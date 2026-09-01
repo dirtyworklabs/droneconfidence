@@ -59,8 +59,8 @@ const policySections: PolicySection[] = [
           ))}
         </ul>
         <p>
-          Payment is processed securely by the external booking and payment provider. Drone
-          Confidence does not store your card details.
+          Payment is processed securely by our payment provider. Drone Confidence does not store
+          your card details.
         </p>
       </>
     ),

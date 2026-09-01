@@ -1,7 +1,8 @@
-# Stripe setup (future)
+# Stripe setup
 
 Documentation only. **No Stripe account, key, product or price is required to build, deploy or run
-this website.**
+this website.** Payment belongs to the live booking integration, which is a separate implementation
+step behind `/book`.
 
 ## The website does not integrate with Stripe
 
@@ -14,11 +15,16 @@ This is deliberate and should stay that way:
 - No Stripe key belongs in this repository. Secret keys must never appear in `src`, in git, in
   committed files, or in any `VITE_*` variable — every `VITE_*` value is readable by the browser.
 
-The only thing the website knows about payment is the copy on `/book` and `/booking-policy`:
-full payment is taken at the time of booking, and it is processed securely by the external
-booking/payment provider.
+The only thing the website knows about payment is the copy on `/book`, `/booking-policy` and
+`/privacy`: full payment is taken online at the time of booking, and it is processed securely by the
+payment provider. Card details are entered with, and processed by, that provider — they are never
+collected, transmitted or stored by this frontend.
 
-## Future setup
+`/book` is where payment will be reached, at the end of the flow. The public UI already tells
+customers that, and `src/lib/bookingService.ts` reserves `startCheckout()` for it, but no checkout
+call, redirect or price object exists in this repository yet.
+
+## Setup, when the integration is connected
 
 - [ ] Create or verify a Stripe account (business details, bank account, identity verification).
 - [ ] Connect Stripe to the scheduling platform using its own integration screen.

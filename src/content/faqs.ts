@@ -1,7 +1,11 @@
-import { bookingConfig } from '@/config/booking'
 import type { Faq } from '@/types'
 
-const allFaqs: Faq[] = [
+/**
+ * The final public FAQ set. Nothing here depends on booking configuration —
+ * payment, meeting points and weather are answered the same way regardless of
+ * which integration sits behind /book.
+ */
+export const faqs: Faq[] = [
   {
     id: 'never-flown',
     question: 'I’ve never flown a drone before. Is that okay?',
@@ -122,14 +126,5 @@ const allFaqs: Faq[] = [
     ],
   },
 ]
-
-/**
- * How payment works is only a real answer once online booking is live. Until
- * then the question is dropped everywhere at once — FAQ page, homepage preview
- * and FAQPage structured data — rather than answered with a caveat.
- */
-export const faqs: Faq[] = bookingConfig.bookingEnabled
-  ? allFaqs
-  : allFaqs.filter((faq) => faq.id !== 'payment')
 
 export const featuredFaqs = faqs.filter((faq) => faq.featured)

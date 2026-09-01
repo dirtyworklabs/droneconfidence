@@ -75,8 +75,24 @@ export interface Testimonial {
   trainingArea?: string
 }
 
-export type BookingDisplayMode = 'disabled' | 'external' | 'embed'
+/**
+ * How the booking integration layer supplies live availability, once one is
+ * configured. This never affects marketing copy or the /book page existing —
+ * only the availability step inside /book. 'none' is the default.
+ */
+export type BookingIntegrationMode = 'none' | 'external' | 'embed'
 
-export type BookingTarget =
-  | { kind: 'internal'; href: string; external: false }
-  | { kind: 'external'; href: string; external: true; newTab: boolean }
+/** An absolute external hand-off produced by the booking integration only. */
+export interface ExternalBookingTarget {
+  href: string
+  newTab: boolean
+}
+
+/**
+ * Public booking state held by /book. Validated against the session and
+ * location content, mirrored in the URL, and never containing personal data.
+ */
+export interface BookingSelection {
+  sessionId: SessionId | null
+  locationId: LocationId | null
+}

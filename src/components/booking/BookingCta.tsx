@@ -1,11 +1,13 @@
-import { AnchorButton, LinkButton, type ButtonSize, type ButtonVariant } from '@/components/ui/Button'
-import { resolveBookingTarget } from '@/config/booking'
+import { LinkButton, type ButtonSize, type ButtonVariant } from '@/components/ui/Button'
+import { bookingPath } from '@/lib/routes'
 import { track } from '@/lib/analytics'
-import type { SessionId } from '@/types'
+import type { LocationId, SessionId } from '@/types'
 
 interface BookingCtaProps {
-  /** Omit for the general "Book a Session" CTA. */
+  /** Preselects a session on /book. Omit for the general CTA. */
   sessionId?: SessionId
+  /** Preselects a training area on /book. */
+  locationId?: LocationId
   children: React.ReactNode
   variant?: ButtonVariant
   size?: ButtonSize
@@ -19,12 +21,14 @@ interface BookingCtaProps {
 /**
  * The only place a booking CTA is created.
  *
- * Routing decisions live entirely in the booking config resolver, so no
- * component ever hard-codes a booking URL and no CTA can end up dead:
- * anything missing or malformed falls back to /book.
+ * Every CTA leads to /book — the permanent public booking entry point — with
+ * optional session or training-area context in the query string. Marketing
+ * pages therefore never need to know which provider or backend sits behind
+ * booking, and no CTA can end up dead or pointing off-site unexpectedly.
  */
 export const BookingCta = ({
   sessionId,
+  locationId,
   children,
   variant = 'primary',
   size = 'md',
@@ -33,35 +37,19 @@ export const BookingCta = ({
   className,
   context,
 }: BookingCtaProps) => {
-  const target = resolveBookingTarget(sessionId)
+  const to = bookingPath({ session: sessionId, location: locationId })
 
   const handleClick = () => {
-    track('booking_clicked', { session: sessionId ?? 'general', context, destination: target.kind })
-    if (target.external) {
-      track('external_booking_opened', { session: sessionId ?? 'general' })
-    }
-  }
-
-  if (target.external) {
-    return (
-      <AnchorButton
-        href={target.href}
-        newTab={target.newTab}
-        onClick={handleClick}
-        variant={variant}
-        size={size}
-        external
-        fullWidth={fullWidth}
-        className={className}
-      >
-        {children}
-      </AnchorButton>
-    )
+    track('booking_clicked', {
+      session: sessionId ?? 'general',
+      location: locationId ?? 'none',
+      context,
+    })
   }
 
   return (
     <LinkButton
-      to={target.href}
+      to={to}
       onClick={handleClick}
       variant={variant}
       size={size}

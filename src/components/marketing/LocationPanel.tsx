@@ -53,7 +53,9 @@ export const LocationPanel = ({
         </div>
 
         <div className="mt-auto pt-2">
-          <BookingCta context={`location-${location.id}`}>{location.ctaLabel}</BookingCta>
+          <BookingCta locationId={location.id} context={`location-${location.id}`}>
+            {location.ctaLabel}
+          </BookingCta>
         </div>
       </div>
     </RevealItem>

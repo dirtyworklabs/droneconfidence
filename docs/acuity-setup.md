@@ -1,10 +1,12 @@
-# Acuity Scheduling setup (future)
+# Acuity Scheduling setup
 
 Documentation only. **Nothing in this file is required for the current build, deploy, or for the
-website to work.** The site is fully functional before any scheduling account exists — every booking
-CTA routes to `/book`, which shows a polished enquiry state.
+website to work.** The public booking UI at `/book` is complete and ships without any scheduling
+account: every CTA routes to `/book`, session and training area are chosen there, and the date and
+time step shows an operational unavailable message until an integration is configured.
 
-Follow this once you're ready to take real bookings.
+Follow this when connecting the live booking integration — the separate implementation step that
+supplies real availability, details capture, payment and confirmation.
 
 ---
 
@@ -104,10 +106,10 @@ Once the appointment types exist, copy the public scheduling links:
 These are public URLs, not secrets. Never put an Acuity **API key or secret** anywhere in this
 repository or in a `VITE_*` variable — the browser can read every `VITE_*` value.
 
-## 9. Enable booking on the website
+## 9. Enable the integration on the website
 
-See the "Enabling booking" section of the [README](../README.md). Either edit
-`src/config/booking.ts` or set the environment variables in Netlify:
+See "Booking: what is built and what is next" in the [README](../README.md). Set the environment
+variables in Netlify:
 
 ```
 VITE_BOOKING_ENABLED=true
@@ -117,11 +119,22 @@ VITE_BOOKING_FLY_CONFIDENCE_URL=https://…
 VITE_BOOKING_PHOTO_VIDEO_URL=https://…
 ```
 
-`bookingEnabled` is derived, not just declared: it only becomes true when at least one **absolute
-http(s)** URL is present. A typo can't produce a dead CTA — the CTA quietly falls back to `/book`.
+The integration mode is derived, not just declared: it can only leave `'none'` when at least one
+**absolute http(s)** URL is present. A typo can't produce a dead control — the date and time step
+falls back to "Online booking is temporarily unavailable." with a Contact link.
+
+None of these variables change any marketing copy. They are read only through
+`src/lib/bookingService.ts`, which the date and time step inside `/book` consumes. Session-specific
+links are used as a hand-off from that step, not from the CTAs — every CTA on the site points at
+`/book`.
+
+For a first-party flow (real slots rendered on `/book` instead of a hand-off), implement
+`BookingService` in `src/lib/bookingService.ts`, return it from `getBookingService()`, and add a
+`{ kind: 'service' }` case to `AvailabilitySource` for
+`src/components/booking/BookingAvailability.tsx` to render.
 
 ## 10. Test end to end before going live
 
-Run the full test in [`launch-checklist.md`](./launch-checklist.md) — homepage → session → booking
-platform → payment → confirmation email → reschedule → refund. Do not enable live booking until that
-passes.
+Run the full test in [`launch-checklist.md`](./launch-checklist.md) — homepage → `/book` → session →
+training area → real date and time → payment → confirmation email → reschedule → refund. Do not
+enable live booking until that passes.
