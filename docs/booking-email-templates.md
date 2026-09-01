@@ -1,8 +1,29 @@
 # Booking email templates
 
-Copy to paste into the scheduling platform when booking goes live. **Do not build a custom
-email-sending service for this** — no email infrastructure exists in this repository, and none is
-needed. Placeholders in `[SQUARE BRACKETS]` are filled by the booking platform's merge fields.
+The approved wording for every transactional message. These templates are **implemented in code**,
+in `netlify/lib/email/templates.ts`, and delivered through Resend by `netlify/lib/email/send.ts`.
+The `[SQUARE BRACKETS]` placeholders below correspond to real booking fields.
+
+Change the wording here and in `templates.ts` together — this file is the copy of record, and the
+code is what customers actually receive.
+
+Which message is sent when:
+
+| Template | Trigger | Sent by |
+| --- | --- | --- |
+| 1. Booking confirmation | `checkout.session.completed` | `stripe-webhook` |
+| 2. 24-hour reminder | hourly schedule, ~24 hours before the lesson | `booking-reminders` |
+| 3. Weather reschedule | owner reschedules in `/admin` | `admin-bookings` |
+| 4. Cancellation | owner cancels in `/admin` | `admin-bookings` |
+| Owner notification | every confirmed booking | `stripe-webhook` |
+
+Two rules the code enforces:
+
+- **Every customer-supplied value is HTML-escaped** before it reaches an email body
+  (`netlify/lib/email/render.ts`). Nothing a customer types can inject markup.
+- **A failed email never rolls back a paid booking.** Delivery problems are recorded and surfaced to
+  the owner; the booking stays confirmed. Confirmation, reminder and cancellation emails are sent
+  through `sendOnce()`, which records an idempotency row first, so a retry cannot send twice.
 
 ---
 
@@ -116,15 +137,16 @@ decision from a weather API.
 >
 > Drone Confidence
 
-Fill `[REFUND INFORMATION]` from the published policy — full refund, or 50% refunded and 50%
+`[REFUND INFORMATION]` is generated from the amount actually refunded, which the server derives
+from the published policy in `shared/booking/policy.ts` — full refund, or 50% refunded and 50%
 retained, or free reschedule/full refund for a weather change.
 
 ---
 
 ## 5. Meeting details
 
-The booking platform may send or update meeting details separately. Whichever message carries them
-should include:
+Meeting details are confirmed by the owner directly, not automatically. Whichever message carries
+them should include:
 
 - Training area (South Sydney — Taren Point, or North Sydney — North Ryde)
 - The exact meeting point

@@ -1,95 +1,116 @@
 /**
- * Booking service boundary.
+ * Booking service boundary — now first-party.
  *
- * This is the seam the real booking implementation plugs into. The public UI at
- * /book is finished; the machinery that supplies availability, reserves a slot,
- * takes payment and returns a confirmation is a separate implementation step.
+ * Everything /book needs from the server goes through this module: availability,
+ * starting a checkout, and reading back a confirmation. Each call is a fetch to a
+ * Netlify Function, which is the only thing allowed to talk to Supabase or
+ * Stripe. The browser never holds a service key, never sees a price it can
+ * change, and never decides whether a booking is paid.
  *
- * Nothing in this file invents availability, slots, prices, customers or
- * confirmations, and nothing here is allowed to leak developer language into
- * production copy.
- *
- * What the next implementation should do:
- *
- *  1. Implement a `BookingService` (a provider API behind a Netlify function, or
- *     a first-party calendar) and return it from `getBookingService()`.
- *  2. Add a `{ kind: 'service' }` case to `AvailabilitySource` and render a slot
- *     picker for it in `src/components/booking/BookingAvailability.tsx`.
- *  3. Extend the flow with the details and payment steps (steps 4 of the
- *     progress indicator) using the same `BookingSelection` state.
- *
- * No other part of /book, and no marketing page, needs to change to do that.
+ * Nothing here fabricates availability. When the server says booking is
+ * unavailable, the UI says exactly that.
  */
 
-import { bookingIntegration, resolveHandoffTarget } from '@/config/booking'
-import type { ExternalBookingTarget, LocationId, SessionId } from '@/types'
+import type {
+  AvailabilityResponse,
+  CheckoutRequest,
+  CheckoutResponse,
+  ConfirmationResponse,
+  LocationId,
+  SessionId,
+} from '@shared/booking/types'
 
-/** A single bookable start time. ISO 8601 strings including the offset. */
-export interface AvailabilitySlot {
-  id: string
-  startsAt: string
-  endsAt: string
-}
+const ENDPOINT = {
+  availability: '/.netlify/functions/booking-availability',
+  checkout: '/.netlify/functions/booking-checkout',
+  confirmation: '/.netlify/functions/booking-confirmation',
+} as const
 
-/** Slots grouped by calendar day. `date` is an ISO date in Australia/Sydney. */
-export interface AvailabilityDay {
-  date: string
-  slots: AvailabilitySlot[]
-}
-
-/** Everything the availability lookup needs, all of it non-personal. */
 export interface AvailabilityQuery {
   sessionId: SessionId
   locationId: LocationId
-  /** ISO date to search from. Defaults to the provider's earliest notice. */
-  fromDate?: string
-}
-
-export type AvailabilityResult =
-  | { status: 'ok'; days: AvailabilityDay[] }
-  | { status: 'unavailable' }
-
-/** The slot a customer intends to book. Created only by the future flow. */
-export interface BookingDraft extends AvailabilityQuery {
-  slotId: string
 }
 
 /**
- * Contract for the future integration. Implementations must never be called
- * with customer details from the URL, and must not be given card data — payment
- * is redirected to, or hosted by, the payment provider.
- */
-export interface BookingService {
-  readonly id: string
-  fetchAvailability(query: AvailabilityQuery): Promise<AvailabilityResult>
-  /** Reserve the slot and start hosted checkout. Added by the next task. */
-  startCheckout?(draft: BookingDraft): Promise<{ redirectUrl: string }>
-}
-
-/**
- * No booking service is registered yet. Returning null is the safe state: the
- * availability step renders an operational fallback rather than a dead button.
- */
-export const getBookingService = (): BookingService | null => null
-
-/**
- * What the availability step should render for the current selection.
+ * Live availability for one session and training area.
  *
- * 'embed' and 'handoff' are real provider integrations, used only when a usable
- * absolute URL is configured. 'unavailable' is the safe default.
+ * A network or server failure is reported as `disabled` — the same operational
+ * message a switched-off booking system produces — rather than an error the
+ * customer has to interpret.
  */
-export type AvailabilitySource =
-  | { kind: 'embed'; url: string }
-  | { kind: 'handoff'; target: ExternalBookingTarget }
-  | { kind: 'unavailable' }
+export const fetchAvailability = async (
+  query: AvailabilityQuery,
+  signal?: AbortSignal,
+): Promise<AvailabilityResponse> => {
+  const params = new URLSearchParams({ session: query.sessionId, location: query.locationId })
 
-export const resolveAvailabilitySource = (query: AvailabilityQuery): AvailabilitySource => {
-  if (bookingIntegration.mode === 'embed' && bookingIntegration.embedUrl.length > 0) {
-    return { kind: 'embed', url: bookingIntegration.embedUrl }
+  try {
+    const response = await fetch(`${ENDPOINT.availability}?${params.toString()}`, {
+      signal,
+      headers: { Accept: 'application/json' },
+      // Availability is never cached: a slot can go while the page is open.
+      cache: 'no-store',
+    })
+    if (!response.ok) return { status: 'disabled' }
+    return (await response.json()) as AvailabilityResponse
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error
+    return { status: 'disabled' }
   }
-
-  const target = resolveHandoffTarget(query.sessionId)
-  if (target) return { kind: 'handoff', target }
-
-  return { kind: 'unavailable' }
 }
+
+/**
+ * Reserves the slot and returns the hosted Stripe Checkout URL.
+ *
+ * `attemptId` is generated once per submission attempt and reused on retries, so
+ * a double-click or a flaky connection cannot create two holds or two charges.
+ */
+export const startCheckout = async (request: CheckoutRequest): Promise<CheckoutResponse> => {
+  try {
+    const response = await fetch(ENDPOINT.checkout, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(request),
+    })
+    const body = (await response.json()) as CheckoutResponse
+    return body
+  } catch {
+    return {
+      status: 'error',
+      code: 'server_error',
+      message: 'We could not reach the booking system. Please check your connection and try again.',
+    }
+  }
+}
+
+/** Asks the server what actually happened to a checkout. */
+export const fetchConfirmation = async (
+  checkoutSessionId: string,
+  signal?: AbortSignal,
+): Promise<ConfirmationResponse> => {
+  const params = new URLSearchParams({ session_id: checkoutSessionId })
+
+  try {
+    const response = await fetch(`${ENDPOINT.confirmation}?${params.toString()}`, {
+      signal,
+      headers: { Accept: 'application/json' },
+      cache: 'no-store',
+    })
+    return (await response.json()) as ConfirmationResponse
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') throw error
+    return { status: 'error' }
+  }
+}
+
+/** One id per submission attempt, used for both hold and Stripe idempotency. */
+export const newAttemptId = (): string =>
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : // Older browsers only. Shape matters (the server validates a UUID), not entropy quality.
+      '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (character) =>
+        (
+          Number(character) ^
+          (Math.floor(Math.random() * 256) & (15 >> (Number(character) / 4)))
+        ).toString(16),
+      )

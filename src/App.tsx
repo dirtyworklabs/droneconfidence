@@ -18,7 +18,16 @@ const Book = lazy(() => import('@/pages/Book'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const Privacy = lazy(() => import('@/pages/Privacy'))
 const BookingPolicy = lazy(() => import('@/pages/BookingPolicy'))
+const BookingConfirmed = lazy(() => import('@/pages/BookingConfirmed'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
+
+/**
+ * The owner dashboard is split out separately and deliberately sits outside the
+ * marketing layout — it has no site navigation, no footer and no place in the
+ * public information architecture.
+ */
+const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
+const Admin = lazy(() => import('@/pages/Admin'))
 
 /**
  * Route fallback. Deliberately quiet: chunks are small enough that a spinner
@@ -96,6 +105,14 @@ const App = () => (
         }
       />
       <Route
+        path={ROUTES.bookingConfirmed}
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <BookingConfirmed />
+          </Suspense>
+        }
+      />
+      <Route
         path="*"
         element={
           <Suspense fallback={<RouteFallback />}>
@@ -104,6 +121,23 @@ const App = () => (
         }
       />
     </Route>
+
+    <Route
+      path={ROUTES.adminLogin}
+      element={
+        <Suspense fallback={<RouteFallback />}>
+          <AdminLogin />
+        </Suspense>
+      }
+    />
+    <Route
+      path={ROUTES.admin}
+      element={
+        <Suspense fallback={<RouteFallback />}>
+          <Admin />
+        </Suspense>
+      }
+    />
   </Routes>
 )
 

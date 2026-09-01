@@ -1,15 +1,22 @@
-import type { TrainingLocation } from '@/types'
+import { LOCATION_CATALOG } from '@shared/booking/catalog'
+import { EXPERIENCE_LEVELS } from '@shared/booking/experience'
+import type { LocationId, TrainingLocation } from '@/types'
 
 /**
  * Public location wording is deliberately careful: training areas are described
  * as "based around" a park and are always subject to conditions. No exact
  * meeting point is published, and no specific field is guaranteed.
+ *
+ * The ids and the suburb each area is based around come from
+ * `shared/booking/catalog.ts`, which the booking functions also read, so a
+ * training area cannot exist on the website without existing in the booking
+ * system too.
  */
-export const locations: TrainingLocation[] = [
-  {
-    id: 'south-sydney',
+type LocationCopy = Omit<TrainingLocation, 'id' | 'area' | 'enquiryValue'>
+
+const locationCopy: Record<LocationId, LocationCopy> = {
+  'south-sydney': {
     label: 'SOUTH SYDNEY',
-    area: 'Taren Point',
     reference: 'based around Gwawley Park, Taren Point',
     description:
       'Our southern training area is based around Gwawley Park, Taren Point, providing a convenient option for customers coming from:',
@@ -24,12 +31,9 @@ export const locations: TrainingLocation[] = [
     ],
     ctaLabel: 'Book South Sydney',
     imageSlot: 'location-south',
-    enquiryValue: 'South Sydney — Taren Point',
   },
-  {
-    id: 'north-sydney',
+  'north-sydney': {
     label: 'NORTH SYDNEY',
-    area: 'North Ryde',
     reference: 'based around North Ryde Common',
     description:
       'Our northern training area is based around North Ryde Common, providing a convenient option for customers coming from:',
@@ -43,9 +47,16 @@ export const locations: TrainingLocation[] = [
     ],
     ctaLabel: 'Book North Sydney',
     imageSlot: 'location-north',
-    enquiryValue: 'North Sydney — North Ryde',
   },
-]
+}
+
+export const locations: TrainingLocation[] = LOCATION_CATALOG.map((entry) => ({
+  id: entry.id,
+  area: entry.area,
+  // The enquiry form and the booking snapshot use the same public label.
+  enquiryValue: entry.name,
+  ...locationCopy[entry.id],
+}))
 
 export const locationDisclaimer =
   'Exact training areas and meeting points are confirmed before each session and remain subject to suitable weather, airspace, venue access and local operating conditions.'
@@ -61,12 +72,10 @@ export const customLocationNote =
   'Additional travel, venue or permit costs may apply to custom locations and will always be confirmed before you book.'
 
 /**
- * Experience levels. Used by the enquiry intake questions, and by the customer
- * details step of the booking flow when that is implemented.
+ * Experience levels for the enquiry form's free-text intake.
+ *
+ * The booking flow uses `EXPERIENCE_LEVELS` from `shared/booking/experience.ts`
+ * instead, because a booking stores a stable code rather than a label — the
+ * wording can be reworded later without rewriting stored bookings.
  */
-export const experienceOptions = [
-  'I’ve never flown',
-  'I’ve flown a few times',
-  'I’m comfortable with basic flying',
-  'I’m an experienced pilot wanting to improve specific skills',
-]
+export const experienceOptions = EXPERIENCE_LEVELS.map((level) => level.label)

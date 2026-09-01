@@ -13,13 +13,12 @@ interface PrivacySection {
   body: ReactNode
 }
 
-const { scheduling, payment, hosting } = siteConfig.providers
+const { hosting, database, payment, email } = siteConfig.providers
 
 /**
  * Written for the operating business. Provider names are read from
- * `siteConfig.providers`, never typed into the copy, so changing scheduling or
- * payment provider is a configuration change rather than a rewrite of this
- * page.
+ * `siteConfig.providers`, never typed into the copy, so changing a provider is a
+ * configuration change rather than a rewrite of this page.
  */
 const privacySections: PrivacySection[] = [
   {
@@ -37,9 +36,11 @@ const privacySections: PrivacySection[] = [
           <li>your preferred session, training area or location, where you select one</li>
         </ul>
         <p>
-          When you book a session, we receive the booking details you provide — your name, contact
-          details, chosen session, training area, appointment time, drone and experience
-          information, and any notes you add — so the session can be arranged and delivered.
+          When you book a session, we store the booking details you provide — your name, email
+          address, mobile number, chosen session, training area, appointment time, drone make and
+          model, experience level, what you&rsquo;d like help with and any notes you add — so the
+          session can be arranged and delivered. We also store the payment status of your booking
+          and the reference our payment provider gives us for it.
         </p>
         <p>
           Our hosting provider ({hosting}) also processes standard technical information such as IP
@@ -47,8 +48,9 @@ const privacySections: PrivacySection[] = [
           abuse.
         </p>
         <p>
-          This website does not collect card numbers, CVV or expiry dates, and does not run
-          advertising trackers.
+          This website does not collect card numbers, CVV or expiry dates, does not ask you to create
+          an account, and does not run advertising trackers. We don&rsquo;t put your personal details
+          into web addresses or into the anonymous usage events the site records.
         </p>
       </>
     ),
@@ -61,7 +63,9 @@ const privacySections: PrivacySection[] = [
         <p>We use the information you provide to:</p>
         <ul>
           <li>respond to your enquiry</li>
-          <li>prepare and arrange bookings</li>
+          <li>create, confirm, reschedule and cancel bookings</li>
+          <li>take payment for a booked session and issue any refund you&rsquo;re entitled to</li>
+          <li>send you a booking confirmation and a reminder before your session</li>
           <li>deliver your session</li>
           <li>maintain ordinary business records</li>
           <li>protect the security and integrity of this website</li>
@@ -79,18 +83,22 @@ const privacySections: PrivacySection[] = [
     body: (
       <>
         <p>
-          Website hosting and form submissions are handled by {hosting}. Form submissions are stored
-          with that provider so we can read and reply to them.
+          Website hosting and enquiry form submissions are handled by {hosting}. Enquiry submissions
+          are stored with that provider so we can read and reply to them.
         </p>
         <p>
-          Session scheduling is handled by {scheduling}, and payments are processed by {payment}.
-          When you book, the details you enter are provided to those services so your booking and
-          payment can be completed. Their own privacy terms apply to the information they hold.
+          Booking records are stored in a {database} database that only we can access. Payments are
+          processed by {payment} on its own secure checkout page, and booking emails — your
+          confirmation, reminder and any change or cancellation notice — are sent through {email}.
+          Each of these providers receives only what it needs for that purpose, and their own privacy
+          terms apply to the information they hold.
         </p>
         <p>
-          Card details are entered with, and processed by, the payment service. They are not
-          collected, transmitted or stored by this website, and Drone Confidence does not store your
-          card number, CVV or expiry date.
+          Card details are entered on, and processed by, {payment}. They are never collected,
+          transmitted or stored by this website, and Drone Confidence never sees or stores your card
+          number, CVV or expiry date. We receive only the amount paid, the payment status and a
+          reference for the transaction. We don&rsquo;t send your enquiry notes or contact details to
+          the payment provider beyond the email address needed for your receipt.
         </p>
         <p>
           These providers may process information outside Australia. We can&rsquo;t claim that all
@@ -104,10 +112,10 @@ const privacySections: PrivacySection[] = [
     heading: 'How long we keep it',
     body: (
       <p>
-        We keep enquiries and booking records for as long as needed to respond, deliver services and
-        meet ordinary business and record-keeping obligations, and then remove them when they are no
-        longer required. We haven&rsquo;t set fixed retention periods, so we won&rsquo;t state one
-        here.
+        We keep enquiries and booking records for as long as needed to respond, deliver services,
+        handle refunds and meet ordinary business, tax and record-keeping obligations, and then
+        remove them when they are no longer required. We haven&rsquo;t set fixed retention periods,
+        so we won&rsquo;t state one here.
       </p>
     ),
   },

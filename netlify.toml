@@ -20,6 +20,25 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
+# The owner dashboard and the per-booking confirmation page are private surfaces.
+# The pages already set a noindex meta tag; these headers cover the case of a
+# crawler that never runs the JavaScript.
+[[headers]]
+  for = "/admin"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+
+[[headers]]
+  for = "/booking-confirmed"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    Cache-Control = "no-store"
+
 [[headers]]
   for = "/assets/*"
   [headers.values]

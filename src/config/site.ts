@@ -33,11 +33,15 @@ export const siteConfig = {
   timezone: 'Australia/Sydney',
   currency: 'AUD',
 
-  /** Named in the privacy policy once each provider is live. */
+  /**
+   * Named in the privacy policy. These are the real processors behind the
+   * first-party booking system.
+   */
   providers: {
-    scheduling: 'Acuity Scheduling',
-    payment: 'Stripe',
     hosting: 'Netlify',
+    database: 'Supabase',
+    payment: 'Stripe',
+    email: 'Resend',
   },
 
   /** Year shown in the footer copyright line. */

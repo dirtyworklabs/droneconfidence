@@ -4,39 +4,62 @@ Working notes for anyone (human or agent) changing this codebase.
 
 ## What this is
 
-A marketing website for a Sydney private drone-coaching business. Vite + React 19 + TypeScript,
-Tailwind CSS v4, React Router v7, Motion for React, deployed to Netlify as a static SPA.
+The marketing website **and the operating booking system** for a Sydney private drone-coaching
+business. Vite + React 19 + TypeScript, Tailwind CSS v4, React Router v7, Motion for React, deployed
+to Netlify. Booking state lives in Supabase Postgres, payment goes through Stripe Checkout,
+transactional email goes through Resend, and trusted work happens in Netlify Functions.
 
-The **public booking UI is complete** — `/book` is a real, permanent booking flow with session and
-training-area selection. The **live booking integration is a separate implementation step**: this
-repository is not a booking application. Do not add a database, customer accounts, an admin dashboard,
-a payment form, a scheduling backend or an email-sending service. Availability, payment,
-confirmation, emails and administration live with the providers behind `/book`. Netlify Forms covers
-everything the site itself needs from a "backend".
+This file previously said not to build a database, an admin dashboard, a payment flow or an email
+sender. That has changed: those are now the product. What has *not* changed is everything below under
+**Hard guardrails**.
+
+Division of responsibility, and it is not negotiable:
+
+> **Supabase owns booking state. Stripe owns payment processing. The browser is never authoritative
+> for prices, duration, booking status or payment status.**
+
+Deliberately absent, and must stay absent: Acuity, Calendly or any other booking platform; Google
+Calendar; Firebase or a second database; customer accounts; Stripe Elements or any custom card
+field; a second backend framework; a state-management library.
 
 ## Architecture
 
 ```
+shared/booking/   catalog, rules, availability, policy, time, format, fields,
+                  experience, types — the domain, with no React and no import.meta,
+                  so pages, functions and tests share one definition
 src/
-  config/       booking.ts (integration config only), site.ts — every public value
-  content/      sessions, locations, faqs, testimonials, images — all copy lives here
+  config/         site.ts — every public value
+  content/        sessions, locations, faqs, testimonials, images — all copy lives here
   components/
-    ui/         Button, Container, Section, Eyebrow, SectionHeading, Reveal, Accordion
-    layout/     Header, Footer, MobileNav, Layout, Wordmark, navigation
-    booking/    BookingCta, useBookingSelection, BookingProgress, BookingStep, BookingChoice,
-                SessionSelector, LocationSelector, BookingSummary, BookingAvailability, BookingEmbed
-    forms/      Fields, ContactForm, SuccessPanel
-    marketing/  one component per page section, carrying the approved copy
-    visuals/    ImageFrame, Treatments (SVG image fallbacks), TopoBackdrop
-  lib/          seo, structuredData, netlifyForms, validation, analytics, motion, routes, cn,
-                bookingService (the booking integration seam)
-  pages/        one file per route, default-exported for lazy loading
-  styles/       index.css — the entire design system (@theme tokens + @utility)
-  types/        shared domain types
+    ui/           Button, Container, Section, Eyebrow, SectionHeading, Reveal, Accordion
+    layout/       Header, Footer, MobileNav, Layout, Wordmark, navigation
+    booking/      BookingCta, useBookingSelection, BookingProgress, BookingStep, BookingChoice,
+                  SessionSelector, LocationSelector, SlotPicker, BookingAvailability,
+                  BookingDetailsForm, BookingSummary, BookingUnavailable
+    admin/        AdminShell, useAdminSession, AdminBookingsPanel, AdminAvailabilityPanel,
+                  AdminSettingsPanel
+    forms/        Fields, ContactForm, SuccessPanel
+    marketing/    one component per page section, carrying the approved copy
+    visuals/      ImageFrame, Treatments (SVG image fallbacks), TopoBackdrop
+  lib/            seo, structuredData, netlifyForms, validation, analytics, motion, routes, cn,
+                  bookingService (public booking API client), adminApi, supabaseClient
+  pages/          one file per route, default-exported for lazy loading
+  styles/         index.css — the entire design system (@theme tokens + @utility)
+  types/          shared domain types
+netlify/
+  functions/      booking-availability, booking-checkout, booking-confirmation,
+                  stripe-webhook, booking-reminders (hourly),
+                  admin-bookings, admin-availability, admin-settings
+  lib/            supabase, store, availabilityService, bookingInput, stripe, refunds,
+                  adminAuth, env, http, email/{render,templates,send}
+supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql
+tests/            vitest — migrations run against real Postgres via PGlite
 ```
 
-`@/` is aliased to `src/` in both `tsconfig.app.json` (`paths`) and `vite.config.ts`
-(`resolve.alias`). Both are required — tsconfig alone won't resolve at runtime.
+`@/` is aliased to `src/` and `@shared/` to `shared/`, in both `tsconfig.app.json` (`paths`) and
+`vite.config.ts` (`resolve.alias`). Both are required — tsconfig alone won't resolve at runtime.
+Netlify Functions import `shared/` by relative path, because they are bundled without the Vite alias.
 
 ## Non-obvious decisions
 
@@ -45,31 +68,73 @@ location })` in `src/lib/routes.ts` is the only place a booking URL is assembled
 `locationId` to preselect. Never hard-code a booking URL in a component, and never point a CTA
 off-site.
 
-**Public website state and booking integration state are separate.** `src/config/booking.ts` holds
-*only* integration configuration and must not influence marketing copy — no page, FAQ, step list or
-heading may branch on it. Its mode is derived, not declared: it can only leave `'none'` when an
-absolute `http(s)` URL is genuinely usable.
+**The server decides what things cost.** `shared/booking/catalog.ts` holds the id, name, price and
+duration of every session, and `netlify/lib/bookingInput.ts` resolves them from it by id. A payload
+containing `priceCents`, `durationMinutes` or `sessionName` is ignored, not trusted. The same applies
+to refunds: the admin dashboard sends a `CancellationReason`, and the amount is derived from the
+policy and the booking's own start time.
 
-**`src/lib/bookingService.ts` is the integration seam.** It is the only consumer of
-`src/config/booking.ts`, and `BookingAvailability` is its only consumer in turn. The next
-implementation implements `BookingService`, returns it from `getBookingService()`, and adds a
-`{ kind: 'service' }` case to `AvailabilitySource`. Nothing else in `/book` or in marketing changes.
+**Availability is computed, never stored as a slot list.** `shared/booking/availability.ts` is a pure
+function of settings, existing occupancy and blocks. It runs on the server
+(`netlify/lib/availabilityService.ts`) and is covered by `tests/availability.test.ts`. Never
+fabricate a slot, a calendar or a confirmation: when nothing is bookable the step says so, in
+operational language — never "coming soon", "being prepared" or a waitlist.
 
-**Never fabricate availability.** No sample slots, hard-coded times, fake calendar, fake
-confirmation, customer records or placeholder checkout. When nothing is configured, the date and time
-step says "Online booking is temporarily unavailable." and offers Contact. That wording is
-operational, never "coming soon", "being prepared" or a waitlist. Developer-facing notes stay behind
-`import.meta.env.DEV`.
+**The booking master switch defaults to off.** `booking_settings.booking_enabled` ships `false`. With
+it off, `/book` still renders all four steps and reports at step 3 that online booking is
+unavailable. No marketing copy, FAQ, heading or step list may branch on it.
 
-**Booking selection lives in the URL.** `useBookingSelection()` validates `?session=` and
-`?location=` against `src/content/*`, drops invalid values, and mirrors changes with
-`preventScrollReset`. React state plus search params only — no state library. Never put personal data
-in the URL.
+**Concurrency is a database problem, and it is solved in the database.** `reserve_booking_hold`,
+`confirm_booking_payment` and `reschedule_booking` take an advisory lock on the Sydney booking day and
+rely on two GiST exclusion constraints: `bookings_no_overlap` (start → occupied_until, buffer
+included) and `bookings_single_location_per_day` (one training area per Sydney day). Never move either
+check into the browser or into a read-then-write in TypeScript. The `is_active` boolean exists so no
+index predicate ever has to call `now()`, which Postgres will not allow.
+
+**One training area per Sydney day.** Once a live booking *or* an unexpired hold exists on a date, the
+other area disappears from availability. The lock lifts when the last hold expires or the last
+booking is cancelled. `location_locked:<slug>` is raised so the customer can be told which area the
+day is committed to.
+
+**A hold is a booking row, not a lock table.** It is `status = 'pending_payment'` with
+`hold_expires_at` 30 minutes out, matching Stripe's minimum Checkout expiry. `expire_stale_holds`
+releases lapsed holds with a small grace period, so a webhook arriving a few seconds late still
+confirms rather than losing a paid booking.
+
+**Stripe's webhook is the only thing that confirms a booking.** Not the customer's return to the
+site. `stripe-webhook` verifies the signature against the **raw** body, records every event id in
+`stripe_events`, and ignores an id it has already seen. `/booking-confirmed` asks the server what
+happened using the Checkout Session id; it never treats its own URL as proof of payment.
+
+**Email failure never rolls back a paid booking.** `sendOnce()` writes an idempotency row before
+delivering, so a retry cannot send twice, and a delivery problem is reported to the owner rather than
+undoing the payment.
+
+**Time is Sydney time, and the server is not.** Netlify runs in UTC. Every conversion goes through
+`shared/booking/time.ts` (`TZDate` from `@date-fns/tz`) — `instantAt`, `dayOf`, `minutesOf`. Never
+build a `Date` from a bare `YYYY-MM-DDTHH:mm` string: Node reads it as server-local and silently
+shifts by 10 or 11 hours. Admin availability blocks are submitted as a date plus minutes past local
+midnight for exactly this reason.
+
+**Booking selection lives in the URL; the customer's details do not.** `useBookingSelection()`
+validates `?session=`, `?location=` and `?slot=` against real content, drops invalid values, and
+mirrors changes with `preventScrollReset`. React state plus search params only — no state library.
+Never put personal data in the URL.
+
+**The admin route is hidden, and hiding it is not the security.** `requireAdmin()` in
+`netlify/lib/adminAuth.ts` verifies the bearer token with Supabase server-side and requires the
+authenticated email to equal `ADMIN_NOTIFICATION_EMAIL`, compared case-insensitively. A valid
+Supabase user who is not the owner is refused like an anonymous request. Panels never hold a token:
+`AdminRun` fetches a fresh one per call.
+
+**RLS is on with zero policies.** Default deny. The service-role key, server-side only, is the only
+way to data. Do not disable RLS, and do not add an anon policy to "make something work" — move the
+work into a function instead.
 
 **Netlify Forms needs `public/__forms.html`.** Netlify's build bot can't see client-rendered forms,
 so that hidden skeleton registers the `contact` form and every field name. Adding a field to a React
 form without adding it there means the submission is rejected. AJAX POSTs go to `/__forms.html`, not
-`/`.
+`/`. The booking flow does **not** use Netlify Forms, and the contact form is unrelated to it.
 
 **Tailwind v4 has no config file.** Design tokens are `@theme` variables in `src/styles/index.css`;
 custom utilities are `@utility` blocks in the same file. Use the token names (`bg-canvas`,
@@ -85,52 +150,70 @@ Don't replace it with conditional rendering.
 photography, edit `src/content/images.ts` only — no component changes.
 
 **SEO is a hook, not a library.** `useSeo()` in `src/lib/seo.ts` upserts title, description,
-canonical, OG/Twitter tags and JSON-LD directly. It serialises `structuredData` to a string for its
-dependency array so callers can pass inline literals without re-running the effect every render.
+canonical, OG/Twitter tags and JSON-LD directly. `/admin/*` and `/booking-confirmed` pass
+`noIndex: true`, and `netlify.toml` sends `X-Robots-Tag` for them as well, for crawlers that never
+run the JavaScript.
 
 **Motion is restrained on purpose.** 8–18px of movement, 180–250ms interactions, 2–4px card lift.
 Every animated component calls `useReducedMotion()` and renders a static branch; `index.css` also
-clamps animation globally under `prefers-reduced-motion`.
+clamps animation globally under `prefers-reduced-motion`. The admin dashboard is deliberately plainer
+than the marketing site — compact, no hero, no motion for its own sake.
 
 ## Conventions
 
 - Copy belongs in `src/content/*`, not in components, when it's a list or repeated value. Prose that
   appears exactly once can live in its section component.
-- Prices, session names and durations come only from `src/content/sessions.ts` via `formatPrice` /
-  `formatDuration`. Never retype "$179".
+- Prices, session names and durations come only from `shared/booking/catalog.ts` — through
+  `src/content/sessions.ts` for display, and through `findSession()` on the server. Never retype
+  "$179".
 - Pages are `export default` (required for `React.lazy`); components are named exports.
 - Use `LinkButton` for internal routes, `AnchorButton` for external, `Button` for actions. One
   primary CTA per view — don't make everything `variant="primary"`.
 - Touch targets stay at 44px or larger (`min-h-11` / `min-h-13` in the Button size map).
 - Analytics events go through `track()` and carry **no** personal data — no name, email, phone, drone
-  model or message content.
-- Never render customer input as raw HTML. There is no `dangerouslySetInnerHTML` in this codebase.
+  model, message content, booking reference or Stripe id.
+- Never render customer input as raw HTML. There is no `dangerouslySetInnerHTML` in this codebase,
+  and every customer value in an email goes through `escapeHtml`.
+- A customer never sees a stack trace, a provider error or an internal availability-block reason.
+  Functions return a short, honest sentence; the detail stays server-side.
+- New SQL goes in a new numbered file in `supabase/migrations/`. Never edit an applied migration.
 
 ## Hard guardrails
 
-- No secrets in the frontend. No Stripe secret key, Acuity API secret, service-role credential or
-  private key in `src`, in git, or in any `VITE_*` variable (all of which the browser can read).
-  Public booking URLs are not secrets.
-- Never collect card numbers, CVV, expiry dates or payment credentials.
+- `SUPABASE_SECRET_KEY`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` and `RESEND_API_KEY` are
+  server-only. Never expose one through a `VITE_*` variable (all of which the browser can read),
+  never log a value, never commit one. `SUPABASE_SECRET_KEY` must not appear in browser code at all.
+- Never collect card numbers, CVV, expiry dates or payment credentials. Payment happens on Stripe's
+  hosted page.
+- Never put customer notes or contact details into Stripe metadata beyond the email address Stripe
+  needs for the receipt.
+- Never trust a price, duration, session name or refund amount that arrived from a browser.
+- Never fabricate availability, a confirmation, a booking reference or a payment status.
 - Never fabricate testimonials. `src/content/testimonials.ts` is empty and `Testimonials` returns
   `null` when it is.
 - Never claim CASA approval, a licence, certification, insurance, venue permission or government
-  endorsement.
+  endorsement — in a page, an email or a dashboard.
 - Never guarantee a specific park, and never imply a session can be extended.
-- No `/admin` route, no custom admin dashboard.
-- Don't build the booking backend here: no booking CRUD, live calendar, Google Calendar sync, Acuity
-  API call, Stripe Checkout or webhook, email sending, confirmation number, refund or availability
-  rule engine. That is the separate live-integration step, reached through
-  `src/lib/bookingService.ts`.
+- Collect only what the lesson needs. No date of birth, address, licence number or payment detail.
+- No customer accounts, no customer-facing login, no public write path to the database.
 
 ## Verifying a change
 
 ```bash
-npm run build   # tsc -b then vite build; fails on any type error
-npm run preview # check routes, console, and a mobile viewport
+npm run typecheck   # tsc -b --noEmit; fails on any type error
+npm test            # vitest, including the migrations on real Postgres via PGlite
+npm run build       # tsc -b then vite build
+npm run preview     # check routes, console, and a mobile viewport
 ```
 
-The contact form can only be tested on a deployed URL. On `/book`, walk the four routing cases —
-`/book`, `?session=` (three values), `?location=` (two values), and an invalid value that should be
-dropped. To check the configured integration path, temporarily set `VITE_BOOKING_ENABLED=true` with a
-real absolute URL, then revert.
+The contact form and the Netlify Functions can only be exercised on a deployed URL (or via
+`netlify dev` with the environment variables set).
+
+On `/book`, walk the routing cases — `/book`, `?session=` (three values), `?location=` (two values),
+`?slot=`, an invalid value that should be dropped, and a return with `?checkout=cancelled`. Check both
+booking-disabled and booking-enabled states at step 3.
+
+Concurrency changes must come with a test in `tests/migrations.test.ts`. It applies both migrations to
+a real Postgres and asserts the behaviour that cannot be reasoned about from the TypeScript: duplicate
+attempts, buffered slots, the same-day area lock, expiry with grace, webhook idempotency, reschedule
+audit history, and RLS being on with no policies.

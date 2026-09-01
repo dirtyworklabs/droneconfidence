@@ -1,14 +1,17 @@
 # Drone Confidence
 
-Marketing website for Drone Confidence — private one-on-one drone training in Sydney.
+Website and booking system for Drone Confidence — private one-on-one drone training in Sydney.
 
-Vite · React 19 · TypeScript · Tailwind CSS v4 · React Router · Motion for React · Netlify.
+Vite · React 19 · TypeScript · Tailwind CSS v4 · React Router · Motion for React · Netlify Functions
+· Supabase · Stripe Checkout · Resend.
 
-The public website is the finished public face of an operating business, including the complete
-booking experience at `/book`. It is deliberately **not** a scheduling application: there is no
-database, no customer accounts, no payment form and no backend in this repository. Real availability,
-date and time selection, customer details, payment, confirmation and booking administration are
-supplied by the live booking integration, which is a separate implementation step behind `/book`.
+This repository is both the public marketing site and the operating booking system behind it.
+Customers choose a session, a training area and a genuinely available time, pay through Stripe's
+hosted checkout, and receive a confirmation email. The owner runs everything from `/admin`.
+
+There are still no customer accounts, no card fields and no payment form here: Supabase owns booking
+state, Stripe owns payment, and the browser is never authoritative for a price, a duration or a
+booking status.
 
 ---
 
@@ -22,11 +25,13 @@ npm run dev      # start the dev server on http://localhost:5173
 npm run build    # type-check (tsc -b) and build to dist/
 npm run preview  # serve the production build locally
 npm run typecheck
+npm test         # vitest: migrations (real Postgres via PGlite), availability, policy, auth
 ```
 
 `npm run build` fails on any TypeScript error — the type-check runs before Vite.
 
-No environment variable is required. The site builds and runs correctly with none set.
+The **public site builds and runs with no environment variable set**, including with Supabase absent.
+The booking flow and the admin login need the variables below.
 
 ## Deployment
 
@@ -39,7 +44,9 @@ Netlify, from `netlify.toml`:
 
 To deploy: connect the repository to Netlify and push. No build plugins are needed.
 
-Optional environment variables (all public values, all optional):
+### Environment variables
+
+**Browser values** (readable by anyone — never put a secret here):
 
 | Variable | Purpose |
 | --- | --- |
@@ -47,26 +54,34 @@ Optional environment variables (all public values, all optional):
 | `VITE_CONTACT_EMAIL` | Shown in the footer and privacy page. Hidden entirely when unset. |
 | `VITE_CONTACT_PHONE` | Optional. Hidden when unset. |
 | `VITE_INSTAGRAM_URL` | Optional. Hidden when unset. |
-| `VITE_BOOKING_ENABLED` | `true` to activate the booking integration inside `/book`. |
-| `VITE_BOOKING_URL` | General provider scheduling URL. |
-| `VITE_BOOKING_FIRST_FLIGHT_URL` | First Flight provider scheduling URL. |
-| `VITE_BOOKING_FLY_CONFIDENCE_URL` | Fly With Confidence provider scheduling URL. |
-| `VITE_BOOKING_PHOTO_VIDEO_URL` | Photo & Video provider scheduling URL. |
-| `VITE_BOOKING_DISPLAY_MODE` | `embed` to render the scheduler in place instead of handing off. |
-| `VITE_BOOKING_EMBED_URL` | Required by `embed` mode; ignored otherwise. |
-| `VITE_BOOKING_PROVIDER` | Provider identifier. Defaults to `acuity`. |
-| `VITE_BOOKING_OPEN_IN_NEW_TAB` | `true` to hand off in a new tab. Defaults to same tab. |
+| `VITE_SUPABASE_URL` | Supabase project URL. Used **only** by the admin login. |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (anon) key. Used **only** by the admin login. |
 
-None of these variables affect marketing copy anywhere on the site. They only decide what the date
-and time step inside `/book` can reach.
+The two Supabase browser values are optional as far as the public site is concerned: without them
+the site builds and every public page works, and `/admin/login` says the dashboard is not configured
+rather than crashing. Row Level Security is enabled with no policies, so the publishable key grants
+no data access on its own.
 
-**Never** put a secret in a `VITE_*` variable — every one of them is readable in the browser. No
-Stripe secret key, Acuity API secret, service-role credential or private key belongs in this
-repository. Public booking URLs are not secrets.
+**Server-only values**, read by Netlify Functions and never sent to the browser:
+
+| Variable | Purpose |
+| --- | --- |
+| `SUPABASE_URL` | Supabase project URL. |
+| `SUPABASE_SECRET_KEY` | Service-role key. The only credential with data access. |
+| `STRIPE_SECRET_KEY` | Creating Checkout Sessions and issuing refunds. |
+| `STRIPE_WEBHOOK_SECRET` | Verifying the raw-body signature on every webhook. |
+| `RESEND_API_KEY` | Sending transactional email. |
+| `RESEND_FROM_EMAIL` | From address, on a Resend-verified domain. |
+| `RESEND_REPLY_TO` | Reply-to address the owner reads. |
+| `ADMIN_NOTIFICATION_EMAIL` | Owner notifications **and** the only address allowed into `/admin`. |
+| `SITE_URL` | Absolute origin for Stripe return URLs and email links. |
+
+**Never** put a secret in a `VITE_*` variable — every one of them is readable in the browser. Secret
+keys are never logged, never returned by a function and never committed.
 
 ### Forms
 
-Both forms use Netlify Forms and require no backend. `public/__forms.html` is a hidden static
+The contact form uses Netlify Forms and needs no function of its own. `public/__forms.html` is a hidden static
 skeleton that exists purely so Netlify's build bot can register the forms and their fields —
 **don't delete it, and add any new field to it as well as to the React form.** Submissions POST via
 AJAX to `/__forms.html` as `application/x-www-form-urlencoded`.
@@ -78,66 +93,101 @@ create a booking and does not take payment.
 Forms only work on a deployed site, not on `localhost`. After the first deploy, enable email
 notifications in **Netlify → Project configuration → Notifications** so submissions reach an inbox.
 
-## Booking: what is built and what is next
+## How booking works
 
-**The public booking UI is complete. The live booking integration is still a separate implementation
-step.**
+`/book` is the permanent public booking entry point, and every CTA on the site enters through it.
+Four steps, in order:
 
-`/book` is the permanent public booking entry point and the permanent integration boundary. It is
-always rendered in full — no page on this site is waiting for a launch, and there is no
-"coming soon", "being prepared" or register-interest state anywhere.
+1. **Session** — from `src/content/sessions.ts`.
+2. **Training area** — from `src/content/locations.ts`.
+3. **Date & time** — real slots from `/.netlify/functions/booking-availability`. If the master switch
+   is off, or nothing is available, the step says so. It never invents a time.
+4. **Your details & payment** — the fields the lesson needs, a review panel, an unticked policy
+   acknowledgement, then a redirect to Stripe Checkout.
 
-What is built:
+Session, training area and the chosen start time are mirrored in the query string, so
+`/book?session=first-flight&location=north-sydney` deep-links and back/forward work. Values are
+validated against real content and silently dropped when they don't match. **No personal detail ever
+goes in the URL, or into an analytics event.**
 
-- Step 1 **Session** and step 2 **Location** are functional selection UI driven by
-  `src/content/sessions.ts` and `src/content/locations.ts`, with a live summary of session, duration,
-  price and training area.
-- Selections are mirrored in the query string, so `/book?session=first-flight` and
-  `/book?location=north-sydney` deep-link, and back/forward work. Values are validated against real
-  content and silently dropped when they don't match. No personal data ever goes in the URL.
-- Every booking CTA — header, mobile nav, hero, session cards, sessions page, locations, final CTA —
-  routes to `/book` through `BookingCta`, carrying session or location context. There are no `#`
-  links, no placeholder URLs and no dead buttons.
-- Step 3 **Date & time** is the boundary. When no integration is configured it renders an operational
-  "Online booking is temporarily unavailable." fallback with a link to Contact, never a fake calendar.
-- Custom locations are handled as a request at `/contact?reason=custom-location`, never as an instant
-  booking, because travel, venue or permit costs must be confirmed first.
+Payment and confirmation:
 
-What the live integration still has to supply:
+- `booking-checkout` validates the submission, resolves the price and duration from
+  `shared/booking/catalog.ts` (never from the payload), reserves a 30-minute hold, and creates a
+  Stripe Checkout Session with a dynamic AUD line item.
+- Stripe's hosted page collects the card. **No card number, CVV or expiry ever reaches this
+  application.**
+- `stripe-webhook` is what confirms a booking — not the customer's return to the site. It verifies
+  the raw-body signature, records every event id, and ignores a redelivery.
+- `/booking-confirmed` asks the server what actually happened. While the webhook is still in flight
+  it shows "Payment received. Confirming your booking…" and polls.
 
-real availability, date and time selection, customer and drone details capture, payment, booking
-creation, confirmation, email automation, reschedule and cancellation mechanics, and booking
-administration.
+Custom locations are still handled as a request at `/contact?reason=custom-location`, never as an
+instant booking, because travel, venue or permit costs must be confirmed first.
 
-### The integration boundary
+### Business rules
 
-`src/lib/bookingService.ts` is the only seam. It defines the `BookingService` contract
-(`fetchAvailability`, and later `startCheckout`) plus `resolveAvailabilitySource()`, which decides
-what the date and time step renders. `src/components/booking/BookingAvailability.tsx` is the only
-component that consumes it, and `src/config/booking.ts` is read only through it — never by a
-marketing component.
+All times are Australia/Sydney, and all arithmetic is DST-correct.
 
-To connect a provider:
+| Rule | Value |
+| --- | --- |
+| Bookable days | Tuesday, Wednesday, Thursday |
+| Day window | 08:00 – 15:00, lesson finishing by 3:00 pm |
+| Latest start | 2:00 pm (60 min) · 1:30 pm (90 min) |
+| Slot increment | 30 minutes |
+| Buffer between lessons | 30 minutes (not required before the first of the day) |
+| Minimum notice | 7 days |
+| Horizon | 3 calendar months |
+| Checkout hold | 30 minutes |
 
-1. Create the platform account and appointment types — see
-   [`docs/acuity-setup.md`](docs/acuity-setup.md). Connect payment via
-   [`docs/stripe-setup.md`](docs/stripe-setup.md).
-2. Add the public scheduling URLs as Netlify environment variables (above), and set
-   `VITE_BOOKING_ENABLED=true`.
-3. Deploy, then walk `/book` end to end for each session and both training areas.
+Two rules matter more than the rest:
 
-For a first-party flow instead of a hand-off, implement `BookingService`, return it from
-`getBookingService()`, and add a `{ kind: 'service' }` case to `AvailabilitySource` rendered by
-`BookingAvailability`. Nothing else in `/book`, and no marketing page, needs to change.
+- **One training area per Sydney day.** Once a live booking or an unexpired hold exists on a date,
+  that date is committed to that area, and the other area disappears from availability. The lock is
+  enforced by a Postgres exclusion constraint inside a serialised function — not by a browser check —
+  so two customers cannot hold different areas for the same empty date.
+- **Public holidays are blocked by hand**, in `/admin` → Availability. There is no holiday API and no
+  hard-coded list of NSW dates.
 
-Two things worth knowing about `src/config/booking.ts`:
+### Architecture
 
-- The integration mode is **derived**, not merely declared. It can only leave `'none'` when an
-  absolute `http(s)` URL genuinely exists, so a typo or empty value degrades to the safe fallback
-  instead of a broken control.
-- Resolution order inside the availability step: `embed` mode with a usable embed URL → embedded
-  scheduler; a session-specific URL → that URL; a usable general URL → the general URL; otherwise →
-  the temporarily-unavailable fallback.
+```
+src/                    the public site and the owner dashboard (browser only)
+shared/booking/         domain logic shared by both — catalogue, rules, availability,
+                        policy, Sydney time, formatting. No React, no import.meta.
+netlify/functions/      booking-availability, booking-checkout, booking-confirmation,
+                        stripe-webhook, booking-reminders (hourly),
+                        admin-bookings, admin-availability, admin-settings
+netlify/lib/            Supabase, Stripe, Resend, admin auth, validation, refunds
+supabase/migrations/    the schema and the concurrency functions
+tests/                  vitest, including the migrations applied to real Postgres
+```
+
+`shared/` is aliased as `@shared/*` for the browser and imported by relative path from `netlify/`, so
+one definition of a price, a rule or a refund share serves the page, the function and the test.
+
+### The owner dashboard
+
+`/admin/login` and `/admin`, outside the marketing layout, `noindex`, and not in the sitemap. Sign-in
+is Supabase Auth; there is one account, the owner's.
+
+Hiding the route protects nothing, so it isn't the protection. Every admin function calls
+`requireAdmin()`, which verifies the bearer token with Supabase server-side and requires the
+authenticated email to match `ADMIN_NOTIFICATION_EMAIL`. A valid Supabase user who is not the owner
+is refused exactly like an anonymous request.
+
+The dashboard covers bookings (upcoming, past, cancelled), booking detail with cancel and reschedule,
+availability blocks, and settings — including the **booking master switch, which ships off**. Refund
+amounts are always derived on the server from the policy and the booking's own start time; the
+dashboard sends a reason, never an amount.
+
+### Setting it up
+
+See [`docs/launch-checklist.md`](docs/launch-checklist.md) for the full sequence. In short: create
+the Supabase project, apply both migrations in `supabase/migrations/`, create the owner user, set the
+environment variables above, add the Stripe webhook ([`docs/stripe-setup.md`](docs/stripe-setup.md)),
+verify the Resend domain, then work through the test-mode checklist before turning the master switch
+on.
 
 ## Images still required
 
@@ -160,17 +210,16 @@ sessions and real Sydney locations only. Landscape 3:2 or 4:3 works best; the po
 
 ## Launch checklist
 
-[`docs/launch-checklist.md`](docs/launch-checklist.md) — website, domain and booking-integration
-activation, including the full end-to-end test booking that must pass before booking goes live.
+[`docs/launch-checklist.md`](docs/launch-checklist.md) — website, domain, Supabase, Stripe, Resend
+and dashboard checks, including the end-to-end test booking that must pass before the master switch
+is turned on.
 
 ## Documentation
 
-- [`docs/acuity-setup.md`](docs/acuity-setup.md) — scheduling provider setup, appointment types,
-  intake questions
-- [`docs/stripe-setup.md`](docs/stripe-setup.md) — payment setup, and why the frontend has no Stripe
-  integration
-- [`docs/booking-email-templates.md`](docs/booking-email-templates.md) — confirmation, reminder,
-  weather reschedule and cancellation copy
+- [`docs/stripe-setup.md`](docs/stripe-setup.md) — Checkout, the webhook, and the refund policy in
+  practice
+- [`docs/booking-email-templates.md`](docs/booking-email-templates.md) — the approved copy for every
+  transactional message, and which code sends it
 - [`docs/launch-checklist.md`](docs/launch-checklist.md) — pre-launch checks
 - [`AGENTS.md`](AGENTS.md) — architecture and conventions
 

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /booking-confirmed
 
 Sitemap: https://droneconfidence.com/sitemap.xml
