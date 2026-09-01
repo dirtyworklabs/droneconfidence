@@ -29,10 +29,10 @@ const About = () => {
 
       <Section tone="canvas" space="sm">
         <Container>
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)] lg:gap-16">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
             <Reveal>
               <div className="lg:sticky lg:top-28">
-                <ImageFrame slot="about-tom" ratio="aspect-[4/5]" rounded="panel" />
+                <ImageFrame slot="about-tom" ratio="aspect-[4/3]" rounded="panel" />
                 <p className="pt-4 text-[0.9rem] text-ink-muted">
                   Tom Gerrard · Founder, Drone Confidence
                 </p>

@@ -14,7 +14,7 @@ export const Introduction = () => (
 
         <Reveal delay={0.08} className="space-y-5 text-[1.06rem] leading-relaxed text-ink-soft">
           <p>
-            Modern drones make getting airborne surprisingly easy. Knowing what your aircraft is
+            Getting airborne is surprisingly easy. Knowing what your aircraft is
             doing, where you can fly and what to do when something unexpected happens takes a little
             more experience.
           </p>

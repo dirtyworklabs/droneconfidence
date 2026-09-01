@@ -71,8 +71,8 @@ export const imageSlots: Record<ImageSlotKey, ImageSlot> = {
     fallbackCaption: 'Sydney north · North Ryde',
   },
   'about-tom': {
-    src: '',
-    alt: 'Tom Gerrard, founder of Drone Confidence',
+    src: '/images/in-motion-aero-atc.jpg',
+    alt: 'Tom Gerrard during commercial drone operations with In Motion Aero',
     fallback: 'credential',
     fallbackCaption: 'In Motion Aero · commercial drone operations',
   },

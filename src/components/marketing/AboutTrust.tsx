@@ -8,13 +8,13 @@ import { ROUTES } from '@/lib/routes'
 export const AboutTrust = () => (
   <Section tone="sand" space="lg" aria-labelledby="about-trust-heading">
     <Container>
-      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
         <Reveal>
           <ImageFrame
             slot="about-tom"
             ratio="aspect-[4/5]"
             rounded="panel"
-            className="max-w-sm"
+            className="max-w-md"
           />
         </Reveal>
 

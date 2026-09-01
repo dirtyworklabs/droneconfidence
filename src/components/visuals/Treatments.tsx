@@ -82,34 +82,372 @@ const labelClass =
 
 /* ---------------------------------------------------------------- hero path */
 
-const FlightPathTreatment = ({ caption }: { caption: string }) => (
-  <Frame className="bg-eucalyptus text-sage">
-    <svg viewBox="0 0 540 400" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="dc-hero-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#1d4f45" />
-          <stop offset="1" stopColor="#0e2a25" />
-        </linearGradient>
-      </defs>
-      <rect width="540" height="400" fill="url(#dc-hero-sky)" />
-      <g stroke="#337667" strokeWidth="1" opacity="0.28">
-        {[68, 136, 204, 272, 340, 408, 476].map((x) => (
-          <line key={x} x1={x} y1="0" x2={x} y2="400" />
+const FlightPathTreatment = ({ caption }: { caption: string }) => {
+  const reduced = useReducedMotion()
+
+  const flightRoute =
+    'M62 390 C112 352 116 286 174 268 C232 250 232 196 286 184 C344 170 354 120 422 98'
+
+  const groundRoute =
+    'M62 448 C118 432 138 398 190 388 C250 376 280 346 328 332 C374 318 400 294 438 278'
+
+  return (
+    <Frame className="bg-eucalyptus text-sage">
+      <svg
+        viewBox="0 0 460 560"
+        className="size-full"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="dc-flight-bg" x1="0" y1="0" x2="0.8" y2="1">
+            <stop offset="0" stopColor="#1d5147" />
+            <stop offset="0.55" stopColor="#163f37" />
+            <stop offset="1" stopColor="#0b2520" />
+          </linearGradient>
+
+          <radialGradient id="dc-flight-glow" cx="50%" cy="32%" r="62%">
+            <stop offset="0" stopColor="#B9DDE5" stopOpacity="0.12" />
+            <stop offset="1" stopColor="#B9DDE5" stopOpacity="0" />
+          </radialGradient>
+
+          <filter id="dc-flight-marker-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="dc-flight-soft-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="8" />
+          </filter>
+
+          <path id="dc-flight-route" d={flightRoute} />
+          <path id="dc-ground-route" d={groundRoute} />
+        </defs>
+
+        {/* Background */}
+        <rect width="460" height="560" fill="url(#dc-flight-bg)" />
+        <rect width="460" height="560" fill="url(#dc-flight-glow)" />
+
+        {/* Distant horizon */}
+        <path
+          d="M0 176 C110 160 222 168 460 140"
+          fill="none"
+          stroke="#B9DDE5"
+          strokeWidth="1"
+          strokeOpacity="0.09"
+        />
+
+        <path
+          d="M0 191 C126 174 264 184 460 158"
+          fill="none"
+          stroke="#B9DDE5"
+          strokeWidth="1"
+          strokeOpacity="0.055"
+        />
+
+        {/* Perspective floor */}
+        <g
+          fill="none"
+          stroke="#70a99b"
+          strokeWidth="1"
+          strokeOpacity="0.15"
+        >
+          {/* Converging depth lines */}
+          {[-70, 10, 90, 170, 250, 330, 410, 490, 570].map((x) => (
+            <line key={x} x1="278" y1="150" x2={x} y2="590" />
+          ))}
+
+          {/* Perspective cross-lines */}
+          <path d="M236 184 L321 184" />
+          <path d="M210 216 L346 216" />
+          <path d="M176 258 L379 258" />
+          <path d="M136 309 L415 309" />
+          <path d="M90 372 L455 372" />
+          <path d="M28 448 L515 448" />
+          <path d="M-48 538 L596 538" />
+        </g>
+
+        {/* Very subtle moving scan plane */}
+        {!reduced && (
+          <motion.g
+            animate={{
+              opacity: [0.08, 0.2, 0.08],
+              y: [0, 5, 0],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            <path
+              d="M120 330 L278 160 L432 330"
+              fill="#B9DDE5"
+              fillOpacity="0.04"
+            />
+          </motion.g>
+        )}
+
+        {/* Ground track */}
+        {reduced ? (
+          <path
+            d={groundRoute}
+            fill="none"
+            stroke="#70a99b"
+            strokeWidth="1.4"
+            strokeOpacity="0.42"
+            strokeDasharray="5 9"
+          />
+        ) : (
+          <motion.path
+            d={groundRoute}
+            fill="none"
+            stroke="#70a99b"
+            strokeWidth="1.4"
+            strokeOpacity="0.42"
+            strokeDasharray="5 9"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 0.42 }}
+            transition={{
+              pathLength: {
+                duration: 2.4,
+                delay: 0.55,
+                ease: EASE_CALM,
+              },
+              opacity: {
+                duration: 0.4,
+                delay: 0.55,
+              },
+            }}
+          />
+        )}
+
+        {/* Altitude/depth projections */}
+        <g
+          stroke="#B9DDE5"
+          strokeWidth="1"
+          strokeOpacity="0.26"
+          strokeDasharray="3 6"
+        >
+          <line x1="174" y1="268" x2="190" y2="388" />
+          <line x1="286" y1="184" x2="328" y2="332" />
+          <line x1="422" y1="98" x2="438" y2="278" />
+        </g>
+
+        {/* Ground contact / projected points */}
+        <g fill="#70a99b" fillOpacity="0.55">
+          <circle cx="190" cy="388" r="3" />
+          <circle cx="328" cy="332" r="3" />
+          <circle cx="438" cy="278" r="3" />
+        </g>
+
+        {/* Main 3D flight path */}
+        {reduced ? (
+          <path
+            d={flightRoute}
+            fill="none"
+            stroke="#DDEBE6"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+        ) : (
+          <>
+            <motion.path
+              d={flightRoute}
+              fill="none"
+              stroke="#B9DDE5"
+              strokeWidth="8"
+              strokeOpacity="0.08"
+              strokeLinecap="round"
+              filter="url(#dc-flight-soft-glow)"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{
+                duration: 2.5,
+                delay: 0.42,
+                ease: EASE_CALM,
+              }}
+            />
+
+            <motion.path
+              d={flightRoute}
+              fill="none"
+              stroke="#DDEBE6"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{
+                pathLength: {
+                  duration: 2.5,
+                  delay: 0.42,
+                  ease: EASE_CALM,
+                },
+                opacity: {
+                  duration: 0.4,
+                  delay: 0.42,
+                },
+              }}
+            />
+          </>
+        )}
+
+        {/* Waypoints */}
+        {[
+          { x: 174, y: 268 },
+          { x: 286, y: 184 },
+          { x: 422, y: 98 },
+        ].map((point, index) => (
+          <g key={`${point.x}-${point.y}`}>
+            {!reduced && (
+              <motion.circle
+                cx={point.x}
+                cy={point.y}
+                r="14"
+                fill="none"
+                stroke="#B9DDE5"
+                strokeWidth="1"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{
+                  opacity: [0.18, 0.45, 0.18],
+                  scale: [0.9, 1.12, 0.9],
+                }}
+                transition={{
+                  delay: 1 + index * 0.22,
+                  duration: 3.2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                style={{
+                  transformOrigin: `${point.x}px ${point.y}px`,
+                }}
+              />
+            )}
+
+            <circle
+              cx={point.x}
+              cy={point.y}
+              r="3.5"
+              fill="#E9DCC5"
+            />
+          </g>
         ))}
-      </g>
-      <Contours opacity={0.55} stroke="#337667" />
-      <TracedPath d="M-10 300C90 210 170 300 280 200s170-40 280-96" stroke="#B9DDE5" width={2.5} dash="7 10" />
-      <Marker cx={280} cy={200} />
-      <g stroke="#DDEBE6" strokeWidth="1" opacity="0.35">
-        <line x1="280" y1="213" x2="280" y2="304" strokeDasharray="3 6" />
-        <line x1="264" y1="304" x2="296" y2="304" />
-      </g>
-    </svg>
-    <div className={cn(labelClass, 'text-sage-soft/70')}>
-      <span>{caption}</span>
-    </div>
-  </Frame>
-)
+
+        {/* Moving ground shadow */}
+        {reduced ? (
+          <ellipse
+            cx="328"
+            cy="332"
+            rx="10"
+            ry="4"
+            fill="#061713"
+            fillOpacity="0.34"
+          />
+        ) : (
+          <g opacity="0.48">
+            <ellipse
+              cx="0"
+              cy="0"
+              rx="10"
+              ry="4"
+              fill="#061713"
+            />
+            <animateMotion
+              dur="9s"
+              repeatCount="indefinite"
+              rotate="auto"
+            >
+              <mpath href="#dc-ground-route" />
+            </animateMotion>
+          </g>
+        )}
+
+        {/* Aircraft tracker */}
+        {reduced ? (
+          <g transform="translate(286 184)">
+            <circle
+              r="13"
+              fill="#163F37"
+              stroke="#DDEBE6"
+              strokeWidth="1"
+            />
+            <circle r="3.5" fill="#E9DCC5" />
+            <path
+              d="M-10 -10 L10 10 M10 -10 L-10 10"
+              stroke="#DDEBE6"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+            <circle cx="-10" cy="-10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="10" cy="-10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="-10" cy="10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="10" cy="10" r="2.5" fill="none" stroke="#B9DDE5" />
+          </g>
+        ) : (
+          <g filter="url(#dc-flight-marker-glow)">
+            <circle
+              r="13"
+              fill="#163F37"
+              stroke="#DDEBE6"
+              strokeWidth="1"
+            />
+            <circle r="3.5" fill="#E9DCC5" />
+
+            <path
+              d="M-10 -10 L10 10 M10 -10 L-10 10"
+              stroke="#DDEBE6"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+
+            <circle cx="-10" cy="-10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="10" cy="-10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="-10" cy="10" r="2.5" fill="none" stroke="#B9DDE5" />
+            <circle cx="10" cy="10" r="2.5" fill="none" stroke="#B9DDE5" />
+
+            <animateMotion
+              dur="9s"
+              repeatCount="indefinite"
+              rotate="auto"
+            >
+              <mpath href="#dc-flight-route" />
+            </animateMotion>
+          </g>
+        )}
+
+        {/* Tracker brackets */}
+        <g
+          fill="none"
+          stroke="#DDEBE6"
+          strokeWidth="1"
+          strokeOpacity="0.28"
+        >
+          <path d="M34 54 V34 H54" />
+          <path d="M406 34 H426 V54" />
+          <path d="M426 486 V506 H406" />
+          <path d="M54 506 H34 V486" />
+        </g>
+
+        {/* Minimal axis language */}
+        <g
+          fill="#B9DDE5"
+          fillOpacity="0.54"
+          fontSize="9"
+          fontFamily="Inter, sans-serif"
+          letterSpacing="1.6"
+        >
+        </g>
+      </svg>
+
+      <div className={cn(labelClass, 'text-sage-soft/70')}>
+        <span>{caption}</span>
+      </div>
+    </Frame>
+  )
+}
 
 /* ------------------------------------------------------------- controller UI */
 
