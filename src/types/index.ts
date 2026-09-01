@@ -22,7 +22,7 @@ export interface Session {
   bestFor: string
   /** Very short audience label for the comparison table. */
   bestForShort: string
-  /** Booking CTA label, e.g. "Book First Flight — $179". */
+  /** Booking CTA label, e.g. "Book First Flight". The price sits above it, never inside it. */
   ctaLabel: string
   /** Slot key for the session's intended photograph. */
   imageSlot: ImageSlotKey

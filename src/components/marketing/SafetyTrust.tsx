@@ -1,7 +1,7 @@
 import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal'
+import { Reveal } from '@/components/ui/Reveal'
 
 const knowing = [
   'whether the location is suitable',
@@ -32,14 +32,14 @@ export const SafetyTrust = () => (
         />
 
         <div className="flex flex-col gap-7">
-          <RevealGroup as="ul" staggerChildren={0.04} className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
+          <Reveal as="ul" distance={10} className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
             {knowing.map((item) => (
-              <RevealItem as="li" key={item} className="flex items-start gap-3 py-1.5">
+              <li key={item} className="flex items-start gap-3 py-1.5">
                 <span aria-hidden="true" className="mt-2.5 h-px w-4 shrink-0 bg-eucalyptus/40" />
                 <span className="text-[0.99rem] leading-relaxed text-ink-soft">{item}</span>
-              </RevealItem>
+              </li>
             ))}
-          </RevealGroup>
+          </Reveal>
 
           <Reveal delay={0.06} className="space-y-3 border-t border-ink/10 pt-6">
             <p className="font-display text-[1.15rem] font-semibold leading-snug tracking-[-0.02em]">

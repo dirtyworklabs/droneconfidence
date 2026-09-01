@@ -67,7 +67,7 @@ export const Hero = () => {
 
       <Container className="relative">
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
-          <div className="flex flex-col gap-7">
+          <div className="flex flex-col gap-6">
             <motion.div {...step(0)}>
               <Eyebrow>Private drone training · Sydney</Eyebrow>
             </motion.div>
@@ -87,14 +87,15 @@ export const Hero = () => {
             </motion.p>
 
             <motion.div {...step(0.26)} className="measure space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
-              <p>Bought a drone but still not completely comfortable flying it?</p>
               <p>
-                Drone Confidence gives you practical, one-on-one help with your own drone — from your
-                first take-off through to smoother flying, better camera work and more confident
-                decision-making.
+                Bought a drone but still not completely comfortable flying it? Get practical,
+                one-on-one help with your own drone — from your first take-off to smoother flying and
+                better camera work.
               </p>
-              <p className="text-ink">No classroom. No group course. No unnecessary theory.</p>
-              <p>Just practical time flying with an experienced drone operator beside you.</p>
+              <p className="text-ink">
+                No classroom. No group course. Just an experienced drone operator beside you while you
+                fly.
+              </p>
             </motion.div>
 
             <motion.div {...step(0.36)} className="flex flex-col gap-4">
@@ -133,14 +134,6 @@ export const Hero = () => {
               priority
               className="shadow-[var(--shadow-lift)]"
             />
-            <div className="pointer-events-none absolute -bottom-5 -left-5 hidden rounded-[var(--radius-control)] border border-ink/8 bg-surface px-5 py-4 shadow-[var(--shadow-raise)] sm:block">
-              <p className="font-sans text-[0.66rem] uppercase tracking-[0.18em] text-ink-muted">
-                One-on-one
-              </p>
-              <p className="pt-1 font-display text-[1.05rem] font-semibold tracking-[-0.02em]">
-                Your drone. Your questions.
-              </p>
-            </div>
           </motion.div>
         </div>
       </Container>

@@ -9,13 +9,13 @@ import { featuredFaqs } from '@/content/faqs'
 import { ROUTES } from '@/lib/routes'
 
 export const FaqPreview = () => (
-  <Section tone="canvas" space="lg" aria-labelledby="faq-preview-heading">
+  <Section tone="canvas" space="md" aria-labelledby="faq-preview-heading">
     <Container>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
-        <div className="flex flex-col gap-6">
-          <SectionHeading eyebrow="Common questions" id="faq-preview-heading" title="Good to know." size="lg" />
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        <div className="flex flex-col gap-5">
+          <SectionHeading id="faq-preview-heading" title="Good to know." size="lg" />
           <Reveal delay={0.06}>
-            <LinkButton to={ROUTES.faq} variant="secondary">
+            <LinkButton to={ROUTES.faq} variant="quiet">
               All FAQs
             </LinkButton>
           </Reveal>

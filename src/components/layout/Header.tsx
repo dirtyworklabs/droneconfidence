@@ -29,16 +29,19 @@ export const Header = () => {
           : 'border-b border-transparent bg-transparent',
       )}
     >
-      <Container className="flex h-18 items-center justify-between gap-6">
+      <Container
+        gutter="tight"
+        className="flex h-16 items-center justify-between gap-2 min-[400px]:gap-3 sm:h-18 sm:gap-4 lg:gap-6"
+      >
         <Link
           to="/"
-          className="rounded-[var(--radius-control)] py-2 transition-opacity duration-200 ease-[var(--ease-calm)] hover:opacity-80"
+          className="min-w-0 rounded-[var(--radius-control)] py-2 transition-opacity duration-200 ease-[var(--ease-calm)] hover:opacity-80"
         >
           <Wordmark />
           <span className="sr-only">— home</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label="Main" className="hidden shrink-0 lg:block">
           <ul className="flex items-center gap-1">
             {primaryNav.map((item) => (
               <li key={item.to}>
@@ -69,8 +72,8 @@ export const Header = () => {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <BookingCta className="hidden sm:inline-flex" context="header">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <BookingCta size="compact" context="header">
             Book a Session
           </BookingCta>
 
@@ -80,7 +83,7 @@ export const Header = () => {
             onClick={() => setMenuOpen(true)}
             aria-expanded={menuOpen}
             aria-haspopup="dialog"
-            className="grid size-11 place-items-center rounded-[var(--radius-control)] border border-ink/10 bg-surface/70 text-ink transition-colors duration-200 ease-[var(--ease-calm)] hover:border-sage/30 hover:text-sage lg:hidden"
+            className="grid size-10 shrink-0 place-items-center rounded-[var(--radius-control)] border border-ink/10 bg-surface/70 text-ink transition-colors duration-200 ease-[var(--ease-calm)] hover:border-sage/30 hover:text-sage sm:size-11 lg:hidden"
           >
             <Menu aria-hidden="true" className="size-5" />
             <span className="sr-only">Open menu</span>

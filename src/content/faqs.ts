@@ -1,6 +1,7 @@
+import { bookingConfig } from '@/config/booking'
 import type { Faq } from '@/types'
 
-export const faqs: Faq[] = [
+const allFaqs: Faq[] = [
   {
     id: 'never-flown',
     question: 'I’ve never flown a drone before. Is that okay?',
@@ -74,8 +75,7 @@ export const faqs: Faq[] = [
     question: 'Do I pay on the day?',
     answer: [
       'No.',
-      'Once online booking is enabled, full payment is taken online at the time of booking to confirm your session.',
-      'That means there’s nothing to arrange or pay for when we meet — just bring your drone and gear.',
+      'Full payment is taken online when you book, so there’s nothing to arrange or pay for when we meet — just bring your drone and gear.',
     ],
     featured: true,
   },
@@ -122,5 +122,14 @@ export const faqs: Faq[] = [
     ],
   },
 ]
+
+/**
+ * How payment works is only a real answer once online booking is live. Until
+ * then the question is dropped everywhere at once — FAQ page, homepage preview
+ * and FAQPage structured data — rather than answered with a caveat.
+ */
+export const faqs: Faq[] = bookingConfig.bookingEnabled
+  ? allFaqs
+  : allFaqs.filter((faq) => faq.id !== 'payment')
 
 export const featuredFaqs = faqs.filter((faq) => faq.featured)

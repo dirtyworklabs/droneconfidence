@@ -4,6 +4,7 @@ import { PageHero } from '@/components/marketing/PageHero'
 import { SessionComparison } from '@/components/marketing/SessionComparison'
 import { SessionDetail } from '@/components/marketing/SessionDetail'
 import { WhatToBring } from '@/components/marketing/WhatToBring'
+import { SafetyTrust } from '@/components/marketing/SafetyTrust'
 import { NotALicence } from '@/components/marketing/NotALicence'
 import { FinalCta } from '@/components/marketing/FinalCta'
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -91,6 +92,7 @@ const Sessions = () => {
       </Section>
 
       <WhatToBring />
+      <SafetyTrust />
       <NotALicence />
       <FinalCta />
     </>

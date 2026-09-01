@@ -1,7 +1,7 @@
 import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal'
+import { Reveal } from '@/components/ui/Reveal'
 
 const items = [
   'Your drone',
@@ -27,13 +27,13 @@ export const WhatToBring = () => (
         />
 
         <div className="flex flex-col gap-8">
-          <RevealGroup as="ul" staggerChildren={0.04} className="grid gap-x-8 sm:grid-cols-2">
+          <Reveal as="ul" distance={10} className="grid gap-x-8 sm:grid-cols-2">
             {items.map((item) => (
-              <RevealItem as="li" key={item} className="border-b border-ink/8 py-3 text-[0.99rem] text-ink-soft">
+              <li key={item} className="border-b border-ink/8 py-3 text-[0.99rem] text-ink-soft">
                 {item}
-              </RevealItem>
+              </li>
             ))}
-          </RevealGroup>
+          </Reveal>
 
           <Reveal delay={0.06} className="rounded-[var(--radius-card)] border border-sand/70 bg-sand-soft/70 p-6 sm:p-7">
             <h3 className="font-display text-[1.1rem] font-semibold tracking-[-0.02em]">

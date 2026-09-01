@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { MobileBookingBar } from '@/components/layout/MobileBookingBar'
 
 /** Resets scroll position on navigation, ignoring in-page hash links. */
 const ScrollReset = () => {
@@ -30,6 +29,5 @@ export const Layout = () => (
       <Outlet />
     </main>
     <Footer />
-    <MobileBookingBar />
   </>
 )

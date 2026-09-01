@@ -53,6 +53,13 @@ export const locationDisclaimer =
 export const customLocationCopy =
   'Other Sydney locations may be possible by arrangement. Additional travel, venue or permit costs may apply to custom locations and will always be confirmed before you book.'
 
+/**
+ * The travel/venue/permit half of the custom-location message on its own, for
+ * places that already state the "other locations may be possible" line.
+ */
+export const customLocationNote =
+  'Additional travel, venue or permit costs may apply to custom locations and will always be confirmed before you book.'
+
 export const trainingAreaOptions = [
   ...locations.map((location) => location.enquiryValue),
   'Custom location enquiry',

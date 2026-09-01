@@ -14,7 +14,7 @@ import { BookingEmbed } from '@/components/booking/BookingEmbed'
 import { EnquiryForm } from '@/components/forms/EnquiryForm'
 import { bookingConfig } from '@/config/booking'
 import { sessions } from '@/content/sessions'
-import { ASK_A_QUESTION_QUERY, CUSTOM_LOCATION_QUERY } from '@/lib/routes'
+import { ASK_A_QUESTION_QUERY, CUSTOM_LOCATION_QUERY, ROUTES } from '@/lib/routes'
 import { track } from '@/lib/analytics'
 import { useSeo } from '@/lib/seo'
 import { serviceSchema } from '@/lib/structuredData'
@@ -172,6 +172,52 @@ const BookingPreparingState = () => (
   </>
 )
 
+/**
+ * Short, relevant policy only. The full booking and payment section belongs to
+ * the live state — there is nothing to pay for yet, so it isn't shown here.
+ */
+const BookingBasics = () => (
+  <Section tone="canvas" space="md" aria-labelledby="booking-basics-heading">
+    <Container>
+      <Reveal className="flex flex-col gap-5">
+        <h2 id="booking-basics-heading" className="text-[clamp(1.6rem,3.2vw,2.15rem)]">
+          Good to know.
+        </h2>
+
+        <dl className="grid gap-x-14 gap-y-7 border-t border-ink/10 pt-7 sm:grid-cols-2">
+          <div>
+            <dt className="font-display text-[1.05rem] font-semibold tracking-[-0.02em]">
+              Sessions are private and one-on-one
+            </dt>
+            <dd className="pt-2 text-[0.99rem] leading-relaxed text-ink-soft">
+              Each session is a fixed length reserved just for you, using your own drone. Sessions
+              can&rsquo;t be extended on the day.
+            </dd>
+          </div>
+          <div>
+            <dt className="font-display text-[1.05rem] font-semibold tracking-[-0.02em]">
+              Weather is never your problem
+            </dt>
+            <dd className="pt-2 text-[0.99rem] leading-relaxed text-ink-soft">
+              If conditions aren&rsquo;t suitable, you can reschedule at no cost or take a full
+              refund.
+            </dd>
+          </div>
+        </dl>
+
+        <p className="text-[0.95rem] text-ink-muted">
+          <Link
+            to={ROUTES.bookingPolicy}
+            className="text-sage underline decoration-sage/30 underline-offset-4 transition-colors duration-200 ease-[var(--ease-calm)] hover:text-eucalyptus"
+          >
+            Read the full booking &amp; cancellation policy
+          </Link>
+        </p>
+      </Reveal>
+    </Container>
+  </Section>
+)
+
 const Book = () => {
   useSeo({
     title: 'Book a Drone Lesson Sydney | Drone Confidence',
@@ -190,8 +236,17 @@ const Book = () => {
 
   return (
     <>
-      {bookingConfig.bookingEnabled ? <BookingEnabledState /> : <BookingPreparingState />}
-      <BookingPaymentInfo />
+      {bookingConfig.bookingEnabled ? (
+        <>
+          <BookingEnabledState />
+          <BookingPaymentInfo />
+        </>
+      ) : (
+        <>
+          <BookingPreparingState />
+          <BookingBasics />
+        </>
+      )}
       <CustomLocationCallout />
     </>
   )
