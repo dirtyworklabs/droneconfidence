@@ -89,13 +89,26 @@ export const TextField = ({
   </FieldShell>
 )
 
+/**
+ * A select option. A plain string is both the value and the label; the object
+ * form is for fields that store a stable code — booking experience levels are
+ * saved as `new`/`some`/… so the wording can change without rewriting bookings.
+ */
+export type SelectOption = string | { value: string; label: string }
+
+const optionValue = (option: SelectOption): string =>
+  typeof option === 'string' ? option : option.value
+
+const optionLabel = (option: SelectOption): string =>
+  typeof option === 'string' ? option : option.label
+
 interface SelectFieldProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value' | 'id' | 'name'> {
   id: string
   name: string
   label: string
   value: string
   onChange: (value: string) => void
-  options: string[]
+  options: ReadonlyArray<SelectOption>
   placeholder?: string
   error?: string
   hint?: string
@@ -134,8 +147,8 @@ export const SelectField = ({
     >
       <option value="">{placeholder}</option>
       {options.map((option) => (
-        <option key={option} value={option}>
-          {option}
+        <option key={optionValue(option)} value={optionValue(option)}>
+          {optionLabel(option)}
         </option>
       ))}
     </select>
@@ -181,6 +194,56 @@ export const TextareaField = ({
       {...rest}
     />
   </FieldShell>
+)
+
+interface CheckboxFieldProps {
+  id: string
+  name: string
+  checked: boolean
+  onChange: (checked: boolean) => void
+  error?: string
+  children: ReactNode
+  className?: string
+}
+
+/**
+ * A single acknowledgement checkbox.
+ *
+ * Always renders unticked from its `checked` prop — a policy acknowledgement is
+ * never pre-selected — and the label content is passed in so it can carry a link.
+ */
+export const CheckboxField = ({
+  id,
+  name,
+  checked,
+  onChange,
+  error,
+  children,
+  className,
+}: CheckboxFieldProps) => (
+  <div className={cn('flex flex-col gap-1.5', className)}>
+    <div className="flex items-start gap-3">
+      <input
+        id={id}
+        name={name}
+        type="checkbox"
+        checked={checked}
+        onChange={(event) => onChange(event.target.checked)}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className="mt-0.5 size-5 shrink-0 rounded-[6px] border border-ink/25 accent-sage focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage"
+      />
+      <label htmlFor={id} className="text-[0.95rem] leading-relaxed text-ink-soft">
+        {children}
+      </label>
+    </div>
+    {error ? (
+      <p id={`${id}-error`} className="flex items-start gap-1.5 pl-8 text-[0.87rem] font-medium text-red-800">
+        <AlertCircle aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
+        <span>{error}</span>
+      </p>
+    ) : null}
+  </div>
 )
 
 /** Hidden field bots fill in. Kept out of the tab order and the a11y tree. */

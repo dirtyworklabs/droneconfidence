@@ -1,4 +1,11 @@
-export type SessionId = 'first-flight' | 'fly-with-confidence' | 'photo-video'
+import type { LocationId, SessionId } from '@shared/booking/catalog'
+
+/**
+ * Session and training-area ids come from the booking catalogue, which the
+ * Netlify Functions also import. Re-exported here so existing `@/types` imports
+ * keep working and there is still only one definition.
+ */
+export type { LocationId, SessionId } from '@shared/booking/catalog'
 
 export interface Session {
   id: SessionId
@@ -37,8 +44,6 @@ export type ImageSlotKey =
   | 'location-north'
   | 'about-tom'
 
-export type LocationId = 'south-sydney' | 'north-sydney'
-
 export interface TrainingLocation {
   id: LocationId
   /** Region label, e.g. "SOUTH SYDNEY". */
@@ -73,19 +78,6 @@ export interface Testimonial {
   suburb?: string
   session: string
   trainingArea?: string
-}
-
-/**
- * How the booking integration layer supplies live availability, once one is
- * configured. This never affects marketing copy or the /book page existing —
- * only the availability step inside /book. 'none' is the default.
- */
-export type BookingIntegrationMode = 'none' | 'external' | 'embed'
-
-/** An absolute external hand-off produced by the booking integration only. */
-export interface ExternalBookingTarget {
-  href: string
-  newTab: boolean
 }
 
 /**

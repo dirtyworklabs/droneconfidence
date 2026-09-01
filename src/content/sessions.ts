@@ -1,20 +1,23 @@
+import { SESSION_CATALOG } from '@shared/booking/catalog'
 import type { Session, SessionId } from '@/types'
 
 /**
- * The three sessions are defined once, here. Prices, durations and names are
- * read from this file by the homepage, sessions page, booking hand-off, final
- * CTA and structured data so they cannot drift apart.
+ * The marketing copy for the three sessions.
+ *
+ * The bookable facts — id, name, price and duration — are *not* here. They live
+ * in `shared/booking/catalog.ts`, which the Netlify Functions also import, so
+ * the price a customer is charged and the price shown on the website are the
+ * same number by construction. This file supplies everything that is presentation
+ * only, and `sessions` below merges the two.
  *
  * Session lengths are fixed. Copy must never suggest a session can run longer
  * or be extended — a longer session would be a separate bookable product.
  */
-export const sessions: Session[] = [
-  {
-    id: 'first-flight',
-    name: 'First Flight',
+type SessionCopy = Omit<Session, 'id' | 'name' | 'price' | 'durationMinutes'>
+
+const sessionCopy: Record<SessionId, SessionCopy> = {
+  'first-flight': {
     label: 'FIRST FLIGHT',
-    price: 179,
-    durationMinutes: 60,
     tagline: 'Start properly.',
     summary:
       'Perfect if you’ve recently bought a drone, have never flown before, or don’t quite feel confident taking it out by yourself.',
@@ -42,12 +45,8 @@ export const sessions: Session[] = [
     ctaLabel: 'Book First Flight',
     imageSlot: 'session-first-flight',
   },
-  {
-    id: 'fly-with-confidence',
-    name: 'Fly With Confidence',
+  'fly-with-confidence': {
     label: 'FLY WITH CONFIDENCE',
-    price: 239,
-    durationMinutes: 90,
     tagline: 'Turn basic flying into confident flying.',
     summary:
       'You can already get your drone in the air — but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
@@ -78,12 +77,8 @@ export const sessions: Session[] = [
     ctaLabel: 'Book Fly With Confidence',
     imageSlot: 'session-fly-with-confidence',
   },
-  {
-    id: 'photo-video',
-    name: 'Photo & Video',
+  'photo-video': {
     label: 'PHOTO & VIDEO',
-    price: 269,
-    durationMinutes: 90,
     tagline: 'Stop just flying. Start creating.',
     summary:
       'Once you’re comfortable controlling the aircraft, the next challenge is making the footage actually look good.',
@@ -117,7 +112,16 @@ export const sessions: Session[] = [
     ctaLabel: 'Book Photo & Video',
     imageSlot: 'session-photo-video',
   },
-]
+}
+
+/** Catalogue facts plus marketing copy, in catalogue order. */
+export const sessions: Session[] = SESSION_CATALOG.map((entry) => ({
+  id: entry.id,
+  name: entry.name,
+  price: entry.priceDollars,
+  durationMinutes: entry.durationMinutes,
+  ...sessionCopy[entry.id],
+}))
 
 export const sessionById = (id: SessionId): Session => {
   const match = sessions.find((session) => session.id === id)

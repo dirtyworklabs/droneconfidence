@@ -12,15 +12,22 @@ export const ROUTES = {
   contact: '/contact',
   privacy: '/privacy',
   bookingPolicy: '/booking-policy',
+  /** Stripe returns here with ?session_id=. Server-verified, never indexed. */
+  bookingConfirmed: '/booking-confirmed',
+  /** Owner only. Noindex, outside the marketing layout. */
+  adminLogin: '/admin/login',
+  admin: '/admin',
 } as const
 
 /**
- * Query parameters understood by /book. They carry a session and/or training
- * area only — never a name, email, phone number, drone model or note.
+ * Query parameters understood by /book. They carry a session, a training area
+ * and a chosen start time only — never a name, email, phone number, drone
+ * model or note. A slot is a public appointment time, not personal data.
  */
 export const BOOKING_PARAM = {
   session: 'session',
   location: 'location',
+  slot: 'slot',
 } as const
 
 export interface BookingLinkOptions {
@@ -52,3 +59,7 @@ export const ASK_A_QUESTION_QUERY = '/contact?reason=which-session'
 
 /** Contact page pre-set to a booking question. */
 export const BOOKING_QUESTION_QUERY = '/contact?reason=booking'
+
+/** Where Stripe sends a customer after a successful hosted checkout. */
+export const bookingConfirmedPath = (checkoutSessionId: string): string =>
+  `${ROUTES.bookingConfirmed}?session_id=${encodeURIComponent(checkoutSessionId)}`

@@ -1,45 +1,69 @@
 # Stripe setup
 
-Documentation only. **No Stripe account, key, product or price is required to build, deploy or run
-this website.** Payment belongs to the live booking integration, which is a separate implementation
-step behind `/book`.
+The site takes real payments through **Stripe Checkout**. Everything in this document is
+configuration performed in the Stripe dashboard and in Netlify environment variables — there is no
+code change involved.
 
-## The website does not integrate with Stripe
+## How payment works here
 
-This is deliberate and should stay that way:
+1. The customer completes the four steps at `/book`.
+2. `create-checkout` reserves the slot as a 30-minute hold in Supabase, then creates a Stripe
+   Checkout Session with a dynamic AUD `price_data` line item priced from
+   `shared/booking/catalog.ts`.
+3. The browser is redirected to Stripe's hosted page. **Card details are entered on Stripe, never on
+   this site.** No card number, CVV or expiry ever reaches this application.
+4. Stripe calls `/.netlify/functions/stripe-webhook`. `checkout.session.completed` is what confirms
+   a booking — not the customer's return to the site.
+5. `/booking-confirmed` asks the server what actually happened, using the Checkout Session id in the
+   URL. It never trusts the URL as proof of payment.
 
-- The Drone Confidence frontend never collects card numbers, CVV, expiry dates or any payment
-  credential.
-- There is no payment form, no Stripe Checkout call, no webhook handler and no server in this repo.
-- Stripe is connected **through the scheduling platform** (Acuity), which handles the payment page.
-- No Stripe key belongs in this repository. Secret keys must never appear in `src`, in git, in
-  committed files, or in any `VITE_*` variable — every `VITE_*` value is readable by the browser.
+There are no Products or Prices to create in Stripe. Each Checkout Session is priced from the
+session catalogue at request time, so a price change in the code is the only change needed.
 
-The only thing the website knows about payment is the copy on `/book`, `/booking-policy` and
-`/privacy`: full payment is taken online at the time of booking, and it is processed securely by the
-payment provider. Card details are entered with, and processed by, that provider — they are never
-collected, transmitted or stored by this frontend.
+## Environment variables
 
-`/book` is where payment will be reached, at the end of the flow. The public UI already tells
-customers that, and `src/lib/bookingService.ts` reserves `startCheckout()` for it, but no checkout
-call, redirect or price object exists in this repository yet.
+Both are **server-only** and are read by Netlify Functions:
 
-## Setup, when the integration is connected
+| Variable | Where it is used |
+| --- | --- |
+| `STRIPE_SECRET_KEY` | `create-checkout`, `stripe-webhook`, refunds |
+| `STRIPE_WEBHOOK_SECRET` | `stripe-webhook` signature verification |
 
-- [ ] Create or verify a Stripe account (business details, bank account, identity verification).
-- [ ] Connect Stripe to the scheduling platform using its own integration screen.
-- [ ] Configure the scheduling platform to require **full payment** at the time of booking — not a
-      deposit, and not pay-on-the-day.
-- [ ] Verify the currency is **AUD** and that prices display as $179 / $239 / $269.
-- [ ] Run a test payment in Stripe test mode.
-- [ ] Test the cancellation and refund workflow, including a partial (50%) refund.
-- [ ] Confirm the customer receives a receipt.
-- [ ] Confirm refunds are returned to the original payment method.
-- [ ] Switch from test mode to live mode only after all of the above succeed.
+Never expose either through a `VITE_*` variable — every `VITE_*` value is readable by the browser.
+Never paste a key into a commit, a comment or a log line.
+
+## Webhook
+
+- Endpoint URL: `https://<your-domain>/.netlify/functions/stripe-webhook`
+- Events to send: `checkout.session.completed`, `checkout.session.expired`, `charge.refunded`
+- Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+
+The handler verifies the signature against the **raw** request body, records every event id in
+`stripe_events`, and ignores an id it has already processed — so a redelivery cannot double-confirm
+or double-charge.
+
+## Test-mode checklist
+
+- [ ] `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` set in Netlify (test-mode values).
+- [ ] Webhook endpoint added with the three events above.
+- [ ] Complete a booking with card `4242 4242 4242 4242`; confirm `/booking-confirmed` shows the
+      booking and the reference matches the row in Supabase.
+- [ ] Confirm the customer confirmation email and owner notification arrive.
+- [ ] Start a booking and abandon the Stripe page; confirm the slot is held, then released, and that
+      `/book?checkout=cancelled` explains nothing was charged.
+- [ ] Let a hold lapse without paying; confirm `checkout.session.expired` marks it `expired` and the
+      time becomes bookable again.
+- [ ] Cancel a paid booking in `/admin` with each reason; confirm the refund amount matches the
+      policy table below and appears in Stripe.
+- [ ] Confirm a repeated cancel does not refund twice.
+- [ ] Reschedule a paid booking; confirm the payment is preserved and the customer is emailed.
+
+Only switch to live keys once every box above passes.
 
 ## Refunds
 
-The published policy at `/booking-policy` is the source of truth:
+The published policy at `/booking-policy` is the source of truth, and
+`shared/booking/policy.ts` is that policy expressed as data:
 
 | Situation | Outcome |
 | --- | --- |
@@ -48,11 +72,9 @@ The published policy at `/booking-policy` is the source of truth:
 | No-show | 50% refunded, 50% retained |
 | Weather / unsuitable conditions determined by Drone Confidence | Free reschedule or full refund, no fee |
 
-If the scheduling platform can't issue a 50% refund automatically, issue it manually in the Stripe
-dashboard. Keep the wording on the website unchanged — it already tells customers refunds may take
-several business days depending on their bank.
+The amount is always computed on the server from the booking's own start time and the amount
+actually paid. A refund figure is never accepted from a browser, refunds carry a Stripe idempotency
+key, and anything already refunded is subtracted so a repeated action cannot pay out twice.
 
-## If the payment provider changes
-
-Nothing in `src` needs to change except the provider name used by the privacy page:
-`siteConfig.providers.payment` in `src/config/site.ts`.
+Refunds are issued to the original payment method and can take several business days to appear —
+which is what the site already tells customers.

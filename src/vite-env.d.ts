@@ -1,16 +1,16 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Public booking URLs. Optional — the site builds and runs without any of them. */
-  readonly VITE_BOOKING_ENABLED?: string
-  readonly VITE_BOOKING_PROVIDER?: string
-  readonly VITE_BOOKING_DISPLAY_MODE?: string
-  readonly VITE_BOOKING_URL?: string
-  readonly VITE_BOOKING_FIRST_FLIGHT_URL?: string
-  readonly VITE_BOOKING_FLY_CONFIDENCE_URL?: string
-  readonly VITE_BOOKING_PHOTO_VIDEO_URL?: string
-  readonly VITE_BOOKING_EMBED_URL?: string
-  readonly VITE_BOOKING_OPEN_IN_NEW_TAB?: string
+  /**
+   * Supabase Auth for the owner login at /admin only. Both are optional: when
+   * they are absent the site still builds, the public pages are unaffected and
+   * /admin/login reports that the dashboard is not configured.
+   *
+   * These are the publishable browser credentials. `SUPABASE_SECRET_KEY` is
+   * server-only and must never be exposed through a VITE_ variable.
+   */
+  readonly VITE_SUPABASE_URL?: string
+  readonly VITE_SUPABASE_PUBLISHABLE_KEY?: string
   /** Public site details. */
   readonly VITE_SITE_URL?: string
   readonly VITE_CONTACT_EMAIL?: string

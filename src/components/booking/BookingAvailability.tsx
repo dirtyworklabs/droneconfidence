@@ -1,102 +1,143 @@
-import { CalendarClock } from 'lucide-react'
-import { AnchorButton, LinkButton } from '@/components/ui/Button'
-import { BookingEmbed } from '@/components/booking/BookingEmbed'
-import { resolveAvailabilitySource } from '@/lib/bookingService'
-import { BOOKING_QUESTION_QUERY } from '@/lib/routes'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { RefreshCw } from 'lucide-react'
+import type { AvailabilityDay, AvailabilityResponse } from '@shared/booking/types'
+import { Button } from '@/components/ui/Button'
+import { BookingUnavailable } from '@/components/booking/BookingUnavailable'
+import { SlotPicker } from '@/components/booking/SlotPicker'
+import { fetchAvailability } from '@/lib/bookingService'
 import { track } from '@/lib/analytics'
 import type { LocationId, SessionId } from '@/types'
 
 interface BookingAvailabilityProps {
   sessionId: SessionId
   locationId: LocationId
+  selected: string | null
+  onSelect: (startsAtIso: string) => void
+  /** Bumped by the flow to force a fresh lookup after a rejected slot. */
+  refreshToken?: number
+  /** Reports the zone the server formats times in, so later steps agree with it. */
+  onTimeZone?: (timeZone: string) => void
 }
 
+type State =
+  | { kind: 'loading' }
+  | { kind: 'ok'; days: AvailabilityDay[]; timeZone: string }
+  | { kind: 'empty' }
+  | { kind: 'unavailable' }
+
 /**
- * Operational fallback.
+ * Step 3 — real availability.
  *
- * Shown whenever live availability can't be reached — before the booking
- * integration is implemented, and afterwards if it's unreachable. It is an
- * ordinary service message, not a launch or waitlist message, and it never
- * leaves the visitor without a next step.
+ * The only thing this component knows is how to ask the availability endpoint and
+ * render what comes back. There is no local calendar, no sample data and no
+ * client-side idea of opening hours: if the server returns no days, the step says
+ * so. Selecting a time is not a reservation — the slot is reserved when the
+ * customer continues to payment, and re-checked then.
  */
-const Unavailable = () => (
-  <div className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-sand/80 bg-sand-soft/70 p-6 sm:p-7">
-    <div className="flex items-start gap-3">
-      <CalendarClock aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-sage" />
-      <div className="flex flex-col gap-2">
-        <p className="font-display text-[1.08rem] font-semibold tracking-[-0.02em] text-ink">
-          Online booking is temporarily unavailable.
-        </p>
-        <p className="measure text-[0.97rem] leading-relaxed text-ink-soft">
-          Live times can&rsquo;t be shown right now. Send us a message with the session and training
-          area you&rsquo;d like and we&rsquo;ll come back to you with the next available times.
-        </p>
-        <p className="text-[0.88rem] leading-relaxed text-ink-muted">
-          A message doesn&rsquo;t reserve a time or take a payment — we&rsquo;ll confirm everything
-          with you first.
-        </p>
+export const BookingAvailability = ({
+  sessionId,
+  locationId,
+  selected,
+  onSelect,
+  refreshToken = 0,
+  onTimeZone,
+}: BookingAvailabilityProps) => {
+  const [state, setState] = useState<State>({ kind: 'loading' })
+  const [reloadCount, setReloadCount] = useState(0)
+  // Only the first unavailable render per selection is worth an event.
+  const reported = useRef('')
+
+  useEffect(() => {
+    const controller = new AbortController()
+    let active = true
+    setState({ kind: 'loading' })
+
+    fetchAvailability({ sessionId, locationId }, controller.signal)
+      .then((response: AvailabilityResponse) => {
+        if (!active) return
+        if (response.status === 'ok') {
+          setState({ kind: 'ok', days: response.days, timeZone: response.timeZone })
+          onTimeZone?.(response.timeZone)
+        } else if (response.status === 'empty') {
+          setState({ kind: 'empty' })
+          onTimeZone?.(response.timeZone)
+        } else {
+          setState({ kind: 'unavailable' })
+        }
+      })
+      .catch(() => {
+        if (active) setState({ kind: 'unavailable' })
+      })
+
+    return () => {
+      active = false
+      controller.abort()
+    }
+  }, [sessionId, locationId, refreshToken, reloadCount, onTimeZone])
+
+  const key = `${sessionId}:${locationId}:${state.kind}`
+  useEffect(() => {
+    if (state.kind !== 'unavailable' && state.kind !== 'empty') return
+    if (reported.current === key) return
+    reported.current = key
+    track('booking_unavailable_shown', {
+      session: sessionId,
+      location: locationId,
+      reason: state.kind,
+    })
+  }, [key, state.kind, sessionId, locationId])
+
+  const reload = useCallback(() => setReloadCount((count) => count + 1), [])
+
+  if (state.kind === 'loading') {
+    return (
+      <p aria-live="polite" className="text-[0.97rem] leading-relaxed text-ink-soft">
+        Checking available times…
+      </p>
+    )
+  }
+
+  if (state.kind === 'empty') {
+    return (
+      <div className="flex flex-col gap-4">
+        <BookingUnavailable body="There are no available times for this session and training area at the moment. Send us a message and we’ll let you know as soon as more times open up." />
+        <div>
+          <Button type="button" variant="quiet" onClick={reload}>
+            Check again
+          </Button>
+        </div>
       </div>
-    </div>
+    )
+  }
 
-    <div className="pt-1">
-      <LinkButton to={BOOKING_QUESTION_QUERY} variant="secondary">
-        Contact Drone Confidence
-      </LinkButton>
-    </div>
-  </div>
-)
-
-/**
- * Step 3 — the integration boundary.
- *
- * This component is the only place in the site that knows how live availability
- * is reached. It renders a configured provider hand-off when one genuinely
- * exists, and the operational fallback otherwise. No sample dates, no sample
- * times, no fake calendar and no fake confirmation.
- *
- * The next implementation adds a slot picker here, driven by
- * `resolveAvailabilitySource` / `BookingService` in `src/lib/bookingService.ts`.
- * Nothing else on /book has to change.
- */
-export const BookingAvailability = ({ sessionId, locationId }: BookingAvailabilityProps) => {
-  const source = resolveAvailabilitySource({ sessionId, locationId })
+  if (state.kind === 'unavailable') {
+    return (
+      <div className="flex flex-col gap-4">
+        <BookingUnavailable />
+        <div>
+          <Button type="button" variant="quiet" onClick={reload}>
+            Try again
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col gap-4">
-      {source.kind === 'embed' ? (
-        <BookingEmbed url={source.url} />
-      ) : source.kind === 'handoff' ? (
-        <div className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-ink/8 bg-surface p-6 shadow-[var(--shadow-raise)] sm:p-7">
-          <p className="measure text-[0.99rem] leading-relaxed text-ink-soft">
-            Continue to choose an available time for your session, tell us about your drone and
-            complete payment securely.
-          </p>
-          <div>
-            <AnchorButton
-              href={source.target.href}
-              newTab={source.target.newTab}
-              external
-              size="lg"
-              onClick={() =>
-                track('booking_integration_opened', { session: sessionId, location: locationId })
-              }
-            >
-              Choose a date &amp; time
-            </AnchorButton>
-          </div>
-        </div>
-      ) : (
-        <Unavailable />
-      )}
-
-      {import.meta.env.DEV ? (
-        <p className="rounded-[var(--radius-control)] border border-dashed border-ink/20 px-4 py-3 text-[0.82rem] leading-relaxed text-ink-muted">
-          Dev note (never rendered in production): availability source is
-          &ldquo;{source.kind}&rdquo;. Implement <code>getBookingService()</code> and add the{' '}
-          <code>service</code> case in <code>src/lib/bookingService.ts</code> to render real slots
-          here.
-        </p>
-      ) : null}
+    <div className="flex flex-col gap-5">
+      <SlotPicker
+        days={state.days}
+        timeZone={state.timeZone}
+        selected={selected}
+        onSelect={onSelect}
+      />
+      <p className="flex items-center gap-2 text-[0.85rem] text-ink-muted">
+        <RefreshCw aria-hidden="true" className="size-3.5 shrink-0" />
+        Times can be taken by someone else while you&rsquo;re booking.{' '}
+        <Button type="button" variant="quiet" size="compact" onClick={reload} className="min-h-0">
+          Refresh times
+        </Button>
+      </p>
     </div>
   )
 }
