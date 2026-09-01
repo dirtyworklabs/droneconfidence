@@ -3,7 +3,6 @@ import { Section } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
 import { BookingCta } from '@/components/booking/BookingCta'
 import { TopoBackdrop } from '@/components/visuals/TopoBackdrop'
-import { formatDuration, formatPrice, sessions } from '@/content/sessions'
 
 export const FinalCta = () => (
   <Section tone="deep" space="lg" aria-labelledby="final-cta-heading" className="overflow-hidden">
