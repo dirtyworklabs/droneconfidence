@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { PageHero } from '@/components/marketing/PageHero'
 import { SessionComparison } from '@/components/marketing/SessionComparison'
+import { SessionApproach } from '@/components/marketing/SessionApproach'
 import { SessionDetail } from '@/components/marketing/SessionDetail'
 import { WhatToBring } from '@/components/marketing/WhatToBring'
 import { SafetyTrust } from '@/components/marketing/SafetyTrust'
@@ -38,8 +39,9 @@ const Sessions = () => {
         intro={
           <>
             <p>
-              Every session is private, one-on-one and flown on your own aircraft. Session lengths are
-              fixed, so you always know exactly what you&rsquo;re booking.
+              Choose the session that best matches where you are now. Each has a fixed duration and
+              clear focus, while the coaching itself adapts to your aircraft and what you want to
+              improve.
             </p>
           </>
         }
@@ -48,6 +50,8 @@ const Sessions = () => {
       <Section tone="canvas" space="sm" aria-labelledby="at-a-glance-heading">
         <SessionComparison />
       </Section>
+
+      <SessionApproach />
 
       {sessions.map((session, index) => (
         <SessionDetail key={session.id} session={session} index={index} />

@@ -1,9 +1,7 @@
 import { Hero } from '@/components/marketing/Hero'
-import { ExperienceStrip } from '@/components/marketing/ExperienceStrip'
 import { Introduction } from '@/components/marketing/Introduction'
 import { SessionsOverview } from '@/components/marketing/SessionsOverview'
 import { Differentiator } from '@/components/marketing/Differentiator'
-import { LocationsPreview } from '@/components/marketing/LocationsPreview'
 import { HowItWorks } from '@/components/marketing/HowItWorks'
 import { AboutTrust } from '@/components/marketing/AboutTrust'
 import { Testimonials } from '@/components/marketing/Testimonials'
@@ -24,15 +22,18 @@ const Home = () => {
     structuredData: [localBusinessSchema(), websiteSchema(), serviceSchema()],
   })
 
+  /**
+   * Deliberate order: what this is, how it works, why a full course is
+   * unnecessary, which session suits you, then trust and the booking CTA.
+   * Training areas live on /locations and the experience strip on /about.
+   */
   return (
     <>
       <Hero />
-      <ExperienceStrip />
+      <HowItWorks />
       <Introduction />
       <SessionsOverview />
       <Differentiator />
-      <LocationsPreview />
-      <HowItWorks />
       <AboutTrust />
       <Testimonials />
       <FaqPreview />

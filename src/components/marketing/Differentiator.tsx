@@ -1,34 +1,24 @@
 import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
+import { LinkButton } from '@/components/ui/Button'
 import { TopoBackdrop } from '@/components/visuals/TopoBackdrop'
+import { ROUTES } from '@/lib/routes'
 
-/** Three real situations, not a catalogue of them. */
+/**
+ * Three real situations, not a catalogue of them. Kept short on purpose — the
+ * detailed inclusions for each session live on /sessions.
+ */
 const examples = [
-  'If you’ve bought a DJI Mini and you’re worried about losing it, we’ll work on that.',
-  'If Return-to-Home doesn’t make sense, we’ll go through it.',
-  'If you can fly perfectly well but your video looks jerky, we’ll spend the time on movement and camera technique.',
-]
-
-const benefits = [
-  {
-    title: 'Your aircraft',
-    body: 'Learn the drone, controller and settings you’ll actually use.',
-  },
-  {
-    title: 'Real flying time',
-    body: 'Most of the session happens with the controller in your hands.',
-  },
-  {
-    title: 'Answers when you need them',
-    body: 'Work through questions and uncertainty while they are actually happening.',
-  },
+  'New drone? Work through setup, controls, Return-to-Home and the basics.',
+  'Already flying? Build smoother control, orientation and better judgement.',
+  'Want better imagery? Focus on camera settings, movement and shot technique.',
 ]
 
 /**
- * The one section that carries the whole personalised-training argument. It
- * replaced two near-identical sections, so the page makes the point once and
- * makes it properly.
+ * One concise editorial statement of the personalised coaching model. The
+ * fuller philosophy (own aircraft, real flying time, answers in the moment)
+ * now lives in SessionApproach on /sessions.
  */
 export const Differentiator = () => (
   <Section tone="deep" space="md" aria-labelledby="differentiator-heading" className="overflow-hidden">
@@ -41,11 +31,20 @@ export const Differentiator = () => (
             Your drone. Your questions. Your session.
           </h2>
           <p className="measure font-display text-[1.15rem] font-semibold leading-snug tracking-[-0.02em] text-sage-soft">
-            This isn&rsquo;t group training with a fixed lesson plan.
+            This isn&rsquo;t group training with a fixed lesson plan. We start with your drone, your
+            experience and what you actually want to improve.
           </p>
+          <p className="measure text-[1.02rem] leading-relaxed text-sage-soft/85">
+            The goal is confidence to go flying without us.
+          </p>
+          <div className="pt-2">
+            <LinkButton to={ROUTES.sessions} variant="onDark" size="lg" withArrow>
+              Explore the Sessions
+            </LinkButton>
+          </div>
         </Reveal>
 
-        <Reveal delay={0.08} as="ul" className="flex flex-col">
+        <Reveal delay={0.08} as="ul" className="flex flex-col lg:pt-2">
           {examples.map((example) => (
             <li
               key={example}
@@ -56,24 +55,6 @@ export const Differentiator = () => (
           ))}
         </Reveal>
       </div>
-
-      <Reveal className="mt-14 grid gap-x-14 gap-y-8 border-t border-sage/25 pt-10 sm:grid-cols-3">
-        {benefits.map((benefit) => (
-          <div key={benefit.title}>
-            <h3 className="font-display text-[1.1rem] font-semibold tracking-[-0.02em] text-canvas">
-              {benefit.title}
-            </h3>
-            <p className="pt-2 text-[0.99rem] leading-relaxed text-sage-soft/85">{benefit.body}</p>
-          </div>
-        ))}
-      </Reveal>
-
-      <Reveal
-        delay={0.06}
-        className="mt-12 font-display text-[clamp(1.3rem,2.8vw,1.75rem)] font-semibold leading-snug tracking-[-0.025em] text-canvas"
-      >
-        The goal is confidence to go flying without us.
-      </Reveal>
     </Container>
   </Section>
 )
