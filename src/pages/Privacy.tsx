@@ -5,7 +5,6 @@ import { Section } from '@/components/ui/Section'
 import { Reveal } from '@/components/ui/Reveal'
 import { PageHero } from '@/components/marketing/PageHero'
 import { hasContactEmail, siteConfig } from '@/config/site'
-import { bookingConfig } from '@/config/booking'
 import { useSeo } from '@/lib/seo'
 
 interface PrivacySection {
@@ -17,10 +16,10 @@ interface PrivacySection {
 const { scheduling, payment, hosting } = siteConfig.providers
 
 /**
- * Written to match what the site actually does today. The scheduling and
- * payment provider names come from `siteConfig.providers`, and the paragraph
- * about them only appears once booking is enabled — so the policy never
- * describes processing that isn't happening yet.
+ * Written for the operating business. Provider names are read from
+ * `siteConfig.providers`, never typed into the copy, so changing scheduling or
+ * payment provider is a configuration change rather than a rewrite of this
+ * page.
  */
 const privacySections: PrivacySection[] = [
   {
@@ -37,6 +36,11 @@ const privacySections: PrivacySection[] = [
           <li>drone and experience details you choose to tell us</li>
           <li>your preferred session, training area or location, where you select one</li>
         </ul>
+        <p>
+          When you book a session, we receive the booking details you provide — your name, contact
+          details, chosen session, training area, appointment time, drone and experience
+          information, and any notes you add — so the session can be arranged and delivered.
+        </p>
         <p>
           Our hosting provider ({hosting}) also processes standard technical information such as IP
           address, browser type and request logs in order to serve the website and protect it from
@@ -78,19 +82,16 @@ const privacySections: PrivacySection[] = [
           Website hosting and form submissions are handled by {hosting}. Form submissions are stored
           with that provider so we can read and reply to them.
         </p>
-        {bookingConfig.bookingEnabled ? (
-          <p>
-            Session scheduling is handled by {scheduling}, and payments are processed by {payment}.
-            When you book, the details you enter are provided to those services so your booking and
-            payment can be completed. Their own privacy terms apply to the information they hold.
-          </p>
-        ) : (
-          <p>
-            Online booking and payment are not yet enabled on this website. When they are, this
-            policy will be updated to name the scheduling and payment providers involved and explain
-            what they receive.
-          </p>
-        )}
+        <p>
+          Session scheduling is handled by {scheduling}, and payments are processed by {payment}.
+          When you book, the details you enter are provided to those services so your booking and
+          payment can be completed. Their own privacy terms apply to the information they hold.
+        </p>
+        <p>
+          Card details are entered with, and processed by, the payment service. They are not
+          collected, transmitted or stored by this website, and Drone Confidence does not store your
+          card number, CVV or expiry date.
+        </p>
         <p>
           These providers may process information outside Australia. We can&rsquo;t claim that all
           data stays within Australia, or that no international processing occurs.

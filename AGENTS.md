@@ -7,24 +7,29 @@ Working notes for anyone (human or agent) changing this codebase.
 A marketing website for a Sydney private drone-coaching business. Vite + React 19 + TypeScript,
 Tailwind CSS v4, React Router v7, Motion for React, deployed to Netlify as a static SPA.
 
-It is **not** a booking application. Do not add a database, customer accounts, an admin dashboard, a
-payment form, a scheduling backend or an email-sending service. Scheduling and payment are external.
-Netlify Forms covers everything the site needs from a "backend".
+The **public booking UI is complete** — `/book` is a real, permanent booking flow with session and
+training-area selection. The **live booking integration is a separate implementation step**: this
+repository is not a booking application. Do not add a database, customer accounts, an admin dashboard,
+a payment form, a scheduling backend or an email-sending service. Availability, payment,
+confirmation, emails and administration live with the providers behind `/book`. Netlify Forms covers
+everything the site itself needs from a "backend".
 
 ## Architecture
 
 ```
 src/
-  config/       booking.ts, site.ts — every public value and the booking resolver
+  config/       booking.ts (integration config only), site.ts — every public value
   content/      sessions, locations, faqs, testimonials, images — all copy lives here
   components/
     ui/         Button, Container, Section, Eyebrow, SectionHeading, Reveal, Accordion
-    layout/     Header, Footer, MobileNav, MobileBookingBar, Layout, navigation
-    booking/    BookingCta, SessionChoiceCard, BookingEmbed
-    forms/      Fields, EnquiryForm, ContactForm, SuccessPanel
+    layout/     Header, Footer, MobileNav, Layout, Wordmark, navigation
+    booking/    BookingCta, useBookingSelection, BookingProgress, BookingStep, BookingChoice,
+                SessionSelector, LocationSelector, BookingSummary, BookingAvailability, BookingEmbed
+    forms/      Fields, ContactForm, SuccessPanel
     marketing/  one component per page section, carrying the approved copy
     visuals/    ImageFrame, Treatments (SVG image fallbacks), TopoBackdrop
-  lib/          seo, structuredData, netlifyForms, validation, analytics, motion, routes, cn
+  lib/          seo, structuredData, netlifyForms, validation, analytics, motion, routes, cn,
+                bookingService (the booking integration seam)
   pages/        one file per route, default-exported for lazy loading
   styles/       index.css — the entire design system (@theme tokens + @utility)
   types/        shared domain types
@@ -35,18 +40,36 @@ src/
 
 ## Non-obvious decisions
 
-**Booking is config-derived, not declared.** `src/config/booking.ts` computes `bookingEnabled` as
-"the flag is on **and** at least one absolute `http(s)` URL is usable". A missing or malformed URL
-can't produce a dead CTA. `resolveBookingTarget(sessionId?)` returns a discriminated
-`BookingTarget` (`internal` or `external`), and `BookingCta` is the only component allowed to build a
-booking link. Never hard-code a booking URL in a component.
+**Every CTA goes to `/book`, and only `BookingCta` builds the link.** `bookingPath({ session,
+location })` in `src/lib/routes.ts` is the only place a booking URL is assembled. Pass `sessionId` or
+`locationId` to preselect. Never hard-code a booking URL in a component, and never point a CTA
+off-site.
 
-**Only `/book` knows the integration state.** No other page mentions that booking isn't live. If you
-add a "coming soon" note anywhere else, you've broken the design.
+**Public website state and booking integration state are separate.** `src/config/booking.ts` holds
+*only* integration configuration and must not influence marketing copy — no page, FAQ, step list or
+heading may branch on it. Its mode is derived, not declared: it can only leave `'none'` when an
+absolute `http(s)` URL is genuinely usable.
+
+**`src/lib/bookingService.ts` is the integration seam.** It is the only consumer of
+`src/config/booking.ts`, and `BookingAvailability` is its only consumer in turn. The next
+implementation implements `BookingService`, returns it from `getBookingService()`, and adds a
+`{ kind: 'service' }` case to `AvailabilitySource`. Nothing else in `/book` or in marketing changes.
+
+**Never fabricate availability.** No sample slots, hard-coded times, fake calendar, fake
+confirmation, customer records or placeholder checkout. When nothing is configured, the date and time
+step says "Online booking is temporarily unavailable." and offers Contact. That wording is
+operational, never "coming soon", "being prepared" or a waitlist. Developer-facing notes stay behind
+`import.meta.env.DEV`.
+
+**Booking selection lives in the URL.** `useBookingSelection()` validates `?session=` and
+`?location=` against `src/content/*`, drops invalid values, and mirrors changes with
+`preventScrollReset`. React state plus search params only — no state library. Never put personal data
+in the URL.
 
 **Netlify Forms needs `public/__forms.html`.** Netlify's build bot can't see client-rendered forms,
-so that hidden skeleton registers both forms and every field name. Adding a field to a React form
-without adding it there means the submission is rejected. AJAX POSTs go to `/__forms.html`, not `/`.
+so that hidden skeleton registers the `contact` form and every field name. Adding a field to a React
+form without adding it there means the submission is rejected. AJAX POSTs go to `/__forms.html`, not
+`/`.
 
 **Tailwind v4 has no config file.** Design tokens are `@theme` variables in `src/styles/index.css`;
 custom utilities are `@utility` blocks in the same file. Use the token names (`bg-canvas`,
@@ -95,6 +118,10 @@ clamps animation globally under `prefers-reduced-motion`.
   endorsement.
 - Never guarantee a specific park, and never imply a session can be extended.
 - No `/admin` route, no custom admin dashboard.
+- Don't build the booking backend here: no booking CRUD, live calendar, Google Calendar sync, Acuity
+  API call, Stripe Checkout or webhook, email sending, confirmation number, refund or availability
+  rule engine. That is the separate live-integration step, reached through
+  `src/lib/bookingService.ts`.
 
 ## Verifying a change
 
@@ -103,5 +130,7 @@ npm run build   # tsc -b then vite build; fails on any type error
 npm run preview # check routes, console, and a mobile viewport
 ```
 
-Forms can only be tested on a deployed URL. Spot-check `/book` in both states by temporarily setting
-`VITE_BOOKING_ENABLED=true` with a real URL, then reverting.
+The contact form can only be tested on a deployed URL. On `/book`, walk the four routing cases —
+`/book`, `?session=` (three values), `?location=` (two values), and an invalid value that should be
+dropped. To check the configured integration path, temporarily set `VITE_BOOKING_ENABLED=true` with a
+real absolute URL, then revert.

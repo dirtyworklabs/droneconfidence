@@ -1,17 +1,20 @@
 /**
- * Booking configuration layer.
+ * Booking integration configuration.
  *
- * The website never talks to a scheduling API. It only needs public booking
- * URLs, so switching provider later is a configuration change rather than a
- * rebuild. Until real URLs exist, every booking CTA routes to /book, which
- * renders a polished pre-integration state.
+ * Important: this file does **not** describe the state of the public website.
+ * The public booking experience at /book is permanent and always rendered, and
+ * no marketing copy anywhere on the site depends on anything in here.
  *
- * No secrets belong in this file, or in any VITE_ variable.
+ * What this configuration controls is only the integration point where live
+ * availability or checkout is required — the availability step inside /book.
+ * It is consumed through `src/lib/bookingService.ts`, never directly by a
+ * marketing component.
+ *
+ * No secrets belong in this file, or in any VITE_ variable: every VITE_ value
+ * is readable in the browser. Public booking URLs are not secrets.
  */
 
-import type { BookingDisplayMode, BookingTarget, SessionId } from '@/types'
-
-const BOOK_PAGE = '/book'
+import type { BookingIntegrationMode, ExternalBookingTarget, SessionId } from '@/types'
 
 const readString = (value: string | undefined): string => (value ?? '').trim()
 
@@ -22,7 +25,7 @@ const readFlag = (value: string | undefined, fallback: boolean): boolean => {
   return fallback
 }
 
-/** Only absolute http(s) URLs are ever used, so a malformed value can't produce a dead CTA. */
+/** Only absolute http(s) URLs are ever used, so a malformed value can't produce a dead control. */
 export const isUsableBookingUrl = (value: string | undefined): boolean => {
   const candidate = readString(value)
   if (candidate.length === 0) return false
@@ -34,91 +37,69 @@ export const isUsableBookingUrl = (value: string | undefined): boolean => {
   }
 }
 
-const readDisplayMode = (value: string | undefined): BookingDisplayMode => {
-  const normalised = readString(value).toLowerCase()
-  if (normalised === 'external' || normalised === 'embed' || normalised === 'disabled') {
-    return normalised
-  }
-  // External hand-off is the intended default: more reliable on mobile, and it
-  // keeps payment and authentication out of an iframe.
-  return 'external'
-}
-
+/**
+ * Optional per-session hand-off URLs. Kept because a provider that exposes one
+ * public link per appointment type is still the quickest route to real
+ * availability — but they are consumed by the booking flow, not by CTAs.
+ */
 const sessionUrls: Record<SessionId, string> = {
   'first-flight': readString(import.meta.env.VITE_BOOKING_FIRST_FLIGHT_URL),
   'fly-with-confidence': readString(import.meta.env.VITE_BOOKING_FLY_CONFIDENCE_URL),
   'photo-video': readString(import.meta.env.VITE_BOOKING_PHOTO_VIDEO_URL),
 }
 
-const generalBookingUrl = readString(import.meta.env.VITE_BOOKING_URL)
+const generalUrl = readString(import.meta.env.VITE_BOOKING_URL)
 const embedUrl = readString(import.meta.env.VITE_BOOKING_EMBED_URL)
 
-const anyUsableUrl =
-  isUsableBookingUrl(generalBookingUrl) ||
+const anyHandoffUrl =
+  isUsableBookingUrl(generalUrl) ||
   (Object.values(sessionUrls) as string[]).some((url) => isUsableBookingUrl(url))
 
-const requestedDisplayMode = readDisplayMode(import.meta.env.VITE_BOOKING_DISPLAY_MODE)
+const embedRequested = readString(import.meta.env.VITE_BOOKING_DISPLAY_MODE).toLowerCase() === 'embed'
+const embedReady = embedRequested && isUsableBookingUrl(embedUrl)
+
+/** Master switch for the integration layer only. Defaults to off. */
+const integrationRequested = readFlag(import.meta.env.VITE_BOOKING_ENABLED, false)
 
 /**
- * Booking is only ever considered enabled when a usable URL actually exists.
- * That guarantee is what lets every CTA in the site be rendered unconditionally.
+ * The mode is derived, never merely declared: it can only leave 'none' when a
+ * usable absolute URL actually exists. That guarantee is what lets the
+ * availability step render a safe fallback instead of a dead button.
  */
-const bookingEnabled = readFlag(import.meta.env.VITE_BOOKING_ENABLED, false) && anyUsableUrl
+const mode: BookingIntegrationMode = !integrationRequested
+  ? 'none'
+  : embedReady
+    ? 'embed'
+    : anyHandoffUrl
+      ? 'external'
+      : 'none'
 
-const embedAvailable = requestedDisplayMode === 'embed' && isUsableBookingUrl(embedUrl)
-
-export const bookingConfig = {
-  bookingEnabled,
-  bookingProvider: readString(import.meta.env.VITE_BOOKING_PROVIDER) || 'acuity',
-  bookingDisplayMode: (bookingEnabled
-    ? embedAvailable
-      ? 'embed'
-      : 'external'
-    : 'disabled') as BookingDisplayMode,
-  generalBookingUrl,
-  firstFlightBookingUrl: sessionUrls['first-flight'],
-  flyWithConfidenceBookingUrl: sessionUrls['fly-with-confidence'],
-  photoVideoBookingUrl: sessionUrls['photo-video'],
-  embedUrl: embedAvailable ? embedUrl : '',
+export const bookingIntegration = {
+  /** Named in the privacy policy via `siteConfig.providers`, not from here. */
+  provider: readString(import.meta.env.VITE_BOOKING_PROVIDER) || 'acuity',
+  mode,
+  /** True once live availability or checkout can genuinely be reached. */
+  configured: mode !== 'none',
+  embedUrl: embedReady ? embedUrl : '',
   /** Same-tab hand-off by default; no popups. */
   openInNewTab: readFlag(import.meta.env.VITE_BOOKING_OPEN_IN_NEW_TAB, false),
-  bookPagePath: BOOK_PAGE,
 } as const
 
-const internalTarget = (): BookingTarget => ({ kind: 'internal', href: BOOK_PAGE, external: false })
-
-const externalTarget = (href: string): BookingTarget => ({
-  kind: 'external',
-  href,
-  external: true,
-  newTab: bookingConfig.openInNewTab,
-})
-
 /**
- * Single resolver for every booking CTA in the site.
- *
- * - booking disabled → /book
- * - session-specific URL present → that URL
- * - otherwise a usable general URL → general URL
- * - anything missing or malformed → /book
+ * Resolves the external hand-off for a session, preferring a session-specific
+ * link. Returns null when nothing usable is configured — callers must handle
+ * that rather than rendering a link to nowhere.
  */
-export const resolveBookingTarget = (sessionId?: SessionId): BookingTarget => {
-  if (!bookingConfig.bookingEnabled) return internalTarget()
+export const resolveHandoffTarget = (sessionId?: SessionId | null): ExternalBookingTarget | null => {
+  if (bookingIntegration.mode !== 'external') return null
 
-  if (sessionId) {
-    const specific = sessionUrls[sessionId]
-    if (isUsableBookingUrl(specific)) return externalTarget(specific)
-  }
+  const specific = sessionId ? sessionUrls[sessionId] : ''
+  const href = isUsableBookingUrl(specific)
+    ? specific
+    : isUsableBookingUrl(generalUrl)
+      ? generalUrl
+      : ''
 
-  if (isUsableBookingUrl(bookingConfig.generalBookingUrl)) {
-    return externalTarget(bookingConfig.generalBookingUrl)
-  }
-
-  return internalTarget()
+  if (href.length === 0) return null
+  return { href, newTab: bookingIntegration.openInNewTab }
 }
-
-/**
- * True when a booking CTA leaves the site. Used to decide whether to show the
- * subtle external-link affordance.
- */
-export const leavesSite = (sessionId?: SessionId): boolean => resolveBookingTarget(sessionId).external

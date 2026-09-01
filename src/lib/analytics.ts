@@ -10,8 +10,10 @@
 export type AnalyticsEvent =
   | 'session_viewed'
   | 'booking_clicked'
-  | 'booking_handoff_viewed'
-  | 'external_booking_opened'
+  | 'booking_page_viewed'
+  | 'booking_session_selected'
+  | 'booking_location_selected'
+  | 'booking_integration_opened'
   | 'enquiry_submitted'
 
 type AnalyticsPayload = Record<string, string | number | boolean | undefined>

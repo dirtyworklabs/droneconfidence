@@ -26,7 +26,8 @@ export const BookingPaymentInfo = () => (
             </p>
             <p className="flex items-start gap-2.5 text-[0.95rem] text-ink-muted">
               <Lock aria-hidden="true" className="mt-1 size-4 shrink-0 text-sage" />
-              Payment is processed securely by the external booking and payment provider.
+              Payment is processed securely by our payment provider. Drone Confidence never sees or
+              stores your card details.
             </p>
           </Reveal>
         </div>

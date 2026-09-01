@@ -1,19 +1,22 @@
-import { bookingConfig } from '@/config/booking'
+interface BookingEmbedProps {
+  /** Absolute provider URL, already validated by the booking config. */
+  url: string
+}
 
 /**
- * Embedded scheduler. Only rendered when an embed URL genuinely exists and
- * embed mode has been deliberately enabled — never an empty iframe.
+ * Embedded scheduler.
+ *
+ * Rendered only by the availability step, and only when embed mode is
+ * deliberately configured with a real URL — never an empty iframe.
  */
-export const BookingEmbed = () => {
-  if (bookingConfig.bookingDisplayMode !== 'embed' || bookingConfig.embedUrl.length === 0) {
-    return null
-  }
+export const BookingEmbed = ({ url }: BookingEmbedProps) => {
+  if (url.length === 0) return null
 
   return (
     <div className="overflow-hidden rounded-[var(--radius-panel)] border border-ink/8 bg-surface shadow-[var(--shadow-raise)]">
       <iframe
-        src={bookingConfig.embedUrl}
-        title="Book a Drone Confidence session"
+        src={url}
+        title="Choose a date and time for your Drone Confidence session"
         loading="lazy"
         className="h-[42rem] w-full border-0"
       />

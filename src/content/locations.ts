@@ -60,11 +60,10 @@ export const customLocationCopy =
 export const customLocationNote =
   'Additional travel, venue or permit costs may apply to custom locations and will always be confirmed before you book.'
 
-export const trainingAreaOptions = [
-  ...locations.map((location) => location.enquiryValue),
-  'Custom location enquiry',
-]
-
+/**
+ * Experience levels. Used by the enquiry intake questions, and by the customer
+ * details step of the booking flow when that is implemented.
+ */
 export const experienceOptions = [
   'I’ve never flown',
   'I’ve flown a few times',
