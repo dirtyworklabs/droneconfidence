@@ -39,7 +39,7 @@ export const sessions: Session[] = [
     ],
     bestFor: 'New drone owners and complete beginners.',
     bestForShort: 'Complete beginners',
-    ctaLabel: 'Book First Flight — $179',
+    ctaLabel: 'Book First Flight',
     imageSlot: 'session-first-flight',
   },
   {
@@ -75,7 +75,7 @@ export const sessions: Session[] = [
     bestFor:
       'Beginner and developing pilots who want to become more capable and relaxed in the air.',
     bestForShort: 'Developing pilots',
-    ctaLabel: 'Book Fly With Confidence — $239',
+    ctaLabel: 'Book Fly With Confidence',
     imageSlot: 'session-fly-with-confidence',
   },
   {
@@ -114,7 +114,7 @@ export const sessions: Session[] = [
     bestFor:
       'Drone owners, photographers, content creators and small businesses wanting better aerial imagery.',
     bestForShort: 'Aerial photo/video',
-    ctaLabel: 'Book Photo & Video — $269',
+    ctaLabel: 'Book Photo & Video',
     imageSlot: 'session-photo-video',
   },
 ]

@@ -1,6 +1,12 @@
 import type { ImageSlotKey } from '@/types'
 
-export type FallbackTreatment = 'flight-path' | 'controller' | 'orbit' | 'framing' | 'topography' | 'portrait'
+export type FallbackTreatment =
+  | 'flight-path'
+  | 'controller'
+  | 'orbit'
+  | 'framing'
+  | 'topography'
+  | 'credential'
 
 export interface ImageSlot {
   /**
@@ -67,8 +73,8 @@ export const imageSlots: Record<ImageSlotKey, ImageSlot> = {
   'about-tom': {
     src: '',
     alt: 'Tom Gerrard, founder of Drone Confidence',
-    fallback: 'portrait',
-    fallbackCaption: 'Tom Gerrard',
+    fallback: 'credential',
+    fallbackCaption: 'In Motion Aero · commercial drone operations',
   },
 }
 

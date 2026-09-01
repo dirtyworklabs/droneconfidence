@@ -65,36 +65,20 @@ const TracedPath = ({
   )
 }
 
-const Marker = ({ cx, cy, delay = 1.5 }: { cx: number; cy: number; delay?: number }) => {
-  const reduced = useReducedMotion()
-  const content = (
-    <>
-      <circle cx={cx} cy={cy} r={13} fill="none" stroke="#B9DDE5" strokeWidth={1} opacity={0.6} />
-      <circle cx={cx} cy={cy} r={5} fill="#E9DCC5" />
-    </>
-  )
-
-  if (reduced) return <g>{content}</g>
-
-  return (
-    <motion.g
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.5, delay, ease: EASE_CALM }}
-      style={{ transformOrigin: `${cx}px ${cy}px` }}
-    >
-      {content}
-    </motion.g>
-  )
-}
+/** Static. The traced path is the only movement in a treatment. */
+const Marker = ({ cx, cy }: { cx: number; cy: number }) => (
+  <g>
+    <circle cx={cx} cy={cy} r={13} fill="none" stroke="#B9DDE5" strokeWidth={1} opacity={0.6} />
+    <circle cx={cx} cy={cy} r={5} fill="#E9DCC5" />
+  </g>
+)
 
 const Frame = ({ children, className }: { children: React.ReactNode; className?: string }) => (
   <div className={cn('absolute inset-0', className)}>{children}</div>
 )
 
 const labelClass =
-  'pointer-events-none absolute bottom-4 left-5 right-5 flex items-center justify-between gap-3 font-sans text-[0.66rem] uppercase tracking-[0.18em]'
+  'pointer-events-none absolute bottom-4 left-5 right-5 font-sans text-[0.66rem] uppercase tracking-[0.18em]'
 
 /* ---------------------------------------------------------------- hero path */
 
@@ -120,14 +104,9 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => (
         <line x1="280" y1="213" x2="280" y2="304" strokeDasharray="3 6" />
         <line x1="264" y1="304" x2="296" y2="304" />
       </g>
-      <g fill="#DDEBE6" opacity="0.5" fontFamily="Inter, system-ui, sans-serif" fontSize="9" letterSpacing="1.6">
-        <text x="300" y="196">ALT 48 M</text>
-        <text x="300" y="212">HDG 214°</text>
-      </g>
     </svg>
     <div className={cn(labelClass, 'text-sage-soft/70')}>
       <span>{caption}</span>
-      <span aria-hidden="true">FLIGHT PATH</span>
     </div>
   </Frame>
 )
@@ -160,15 +139,10 @@ const ControllerTreatment = ({ caption }: { caption: string }) => (
         <line x1="334" y1="208" x2="410" y2="208" strokeDasharray="2 5" />
         <line x1="372" y1="170" x2="372" y2="246" strokeDasharray="2 5" />
       </g>
-      <g fill="#66716D" fontFamily="Inter, system-ui, sans-serif" fontSize="9" letterSpacing="1.6">
-        <text x="246" y="176">PITCH</text>
-        <text x="240" y="252">THROTTLE</text>
-      </g>
       <TracedPath d="M52 322C150 300 190 344 270 322s180 8 250-28" stroke="#337667" width={1.6} delay={0.3} />
     </svg>
     <div className={cn(labelClass, 'text-ink-muted')}>
       <span>{caption}</span>
-      <span aria-hidden="true">CONTROLS</span>
     </div>
   </Frame>
 )
@@ -186,18 +160,13 @@ const OrbitTreatment = ({ caption }: { caption: string }) => (
       </g>
       <TracedPath d="M270 72a132 132 0 1 1-0.1 0" stroke="#337667" width={2} dash="8 10" delay={0.25} />
       <circle cx="270" cy="204" r="4" fill="#163F37" />
-      <Marker cx={402} cy={204} delay={1.6} />
+      <Marker cx={402} cy={204} />
       <g stroke="#163F37" strokeOpacity="0.3" strokeWidth="1">
         <line x1="270" y1="204" x2="402" y2="204" strokeDasharray="3 6" />
-      </g>
-      <g fill="#66716D" fontFamily="Inter, system-ui, sans-serif" fontSize="9" letterSpacing="1.6">
-        <text x="300" y="196">RADIUS 40 M</text>
-        <text x="270" y="356" textAnchor="middle">ORIENTATION · TURNS</text>
       </g>
     </svg>
     <div className={cn(labelClass, 'text-ink-muted')}>
       <span>{caption}</span>
-      <span aria-hidden="true">ORBIT</span>
     </div>
   </Frame>
 )
@@ -229,14 +198,9 @@ const FramingTreatment = ({ caption }: { caption: string }) => (
         <path d="M100 340H60v-36" />
       </g>
       <circle cx="360" cy="153" r="5" fill="#E9DCC5" />
-      <g fill="#DDEBE6" opacity="0.55" fontFamily="Inter, system-ui, sans-serif" fontSize="9" letterSpacing="1.6">
-        <text x="62" y="380">f/2.8 · 1/240 · ISO 100</text>
-        <text x="478" y="380" textAnchor="end">4K · 24 FPS</text>
-      </g>
     </svg>
     <div className={cn(labelClass, 'text-sage-soft/70')}>
       <span>{caption}</span>
-      <span aria-hidden="true">FRAMING</span>
     </div>
   </Frame>
 )
@@ -273,37 +237,51 @@ const TopographyTreatment = ({ caption }: { caption: string }) => (
     </svg>
     <div className={cn(labelClass, 'text-ink-soft/70')}>
       <span>{caption}</span>
-      <span aria-hidden="true">TRAINING AREA</span>
     </div>
   </Frame>
 )
 
-/* ----------------------------------------------------------------- portrait */
+/* --------------------------------------------------------------- credential */
 
-const PortraitTreatment = ({ caption }: { caption: string }) => (
+/**
+ * Stands in for the founder portrait. Deliberately typographic rather than a
+ * generic silhouette: it states the one fact the section is about and carries
+ * the same contour-and-flight-path motif as every other treatment, so a real
+ * photograph can replace it later without changing anything around it.
+ */
+const CredentialTreatment = ({ caption }: { caption: string }) => (
   <Frame className="bg-sand text-eucalyptus-deep">
     <svg viewBox="0 0 420 520" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <rect width="420" height="520" fill="#e9dcc5" />
+      <g stroke="#163F37" strokeOpacity="0.07" strokeWidth="1">
+        {[70, 140, 210, 280, 350].map((x) => (
+          <line key={x} x1={x} y1="0" x2={x} y2="520" />
+        ))}
+      </g>
       <g fill="none" stroke="#163F37" strokeOpacity="0.16" strokeWidth="1">
-        <path d="M-20 380C60 344 140 404 250 368s140 20 220-16" />
-        <path d="M-20 424C70 388 150 446 260 410s130 22 210-14" />
-        <path d="M-20 470C80 434 160 490 270 454s120 24 200-12" />
+        <path d="M-20 330C60 294 140 354 250 318s140 20 220-16" />
+        <path d="M-20 378C70 342 150 400 260 364s130 22 210-14" />
+        <path d="M-20 428C80 392 160 448 270 412s120 24 200-12" />
+        <path d="M-20 480C90 444 170 498 280 462s110 26 190-10" />
       </g>
-      <circle cx="210" cy="216" r="104" fill="#f4ece0" />
-      <circle cx="210" cy="216" r="104" fill="none" stroke="#163F37" strokeOpacity="0.2" />
-      <path
-        d="M210 176a30 30 0 1 1 0 60 30 30 0 0 1 0-60zm0 74c34 0 60 20 66 48h-132c6-28 32-48 66-48z"
-        fill="#163F37"
-        opacity="0.28"
+      <TracedPath
+        d="M-10 300C70 244 130 296 210 240s130-34 230-78"
+        stroke="#337667"
+        width={1.8}
+        dash="7 10"
+        delay={0.3}
       />
-      <g stroke="#163F37" strokeOpacity="0.35" strokeWidth="1">
-        <line x1="210" y1="80" x2="210" y2="102" />
-        <line x1="210" y1="330" x2="210" y2="352" />
-      </g>
+      <circle cx="210" cy="240" r="16" fill="none" stroke="#163F37" strokeOpacity="0.3" />
+      <circle cx="210" cy="240" r="5" fill="#163F37" opacity="0.55" />
     </svg>
-    <div className={cn(labelClass, 'text-eucalyptus-deep/60')}>
-      <span>{caption}</span>
-      <span aria-hidden="true">SYDNEY</span>
+
+    <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
+      <p className="max-w-[15ch] font-display text-[clamp(1.45rem,2.6vw,1.85rem)] font-bold leading-[1.1] tracking-[-0.03em]">
+        Working with drones since 2013
+      </p>
+      <p className="font-sans text-[0.66rem] uppercase tracking-[0.18em] text-eucalyptus-deep/60">
+        {caption}
+      </p>
     </div>
   </Frame>
 )
@@ -314,7 +292,7 @@ const registry: Record<FallbackTreatment, (props: { caption: string }) => React.
   orbit: OrbitTreatment,
   framing: FramingTreatment,
   topography: TopographyTreatment,
-  portrait: PortraitTreatment,
+  credential: CredentialTreatment,
 }
 
 export const Treatment = ({ variant, caption }: { variant: FallbackTreatment; caption: string }) => {

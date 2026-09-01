@@ -21,7 +21,7 @@ export const SessionsOverview = () => (
         size="lg"
       />
 
-      <RevealGroup as="ul" className="mt-12 grid gap-6 lg:grid-cols-3">
+      <RevealGroup as="ul" className="mt-11 grid gap-6 lg:grid-cols-3">
         {sessions.map((session) => (
           <SessionCard key={session.id} session={session} />
         ))}

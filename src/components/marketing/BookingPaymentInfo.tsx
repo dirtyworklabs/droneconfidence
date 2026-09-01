@@ -22,12 +22,11 @@ export const BookingPaymentInfo = () => (
               Your appointment reserves private one-on-one training time specifically for you.
             </p>
             <p>
-              Once online booking is enabled, full payment is required at the time of booking to
-              confirm your session.
+              Full payment is taken at the time of booking to confirm your session.
             </p>
             <p className="flex items-start gap-2.5 text-[0.95rem] text-ink-muted">
               <Lock aria-hidden="true" className="mt-1 size-4 shrink-0 text-sage" />
-              Payment will be processed securely by the external booking/payment provider.
+              Payment is processed securely by the external booking and payment provider.
             </p>
           </Reveal>
         </div>

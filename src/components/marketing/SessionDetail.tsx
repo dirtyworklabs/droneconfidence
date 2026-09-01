@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Clock, User } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
-import { Reveal, RevealGroup, RevealItem } from '@/components/ui/Reveal'
+import { Reveal } from '@/components/ui/Reveal'
 import { BookingCta } from '@/components/booking/BookingCta'
 import { ImageFrame } from '@/components/visuals/ImageFrame'
 import { formatDuration, formatPrice } from '@/content/sessions'
@@ -120,18 +120,17 @@ export const SessionDetail = ({ session, index }: SessionDetailProps) => {
               <h3 className="font-display text-[0.72rem] font-medium uppercase tracking-[0.2em] text-ink-muted">
                 We can cover
               </h3>
-              <RevealGroup as="ul" staggerChildren={0.02} className="mt-4 grid gap-x-8 sm:grid-cols-2">
+              <ul className="mt-4 grid gap-x-8 sm:grid-cols-2">
                 {session.covers.map((item) => (
-                  <RevealItem
-                    as="li"
+                  <li
                     key={item}
                     className="flex items-start gap-2.5 border-b border-ink/8 py-2.5 text-[0.95rem] text-ink-soft"
                   >
                     <span aria-hidden="true" className="mt-2.5 h-px w-3 shrink-0 bg-sage/50" />
                     <span>{item}</span>
-                  </RevealItem>
+                  </li>
                 ))}
-              </RevealGroup>
+              </ul>
             </Reveal>
           </div>
         </div>
