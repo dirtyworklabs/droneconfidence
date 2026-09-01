@@ -18,7 +18,7 @@ export const FinalCta = () => (
             Get confident enough to use it.
           </h2>
           <p className="measure text-sage-soft/85">
-            Private one-on-one drone training with more than a decade of industry experience behind it.
+            Private one-on-one drone training with a decade of industry experience behind it.
           </p>
         </Reveal>
 

@@ -69,7 +69,7 @@ export const Hero = () => {
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
           <div className="flex flex-col gap-6">
             <motion.div {...step(0)}>
-              <Eyebrow>Private drone training · Sydney</Eyebrow>
+              <Eyebrow>Private one-on-one drone training · Sydney</Eyebrow>
             </motion.div>
 
             <motion.h1
@@ -79,22 +79,11 @@ export const Hero = () => {
               Fly your drone with confidence.
             </motion.h1>
 
-            <motion.p
-              {...step(0.18)}
-              className="max-w-[34ch] font-display text-[clamp(1.15rem,2.4vw,1.45rem)] font-medium leading-snug tracking-[-0.02em] text-eucalyptus"
-            >
-              Private one-on-one drone training in Sydney.
-            </motion.p>
-
             <motion.div {...step(0.26)} className="measure space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
               <p>
                 Bought a drone but still not completely comfortable flying it? Get practical,
-                one-on-one help with your own drone — from your first take-off to smoother flying and
+                one-on-one help with your own drone, from your first take-off to smoother flying and
                 better camera work.
-              </p>
-              <p className="text-ink">
-                No classroom. No group course. Just an experienced drone operator beside you while you
-                fly.
               </p>
             </motion.div>
 

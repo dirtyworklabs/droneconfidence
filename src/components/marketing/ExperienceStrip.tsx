@@ -7,10 +7,10 @@ import { cn } from '@/lib/cn'
  * bullet dots, so the strip reads as a masthead line and not a feature ticker.
  */
 const signals = [
-  'Working with drones since 2013',
-  '10+ years commercial experience',
-  'Government & commercial projects',
-  'Professional photography background',
+  'Working with drones since 2014',
+  'A decade of drone industry experience',
+  'Government & commercial clients',
+  'Photography background',
 ]
 
 export const ExperienceStrip = () => (

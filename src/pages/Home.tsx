@@ -20,7 +20,7 @@ const Home = () => {
     path: '/',
     socialTitle: 'Drone Confidence | Private Drone Training Sydney',
     socialDescription:
-      'Learn to fly your drone with confidence. Private one-on-one training in Sydney from an experienced commercial drone operator.',
+        'Learn to fly your drone with confidence. Private one-on-one training in Sydney from an experienced drone operator and professional photographer.',
     structuredData: [localBusinessSchema(), websiteSchema(), serviceSchema()],
   })
 

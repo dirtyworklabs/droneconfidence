@@ -277,7 +277,7 @@ const CredentialTreatment = ({ caption }: { caption: string }) => (
 
     <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
       <p className="max-w-[15ch] font-display text-[clamp(1.45rem,2.6vw,1.85rem)] font-bold leading-[1.1] tracking-[-0.03em]">
-        Working with drones since 2013
+        Working with drones since 2014
       </p>
       <p className="font-sans text-[0.66rem] uppercase tracking-[0.18em] text-eucalyptus-deep/60">
         {caption}

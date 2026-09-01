@@ -42,26 +42,31 @@ const About = () => {
             <Reveal delay={0.08} className="flex flex-col gap-6">
               <div className="space-y-5 text-[1.06rem] leading-relaxed text-ink-soft">
                 <p>
-                  Tom has been professionally involved with drones since 2013, when he founded In Motion
-                  Aero during the early development of Australia&rsquo;s commercial drone industry.
+                  Tom has been professionally involved with drones since 2016, including through In Motion Aero,
+                  which previously held a UAV Operator&rsquo;s Certificate (UOC) and conducted commercial unmanned
+                  aircraft operations in Australia.
                 </p>
                 <p>
-                  Over more than a decade, his work has included drone operations for major commercial
-                  and government clients across a range of real-world projects and environments.
+                  In Motion Aero is no longer trading, but Tom currently holds RPA operator accreditation covering
+                  excluded RPA, micro RPA and model aircraft.
                 </p>
                 <p>
-                  Through In Motion Aero, Tom also participated in industry discussions around
-                  Australia&rsquo;s developing drone regulatory framework, including contributing to
-                  CASA consultation on RPAS regulation.
+                  His work has included drone operations for major commercial and government clients across a range
+                  of real-world projects and environments.
+                </p>
+                <p>
+                  Through In Motion Aero, Tom also participated in industry discussions around Australia&rsquo;s
+                  developing drone regulatory framework, including contributing to CASA consultation on RPAS
+                  regulation.
                 </p>
                 <p>His professional background extends beyond operating drones.</p>
                 <p>
-                  Tom also works professionally in photography, bringing an understanding of cameras,
-                  composition and image-making to Drone Confidence&rsquo;s Photo &amp; Video sessions.
+                  Tom also works professionally in photography, bringing an understanding of cameras, composition
+                  and image-making to Drone Confidence&rsquo;s Photo &amp; Video sessions.
                 </p>
                 <p>
-                  And after years of working around both professional operators and everyday drone
-                  owners, he kept seeing the same problem:
+                  After years of working around both professional operators and everyday drone owners, he kept
+                  seeing the same problem:
                 </p>
               </div>
 
