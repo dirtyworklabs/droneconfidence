@@ -44,3 +44,11 @@ export const formatMoneyCents = (cents: number, currency = 'AUD'): string =>
 /** Minutes remaining, rounded up, for the checkout-hold countdown. */
 export const minutesUntil = (target: Date, now: Date): number =>
   Math.max(0, Math.ceil((target.getTime() - now.getTime()) / 60000))
+
+/** "Thu" — the compact weekday on an available-date button. */
+export const formatWeekday = (instant: Date, timeZone = SYDNEY): string =>
+  formatter({ weekday: 'short' }, timeZone).format(instant)
+
+/** "10 Sep" — the compact date on an available-date button. */
+export const formatDayAndMonth = (instant: Date, timeZone = SYDNEY): string =>
+  formatter({ day: 'numeric', month: 'short' }, timeZone).format(instant)

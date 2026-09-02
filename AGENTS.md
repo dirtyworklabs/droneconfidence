@@ -25,9 +25,11 @@ field; a second backend framework; a state-management library.
 ## Architecture
 
 ```
-shared/booking/   catalog, rules, availability, policy, time, format, fields,
+shared/booking/   catalog, rules, availability, policy, time, format, months, fields,
                   experience, types — the domain, with no React and no import.meta,
                   so pages, functions and tests share one definition
+shared/analytics/ events (the storable-field contract), tracker (the DOM-free
+                  tracker core) — shared by the browser and the collector
 src/
   config/         site.ts — every public value
   content/        sessions, locations, faqs, testimonials, images — all copy lives here
@@ -42,19 +44,23 @@ src/
     forms/        Fields, ContactForm, SuccessPanel
     marketing/    one component per page section, carrying the approved copy
     visuals/      ImageFrame, Treatments (SVG image fallbacks), TopoBackdrop
-  lib/            seo, structuredData, netlifyForms, validation, analytics, motion, routes, cn,
-                  bookingService (public booking API client), adminApi, supabaseClient
+  lib/            seo, structuredData, netlifyForms, validation, analytics, pageTracking,
+                  motion, routes, cn, bookingService (public booking API client),
+                  adminApi, supabaseClient
   pages/          one file per route, default-exported for lazy loading
   styles/         index.css — the entire design system (@theme tokens + @utility)
   types/          shared domain types
 netlify/
   functions/      booking-availability, booking-checkout, booking-confirmation,
-                  stripe-webhook, booking-reminders (hourly),
+                  stripe-webhook, booking-reminders (hourly), analytics-event,
                   admin-bookings, admin-availability, admin-settings
   lib/            supabase, store, availabilityService, bookingAccess, bookingInput, stripe,
                   refunds, adminAuth, env, http, email/{render,templates,send}
 supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql,
-                      0003_privilege_hardening.sql, 0004_service_role_table_grants.sql
+                      0003_privilege_hardening.sql, 0004_service_role_table_grants.sql,
+                      0005_first_party_analytics.sql
+docs/             stripe-setup, booking-email-templates, launch-checklist,
+                  local-booking-test-mode, reporting (the owner's SQL)
 tests/            vitest — migrations run against real Postgres via PGlite
 ```
 
@@ -146,6 +152,40 @@ migration's hardening list — `tests/migrations.test.ts` fails if one isn't. Th
 `search_path = ''` (pinned by `alter function`, so 0002 stays the only copy of each body), which is
 only safe because every relation and type they name is schema-qualified. Keep new SQL qualified.
 
+**Analytics is anonymous by construction, not by discipline.** `shared/analytics/events.ts` is the
+whole contract: a fixed list of storable fields, a fixed list of caller keys that map onto them, a
+length cap on each, and a character class that rejects anything shaped like prose, an email address
+or a URL. `path` is never accepted from a caller — it is derived from the current pathname with the
+query string cut first, because `/booking-confirmed` carries a Stripe session id. `track()` still
+forwards to `window.dataLayer` and additionally posts to `analytics-event`, which re-runs the same
+sanitiser server-side and is authoritative. There is no JSON column to hide a field in, no cookie, no
+`localStorage`, and the anonymous session UUID lives only in `sessionStorage`. Adding a field means
+adding a column, a constraint and a line to `tests/analytics.test.ts`, which asserts the field list.
+
+**The tracker's browser is injected.** `shared/analytics/tracker.ts` holds the logic (one
+`session_started` per session, attribution capture, ordering) behind a `TrackerHost`, so it is
+testable under `tsconfig.server.json`, which has no DOM lib. Every host call is wrapped: blocked
+storage, missing `crypto` or a rejected request can never throw into a navigation, a slot selection
+or checkout. `usePageTracking()` fires one `page_viewed` per navigation, and `/admin` is never
+measured — `isTrackablePath()` refuses it, so not even a session id is created there.
+
+**Reporting is SQL, and it is owner-only.** `0005_first_party_analytics.sql` creates the private
+`reporting` schema: `period_snapshot` defines every metric once and `daily_`/`weekly_`/
+`monthly_snapshot` are the same view filtered by grain, so the three can't drift apart. Money comes
+from `bookings` and `booking_events`, never from analytics. Periods are Sydney via
+`reporting.sydney_period()`. A zero denominator is `NULLIF`'d to NULL rather than shown as 0%.
+`docs/reporting.md` is the owner's copy-paste page and states the one figure that cannot be
+periodised honestly: a refund issued in the Stripe dashboard arrives as a cumulative charge total, so
+it is counted, not summed. Don't approximate it. No dashboard UI — the SQL Editor is the interface.
+
+**Step 3 browses months, and only real ones.** `shared/booking/months.ts` groups the availability
+response into months and answers every navigation question purely; `SlotPicker` renders one month at
+a time with an `auto-fill` grid, so the column count follows the content width and nothing scrolls
+sideways. Only dates the server returned are rendered — no greyed-out days, no month reachable
+outside the data, and no horizon, weekday or notice rule recomputed in the browser. Changing month is
+a view change only: `activeDate` is not the booking, `onSelect` fires from the time radio alone, and
+`booking_slot_selected` therefore can't be inflated by browsing.
+
 **Netlify Forms needs `public/__forms.html`.** Netlify's build bot can't see client-rendered forms,
 so that hidden skeleton registers the `contact` form and every field name. Adding a field to a React
 form without adding it there means the submission is rejected. AJAX POSTs go to `/__forms.html`, not
@@ -186,7 +226,12 @@ than the marketing site — compact, no hero, no motion for its own sake.
   primary CTA per view — don't make everything `variant="primary"`.
 - Touch targets stay at 44px or larger (`min-h-11` / `min-h-13` in the Button size map).
 - Analytics events go through `track()` and carry **no** personal data — no name, email, phone, drone
-  model, message content, booking reference or Stripe id.
+  model, message content, booking reference or Stripe id. A new event name goes in
+  `ANALYTICS_EVENTS`, the `analytics_events_name` check constraint and, if it belongs in a report,
+  `reporting.period_snapshot`. A payload key that isn't in the whitelist is silently dropped, so
+  invent one deliberately rather than hoping it lands.
+- Month grouping, navigation bounds and the step 3 view state live in `shared/booking/months.ts` as
+  pure functions, because `tests/` cannot import from `src/`. Put anything worth testing there.
 - Never render customer input as raw HTML. There is no `dangerouslySetInnerHTML` in this codebase,
   and every customer value in an email goes through `escapeHtml`.
 - A customer never sees a stack trace, a provider error or an internal availability-block reason.
@@ -211,6 +256,19 @@ than the marketing site — compact, no hero, no motion for its own sake.
 - Never guarantee a specific park, and never imply a session can be extended.
 - Collect only what the lesson needs. No date of birth, address, licence number or payment detail.
 - No customer accounts, no customer-facing login, no public write path to the database.
+- Never store or transmit as analytics: a name, email, phone number, drone model, free-text answer,
+  note, booking reference, booking id, Stripe id, IP address, User-Agent, full URL, query string or
+  any identifier that outlives the browser tab. No analytics cookie and nothing in `localStorage`.
+- Never let the browser write to Supabase. Analytics posts to `analytics-event`, which is the only
+  thing holding the service role, and `public.analytics_events` is RLS-on with zero policies and
+  INSERT-only for that role. Never expose it or the `reporting` schema through the public app, and
+  never grant either to `anon` or `authenticated`.
+- Never add a third-party tracker, pixel, tag manager or analytics cookie.
+- Never accept a client timestamp for an analytics event; `occurred_at` is stamped by the database.
+- Never fabricate a reporting figure. If the authoritative data can't answer a question exactly, name
+  the metric for what it is (a cohort, a count) or document the limit in `docs/reporting.md`.
+- Never recompute a booking rule in the browser to build a calendar. Step 3 renders the days the
+  availability endpoint returned, and nothing else.
 
 ## Verifying a change
 
@@ -226,7 +284,10 @@ The contact form and the Netlify Functions can only be exercised on a deployed U
 
 On `/book`, walk the routing cases — `/book`, `?session=` (three values), `?location=` (two values),
 `?slot=`, an invalid value that should be dropped, and a return with `?checkout=cancelled`. Check both
-booking-disabled and booking-enabled states at step 3.
+booking-disabled and booking-enabled states at step 3. At step 3, page through the months at 320px,
+768px and 1440px: nothing may scroll sideways, no date may be hidden to fit, the arrows must disable
+at the first and last month with times, and the summary must keep showing the selected time while
+another month is on screen.
 
 Concurrency changes must come with a test in `tests/migrations.test.ts`. It applies both migrations to
 a real Postgres and asserts the behaviour that cannot be reasoned about from the TypeScript: duplicate

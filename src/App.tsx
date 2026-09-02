@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Layout } from '@/components/layout/Layout'
+import { usePageTracking } from '@/lib/pageTracking'
 import { ROUTES } from '@/lib/routes'
 
 /**
@@ -36,109 +37,122 @@ const Admin = lazy(() => import('@/pages/Admin'))
  */
 const RouteFallback = () => <div aria-hidden="true" className="min-h-[70vh] bg-canvas" />
 
-const App = () => (
-  <Routes>
-    <Route element={<Layout />}>
-      <Route path={ROUTES.home} element={<Home />} />
-      <Route
-        path={ROUTES.sessions}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Sessions />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.locations}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Locations />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.about}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <About />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.faq}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Faq />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.book}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Book />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.contact}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Contact />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.privacy}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <Privacy />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.bookingPolicy}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <BookingPolicy />
-          </Suspense>
-        }
-      />
-      <Route
-        path={ROUTES.bookingConfirmed}
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <BookingConfirmed />
-          </Suspense>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <Suspense fallback={<RouteFallback />}>
-            <NotFound />
-          </Suspense>
-        }
-      />
-    </Route>
+/**
+ * First-party page-view tracking, mounted once above the route tree so one
+ * navigation produces one event rather than one per render. Renders nothing,
+ * blocks no route, and skips the /admin surfaces.
+ */
+const PageViewTracker = () => {
+  usePageTracking()
+  return null
+}
 
-    <Route
-      path={ROUTES.adminLogin}
-      element={
-        <Suspense fallback={<RouteFallback />}>
-          <AdminLogin />
-        </Suspense>
-      }
-    />
-    <Route
-      path={ROUTES.admin}
-      element={
-        <Suspense fallback={<RouteFallback />}>
-          <Admin />
-        </Suspense>
-      }
-    />
-  </Routes>
+const App = () => (
+  <>
+    <PageViewTracker />
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path={ROUTES.home} element={<Home />} />
+        <Route
+          path={ROUTES.sessions}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Sessions />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.locations}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Locations />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.about}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <About />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.faq}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Faq />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.book}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Book />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.contact}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Contact />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.privacy}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Privacy />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.bookingPolicy}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <BookingPolicy />
+            </Suspense>
+          }
+        />
+        <Route
+          path={ROUTES.bookingConfirmed}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <BookingConfirmed />
+            </Suspense>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <NotFound />
+            </Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path={ROUTES.adminLogin}
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <AdminLogin />
+          </Suspense>
+        }
+      />
+      <Route
+        path={ROUTES.admin}
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <Admin />
+          </Suspense>
+        }
+      />
+    </Routes>
+  </>
 )
 
 export default App
