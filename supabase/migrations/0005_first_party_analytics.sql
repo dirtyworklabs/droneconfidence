@@ -382,6 +382,20 @@ select p.period_start,
        -- Conversion, as percentages of the stage before it. nullif keeps a
        -- zero denominator as NULL rather than dividing by zero, so an empty
        -- period reads as "no data" instead of 0%.
+       --
+       -- Every percentage here is a *browser funnel* figure: numerator and
+       -- denominator are both counts of anonymous sessions. The last two end on
+       -- booking_confirmed_view_sessions, which means "a browser came back from
+       -- Stripe and successfully loaded a confirmed booking" — not "a payment
+       -- was taken". A customer who pays and then closes the Stripe tab, loses
+       -- connectivity or never returns is a confirmed booking that these two
+       -- percentages never see, so they are named for the confirmation *view*
+       -- and nothing else. `confirmed_bookings` above, from
+       -- public.booking_events, is the authoritative paid count. The two are
+       -- deliberately not divided into one another: analytics sessions carry no
+       -- booking, customer or Stripe identifier, so an exact anonymous-session
+       -- to paid-booking rate is not calculable here, and that privacy boundary
+       -- is worth more than the ratio. See docs/reporting.md.
        round(100.0 * a.booking_page_sessions / nullif(a.sessions, 0), 2)
          as site_to_booking_page_pct,
        round(100.0 * a.slot_selected_sessions / nullif(a.booking_page_sessions, 0), 2)
@@ -389,9 +403,9 @@ select p.period_start,
        round(100.0 * a.checkout_started_sessions / nullif(a.slot_selected_sessions, 0), 2)
          as slot_to_checkout_pct,
        round(100.0 * a.booking_confirmed_view_sessions / nullif(a.checkout_started_sessions, 0), 2)
-         as checkout_to_paid_pct,
+         as checkout_to_confirmation_view_pct,
        round(100.0 * a.booking_confirmed_view_sessions / nullif(a.sessions, 0), 2)
-         as site_to_paid_booking_pct,
+         as site_to_confirmation_view_pct,
 
        p.grain
   from periods p
@@ -518,8 +532,16 @@ select reporting.sydney_period(ev.created_at, 'month') as period_start,
 -- Live diagnostics
 -- ---------------------------------------------------------------------------
 -- One row, read-only, no side effects. `stale_active_holds` uses the configured
--- grace period, so it counts exactly the holds that expire_stale_holds() would
--- release on its next run — a number that should normally be at or near zero.
+-- grace period, so it counts exactly the pending holds that expire_stale_holds()
+-- would release: past expiry plus grace, but still flagged active.
+--
+-- There is no scheduled sweep, and none is needed. expire_stale_holds() runs
+-- inside reserve_booking_hold() and reschedule_booking(), so booking traffic
+-- clears lapsed holds, and the availability engine already applies the same
+-- expiry-plus-grace rule when it reads occupancy — a lapsed hold stops blocking
+-- a slot whether or not its row has been swept yet. A quiet period can therefore
+-- show a non-zero count harmlessly; a count that stays non-zero across booking
+-- activity is worth investigating.
 create or replace view reporting.current_health
 with (security_invoker = true) as
 select s.booking_enabled,

@@ -103,9 +103,33 @@ three times counts once — `session_selected_sessions`, `location_selected_sess
 `cancellation_emails_sent`, `reschedule_emails_sent`.
 
 **Conversion**, as a percentage of the stage before it — `site_to_booking_page_pct`,
-`booking_page_to_slot_pct`, `slot_to_checkout_pct`, `checkout_to_paid_pct`, and
-`site_to_paid_booking_pct` end to end. A stage nobody reached has no denominator, so the
+`booking_page_to_slot_pct`, `slot_to_checkout_pct`, `checkout_to_confirmation_view_pct`, and
+`site_to_confirmation_view_pct` end to end. A stage nobody reached has no denominator, so the
 percentage is **NULL** rather than 0 — "no data", not "0%".
+
+### Browser funnel vs paid bookings
+
+These are two different questions, and the columns keep them apart on purpose.
+
+- `booking_confirmed_view_sessions`, `checkout_to_confirmation_view_pct` and
+  `site_to_confirmation_view_pct` are **browser funnel** figures. They count anonymous
+  visits that came back from Stripe and successfully loaded a confirmed booking. That is a
+  measure of how far visitors got through the website, not of how much was sold.
+- `confirmed_bookings` is the **authoritative paid booking count**, taken from
+  `public.booking_events` where the Stripe webhook confirmed the payment. Use this one for
+  "how many bookings did we take".
+
+The two will not match, and the gap is not an error. A customer can pay in full and still
+never load the confirmation page — they close the Stripe tab, lose signal, or simply do not
+come back. The payment is confirmed by Stripe's webhook regardless, so it appears in
+`confirmed_bookings` while the confirmation view never happens.
+
+**An exact anonymous-visit → paid-booking conversion rate is deliberately not calculated.**
+It would require joining an analytics session to a booking, and analytics events hold no
+booking id, booking reference, Stripe id or customer identifier to join on — by design, and
+that design is not being loosened to produce a percentage. The honest substitutes are
+`site_to_confirmation_view_pct` for the browser funnel and `confirmed_bookings` for the
+money.
 
 ### A short version, for a weekly glance
 
@@ -118,7 +142,7 @@ select period_start,
        gross_booked_aud,
        refunded_aud,
        net_retained_aud,
-       site_to_paid_booking_pct
+       site_to_confirmation_view_pct
   from reporting.weekly_snapshot
  order by period_start desc
  limit 8;
@@ -136,9 +160,13 @@ select * from reporting.current_health;
 - `upcoming_confirmed_bookings` — paid bookings still in the future.
 - `active_pending_holds` — slots held while someone is at the Stripe page. A small number is
   normal.
-- `stale_active_holds` — holds already past their expiry plus the configured grace period.
-  These are released automatically; a number that stays above zero means the hourly function
-  is not running.
+- `stale_active_holds` — pending holds whose expiry plus the configured grace period has
+  passed but which are still flagged active. There is no scheduled sweep: lapsed holds are
+  released when booking traffic next runs `expire_stale_holds` (it runs inside taking a hold
+  and inside a reschedule), and availability already ignores a hold past expiry plus grace,
+  so a stale row does not block anyone's slot in the meantime. A non-zero count during a
+  quiet spell is harmless; a value that stays non-zero while bookings are happening warrants
+  investigation.
 - `notifications_claimed_but_unsent` — emails that were claimed but never delivered. Should
   be zero.
 - `payment_conflicts_last_24h` — customers who lost a race for a slot in the last day.

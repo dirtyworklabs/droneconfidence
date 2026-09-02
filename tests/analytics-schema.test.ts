@@ -324,10 +324,10 @@ describe('reporting figures', () => {
       refunded_aud: string
       net_retained_aud: string
       average_booking_value_aud: string | null
-      checkout_to_paid_pct: string | null
+      checkout_to_confirmation_view_pct: string | null
     }>(
       `select period_start::text, confirmed_bookings, gross_booked_aud, refunded_aud,
-              net_retained_aud, average_booking_value_aud, checkout_to_paid_pct
+              net_retained_aud, average_booking_value_aud, checkout_to_confirmation_view_pct
          from reporting.daily_snapshot order by period_start`,
     )
 
@@ -340,7 +340,7 @@ describe('reporting figures', () => {
       average_booking_value_aud: '209.00',
       // Nobody started checkout that day, so the ratio has no denominator and
       // reads as "no data" rather than 0%.
-      checkout_to_paid_pct: null,
+      checkout_to_confirmation_view_pct: null,
     })
     // The refund lands on the Sydney day it was issued, not the booking's day.
     expect(rows.rows[1]!.refunded_aud).toBe('119.50')
@@ -377,6 +377,43 @@ describe('reporting figures', () => {
     expect(await columns('weekly_snapshot')).toEqual(daily)
     expect(await columns('monthly_snapshot')).toEqual(daily)
     expect(daily[0]).toBe('period_start')
+  })
+
+  it('names the confirmation-view funnel for what it measures, not for payment', async () => {
+    const columns = await db.query<{ column_name: string }>(
+      `select distinct a.attname as column_name
+         from pg_attribute a
+         join pg_class c on c.oid = a.attrelid
+        where c.relnamespace = 'reporting'::regnamespace and c.relkind = 'v' and a.attnum > 0`,
+    )
+    const names = columns.rows.map((row) => row.column_name)
+    // The old names claimed the browser funnel proved a payment. Gone, and not
+    // kept as aliases: a paid-conversion column would be read as authoritative.
+    expect(names).not.toContain('checkout_to_paid_pct')
+    expect(names).not.toContain('site_to_paid_booking_pct')
+    expect(names).toContain('checkout_to_confirmation_view_pct')
+    expect(names).toContain('site_to_confirmation_view_pct')
+    // The authoritative paid count stays exposed separately.
+    expect(names).toContain('confirmed_bookings')
+  })
+
+  it('keeps the authoritative paid count independent of the confirmation view', async () => {
+    const rows = await db.query<{
+      confirmed_bookings: number
+      booking_confirmed_view_sessions: number
+      site_to_confirmation_view_pct: string | null
+    }>(
+      `select confirmed_bookings, booking_confirmed_view_sessions, site_to_confirmation_view_pct
+         from reporting.daily_snapshot where period_start = '2026-09-30'`,
+    )
+    // Two payments were confirmed by the webhook and nobody loaded the
+    // confirmation page. The funnel column reads 0 and the paid count reads 2:
+    // that gap is the point, and the percentage is not a paid-conversion rate.
+    expect(rows.rows[0]).toEqual({
+      confirmed_bookings: 2,
+      booking_confirmed_view_sessions: 0,
+      site_to_confirmation_view_pct: '0.00',
+    })
   })
 
   it('attributes traffic without inventing a source', async () => {
