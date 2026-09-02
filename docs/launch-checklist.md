@@ -68,7 +68,9 @@ one form: `contact`. It is unchanged by the booking system.
 ### Supabase
 
 - [ ] Project created in a region close to Sydney.
-- [ ] `supabase/migrations/0001_booking_core.sql` and `0002_booking_functions.sql` applied, in order.
+- [ ] All four migrations applied, in order: `0001_booking_core.sql`,
+      `0002_booking_functions.sql`, `0003_privilege_hardening.sql`,
+      `0004_service_role_table_grants.sql`.
 - [ ] `select relrowsecurity from pg_class where relname = 'bookings';` returns `true`, and
       `select count(*) from pg_policies where schemaname = 'public';` returns `0`. Row Level Security
       is on with no policies: the service-role key is the only way in.
@@ -105,6 +107,20 @@ Full detail in [docs/stripe-setup.md](./stripe-setup.md).
 - [ ] Owner notification received with the drone, experience and help-with details.
 - [ ] Reminder email received (temporarily move a test booking to ~24 hours away).
 - [ ] Cancellation email received with the correct refund wording.
+
+### Local sandbox testing (optional, before launch)
+
+The whole booking flow can be driven locally through `netlify dev` against Stripe's sandbox while the
+shared database keeps `booking_settings.booking_enabled = false`. See
+[docs/local-booking-test-mode.md](./local-booking-test-mode.md).
+
+- [ ] `BOOKING_TEST_MODE=true` set **server-only**, scope **Functions**, context **Local development
+      only** — never Production, never Deploy Previews, never Branch deploys.
+- [ ] `SITE_URL=http://localhost:8888` and a `sk_test_…` `STRIPE_SECRET_KEY` in the same local
+      context. All three are required; anything missing or unrecognised leaves booking closed.
+- [ ] Do **not** turn the production master switch on for local testing, and do not change
+      `booking_settings.booking_enabled` in the database.
+- [ ] Sandbox bookings are real rows in the shared database — delete them afterwards.
 
 ### Availability and settings
 

@@ -75,6 +75,7 @@ no data access on its own.
 | `RESEND_REPLY_TO` | Reply-to address the owner reads. |
 | `ADMIN_NOTIFICATION_EMAIL` | Owner notifications **and** the only address allowed into `/admin`. |
 | `SITE_URL` | Absolute origin for Stripe return URLs and email links. |
+| `BOOKING_TEST_MODE` | **Local development only.** Opens public booking against Stripe's sandbox while the database master switch stays off. See [`docs/local-booking-test-mode.md`](docs/local-booking-test-mode.md). Never set it in Production, Deploy Previews or Branch deploys. |
 
 **Never** put a secret in a `VITE_*` variable — every one of them is readable in the browser. Secret
 keys are never logged, never returned by a function and never committed.
@@ -184,10 +185,10 @@ dashboard sends a reason, never an amount.
 ### Setting it up
 
 See [`docs/launch-checklist.md`](docs/launch-checklist.md) for the full sequence. In short: create
-the Supabase project, apply both migrations in `supabase/migrations/`, create the owner user, set the
-environment variables above, add the Stripe webhook ([`docs/stripe-setup.md`](docs/stripe-setup.md)),
-verify the Resend domain, then work through the test-mode checklist before turning the master switch
-on.
+the Supabase project, apply the migrations in `supabase/migrations/` in order (`0001` → `0004`),
+create the owner user, set the environment variables above, add the Stripe webhook
+([`docs/stripe-setup.md`](docs/stripe-setup.md)), verify the Resend domain, then work through the
+test-mode checklist before turning the master switch on.
 
 ## Images still required
 

@@ -12,6 +12,7 @@ import { buildAvailability, noticeFloor } from '../../shared/booking/availabilit
 import type { BookingSettings } from '../../shared/booking/rules'
 import { addCalendarMonths, addDays, dayOf, instantAt } from '../../shared/booking/time'
 import type { AvailabilityDay } from '../../shared/booking/types'
+import { publicBookingAllowed } from './bookingAccess'
 import { loadBlocks, loadOccupancy, loadSettings } from './store'
 
 export interface AvailabilityLookup {
@@ -37,7 +38,12 @@ export const lookupAvailability = async (
   // No settings row means the migration hasn't been applied. The site keeps
   // working; booking simply reports itself unavailable.
   if (!settings) return { status: 'unconfigured' }
-  if (!settings.bookingEnabled && !input.waiveNotice) return { status: 'disabled' }
+  // A customer lookup needs public booking to be open — the database switch, or
+  // the narrow local test override in `bookingAccess`. An admin lookup already
+  // waives the notice period and is authorised upstream, so it is unaffected.
+  if (!input.waiveNotice && !publicBookingAllowed(settings.bookingEnabled)) {
+    return { status: 'disabled' }
+  }
 
   const now = input.now ?? new Date()
   const floor = input.waiveNotice ? now : noticeFloor(settings, now)

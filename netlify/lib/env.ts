@@ -37,4 +37,6 @@ export const ENV_NAMES = {
   resendReplyTo: 'RESEND_REPLY_TO',
   adminEmail: 'ADMIN_NOTIFICATION_EMAIL',
   siteUrl: 'SITE_URL',
+  /** Server-only switch for the local booking test override. Never `VITE_*`. */
+  bookingTestMode: 'BOOKING_TEST_MODE',
 } as const

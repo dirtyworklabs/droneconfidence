@@ -18,6 +18,7 @@ import { findSlot } from '../../shared/booking/availability'
 import { type LocationId, sessionPriceCents } from '../../shared/booking/catalog'
 import type { CheckoutResponse } from '../../shared/booking/types'
 import { lookupAvailability } from '../lib/availabilityService'
+import { publicBookingAllowed } from '../lib/bookingAccess'
 import { validateCheckoutRequest } from '../lib/bookingInput'
 import { siteOrigin } from '../lib/env'
 import { jsonResponse, logFailure, methodNotAllowed, readJson } from '../lib/http'
@@ -67,6 +68,14 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     })
 
     if (availability.status !== 'ok') {
+      return error('disabled', 'Online booking is temporarily unavailable.', 503)
+    }
+
+    // Defence in depth: the same decision, re-derived from the settings row here
+    // rather than inferred from the availability lookup having succeeded. A
+    // direct POST to this function cannot reserve a hold or create a Checkout
+    // Session while public booking is closed.
+    if (!publicBookingAllowed(availability.settings.bookingEnabled)) {
       return error('disabled', 'Online booking is temporarily unavailable.', 503)
     }
 
