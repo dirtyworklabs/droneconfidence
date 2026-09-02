@@ -20,7 +20,7 @@
  * running in UTC would read as UTC and silently shift by 10 or 11 hours.
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import { findLocation, findSession } from '../../shared/booking/catalog'
 import type { AdminAvailabilityBlock, LocationId } from '../../shared/booking/types'
 import { requireAdmin } from '../lib/adminAuth'
@@ -171,5 +171,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return jsonResponse({ status: 'error', message: 'Something went wrong.' }, 500)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/admin-availability' }

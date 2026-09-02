@@ -13,7 +13,7 @@
  *   charge.refunded             → record a refund made in the Stripe dashboard
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import type Stripe from 'stripe'
 import { ENV_NAMES, env, siteOrigin } from '../lib/env'
 import { jsonResponse, logFailure, methodNotAllowed } from '../lib/http'
@@ -220,5 +220,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return jsonResponse({ received: false }, 500)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/stripe-webhook' }

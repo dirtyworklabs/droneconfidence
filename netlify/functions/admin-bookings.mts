@@ -10,7 +10,7 @@
  * the browser only names the reason.
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import { findSlot } from '../../shared/booking/availability'
 import { findLocation } from '../../shared/booking/catalog'
 import { cancellationOutcome, isCancellationReason, isRescheduleOutcome } from '../../shared/booking/policy'
@@ -314,5 +314,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return jsonResponse({ status: 'error', message: 'Something went wrong.' }, 500)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/admin-bookings' }
