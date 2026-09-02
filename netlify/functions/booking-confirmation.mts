@@ -12,7 +12,7 @@
  * already provided are returned.
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import type { BookingSummary, ConfirmationResponse } from '../../shared/booking/types'
 import { jsonResponse, logFailure, methodNotAllowed } from '../lib/http'
 import { findBookingByCheckoutSession, type BookingRow } from '../lib/store'
@@ -96,5 +96,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return jsonResponse({ status: 'error' } satisfies ConfirmationResponse, 502)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/booking-confirmation' }

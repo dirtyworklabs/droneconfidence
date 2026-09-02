@@ -9,7 +9,7 @@
  * two requests.
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import { findLocation, findSession } from '../../shared/booking/catalog'
 import type { AvailabilityResponse } from '../../shared/booking/types'
 import { lookupAvailability } from '../lib/availabilityService'
@@ -64,5 +64,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return jsonResponse({ status: 'error', message: 'Availability is unavailable right now.' }, 502)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/booking-availability' }

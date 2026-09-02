@@ -12,7 +12,7 @@
  * request body; all three come from the catalogue.
  */
 
-import type { Config, Context } from '@netlify/functions'
+import type { Context } from '@netlify/functions'
 import { formatDateTime } from '../../shared/booking/format'
 import { findSlot } from '../../shared/booking/availability'
 import { type LocationId, sessionPriceCents } from '../../shared/booking/catalog'
@@ -199,5 +199,3 @@ export default async (request: Request, _context: Context): Promise<Response> =>
     return error('server_error', 'Something went wrong starting your booking. Please try again.', 500)
   }
 }
-
-export const config: Config = { path: '/.netlify/functions/booking-checkout' }
