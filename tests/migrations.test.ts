@@ -20,6 +20,19 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 const MIGRATIONS = [
   'supabase/migrations/0001_booking_core.sql',
   'supabase/migrations/0002_booking_functions.sql',
+  'supabase/migrations/0003_privilege_hardening.sql',
+]
+
+/** Every function the migrations define. All of them must be unreachable to PUBLIC. */
+const BOOKING_FUNCTIONS = [
+  'booking_weekdays_valid',
+  'bookings_set_derived',
+  'confirm_booking_payment',
+  'expire_stale_holds',
+  'generate_booking_reference',
+  'reschedule_booking',
+  'reserve_booking_hold',
+  'touch_updated_at',
 ]
 
 let db: PGlite
@@ -484,5 +497,213 @@ describe('cancelling a booking', () => {
       [created.booking_id],
     )
     expect(row.rows[0]).toMatchObject({ status: 'cancelled', is_active: false })
+  })
+})
+
+describe('function privileges', () => {
+  it('defines exactly the functions the hardening list covers', async () => {
+    const rows = await db.query<{ proname: string }>(
+      `select p.proname from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public' and p.prokind = 'f'
+         -- pgcrypto and btree_gist also live in public; only our own count.
+         and not exists (
+           select 1 from pg_depend d
+            where d.objid = p.oid and d.deptype = 'e'
+         )
+       order by p.proname`,
+    )
+    // A new function added without being hardened fails here, not in production.
+    expect(rows.rows.map((row) => row.proname)).toEqual(BOOKING_FUNCTIONS)
+  })
+
+  it('takes EXECUTE away from PUBLIC on every function', async () => {
+    const rows = await db.query<{
+      proname: string
+      acl_is_default: boolean
+      public_execute: boolean
+    }>(
+      `select p.proname,
+              p.proacl is null as acl_is_default,
+              exists (
+                select 1 from aclexplode(p.proacl) a
+                 where a.grantee = 0 and a.privilege_type = 'EXECUTE'
+              ) as public_execute
+         from pg_proc p
+         join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.proname = any($1)
+        order by p.proname`,
+      [BOOKING_FUNCTIONS],
+    )
+
+    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    for (const row of rows.rows) {
+      // A null ACL is the Postgres default, and the default includes PUBLIC.
+      expect(row.acl_is_default, `${row.proname} still has the default ACL`).toBe(false)
+      expect(row.public_execute, `${row.proname} is executable by PUBLIC`).toBe(false)
+    }
+  })
+
+  it('pins every function to an empty search path', async () => {
+    const rows = await db.query<{ proname: string; proconfig: string[] | null }>(
+      `select proname, proconfig from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public' and p.proname = any($1)`,
+      [BOOKING_FUNCTIONS],
+    )
+
+    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    for (const row of rows.rows) {
+      // 'search_path=public' would leave pg_temp implicitly searched first for
+      // relation names, which a SECURITY DEFINER function must never allow.
+      expect(row.proconfig, `${row.proname} has a mutable search path`).toEqual([
+        'search_path=""',
+      ])
+    }
+  })
+
+  it('keeps the definer functions working with no search path', async () => {
+    // The functions are only safe at '' because every reference inside them is
+    // schema-qualified or lives in pg_catalog. Exercising one proves it.
+    const created = await reserve({
+      attempt: 'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',
+      start: '2026-12-08T21:00:00Z',
+    })
+    expect(created.reference).toMatch(/^DC-/)
+
+    const confirmed = await db.query<{ outcome: string }>(
+      `select * from confirm_booking_payment($1, 'pi_search_path', 17900, 'aud')`,
+      [created.booking_id],
+    )
+    expect(confirmed.rows[0]!.outcome).toBe('confirmed')
+
+    const released = await db.query<{ n: number }>(`select expire_stale_holds(3) as n`)
+    expect(released.rows[0]!.n).toBe(0)
+
+    await db.query(
+      `update bookings set status = 'cancelled', is_active = false where id = $1`,
+      [created.booking_id],
+    )
+  })
+})
+
+describe('privileges with the Supabase roles present', () => {
+  let roled: PGlite
+
+  beforeAll(async () => {
+    roled = await PGlite.create({ extensions: { btree_gist, pgcrypto } })
+    // The migrations skip roles that don't exist, so the harness must supply the
+    // three Supabase roles for the grants and revokes to be observable at all.
+    await roled.exec(`create role anon; create role authenticated; create role service_role;`)
+    for (const file of MIGRATIONS) {
+      await roled.exec(readFileSync(file, 'utf8'))
+    }
+  })
+
+  afterAll(async () => {
+    await roled?.close()
+  })
+
+  it('refuses EXECUTE to anon and authenticated and allows it to service_role', async () => {
+    const rows = await roled.query<{
+      proname: string
+      anon: boolean
+      authenticated: boolean
+      service_role: boolean
+    }>(
+      `select p.proname,
+              has_function_privilege('anon', p.oid, 'execute') as anon,
+              has_function_privilege('authenticated', p.oid, 'execute') as authenticated,
+              has_function_privilege('service_role', p.oid, 'execute') as service_role
+         from pg_proc p
+         join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.proname = any($1)
+        order by p.proname`,
+      [BOOKING_FUNCTIONS],
+    )
+
+    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    for (const row of rows.rows) {
+      expect(row.anon, `${row.proname} is callable by anon`).toBe(false)
+      expect(row.authenticated, `${row.proname} is callable by authenticated`).toBe(false)
+      // The trusted Netlify Functions are the only intended caller.
+      expect(row.service_role, `${row.proname} is not callable by service_role`).toBe(true)
+    }
+  })
+
+  it('gives the browser roles no table privilege in either direction', async () => {
+    const rows = await roled.query<{ relname: string; granted: boolean }>(
+      `select c.relname,
+              bool_or(has_table_privilege(r.rolname, c.oid, p.priv)) as granted
+         from pg_class c
+         join pg_namespace n on n.oid = c.relnamespace
+        cross join (select unnest(array['anon', 'authenticated']) as rolname) r
+        cross join (select unnest(array['select', 'insert', 'update', 'delete']) as priv) p
+        where n.nspname = 'public' and c.relkind = 'r'
+        group by c.relname
+        order by c.relname`,
+    )
+
+    expect(rows.rows).not.toEqual([])
+    for (const row of rows.rows) {
+      expect(row.granted, `${row.relname} is reachable by a browser role`).toBe(false)
+    }
+  })
+
+  it('still has row level security on with no policies', async () => {
+    const unprotected = await roled.query<{ relname: string }>(
+      `select relname from pg_class
+       where relnamespace = 'public'::regnamespace and relkind = 'r' and not relrowsecurity`,
+    )
+    expect(unprotected.rows).toEqual([])
+
+    const policies = await roled.query<{ n: number }>(
+      `select count(*)::int as n from pg_policies where schemaname = 'public'`,
+    )
+    expect(policies.rows[0]!.n).toBe(0)
+  })
+})
+
+describe('booking_settings.weekdays', () => {
+  const setWeekdays = (value: string) =>
+    db.query(`update booking_settings set weekdays = $1::smallint[] where id = 1`, [value])
+
+  afterAll(async () => {
+    await db.query(`update booking_settings set weekdays = '{2,3,4}' where id = 1`)
+  })
+
+  it('accepts the seeded operating days', async () => {
+    const row = await db.query<{ weekdays: number[] }>(
+      `select weekdays from booking_settings where id = 1`,
+    )
+    expect(row.rows[0]!.weekdays).toEqual([2, 3, 4])
+  })
+
+  it('accepts any valid set of ISO weekdays', async () => {
+    for (const value of ['{1}', '{7}', '{1,2,3,4,5,6,7}', '{4,1,6}']) {
+      expect(await failure(() => setWeekdays(value)), value).toBeNull()
+    }
+  })
+
+  it('rejects an empty array, an out-of-range day and a duplicate', async () => {
+    // '{}' passed the old length check, because array_length('{}', 1) is NULL
+    // and a NULL check expression is treated as satisfied.
+    for (const value of ['{}', '{0}', '{0,1}', '{8}', '{1,8}', '{-1}', '{2,2}', '{1,2,1}']) {
+      expect(await failure(() => setWeekdays(value)), value).toContain(
+        'booking_settings_weekdays',
+      )
+    }
+  })
+
+  it('rejects a null element and more than seven days', async () => {
+    expect(
+      await failure(() =>
+        db.query(`update booking_settings set weekdays = array[1, null]::smallint[] where id = 1`),
+      ),
+    ).toContain('booking_settings_weekdays')
+
+    expect(await failure(() => setWeekdays('{1,2,3,4,5,6,7,7}'))).toContain(
+      'booking_settings_weekdays',
+    )
   })
 })
