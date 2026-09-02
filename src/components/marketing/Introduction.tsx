@@ -8,7 +8,7 @@ export const Introduction = () => (
       <div className="grid gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
         <Reveal>
           <h2 id="introduction-heading" className="text-[clamp(1.9rem,4vw,2.8rem)]">
-            You don&rsquo;t need a whole drone course.
+            Some people don&rsquo;t want a whole course.
           </h2>
         </Reveal>
 
@@ -19,7 +19,7 @@ export const Introduction = () => (
             more experience.
           </p>
           <p className="font-display text-[1.2rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
-            These are private sessions built around you, your drone and what you actually want to
+            Drone Confidence provides private sessions built around you, your drone and what you actually want to
             learn.
           </p>
           <p>

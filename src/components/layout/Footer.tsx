@@ -12,8 +12,7 @@ export const Footer = () => (
         <div className="flex flex-col gap-4">
           <Wordmark />
           <p className="measure text-ink-soft">
-            Private one-on-one drone training in Sydney. Sessions available in Sydney&rsquo;s north and
-            south by appointment.
+            Private one-on-one drone training in Sydney.
           </p>
 
           {hasContactEmail || hasInstagram ? (

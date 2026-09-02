@@ -17,8 +17,8 @@ type SessionCopy = Omit<Session, 'id' | 'name' | 'price' | 'durationMinutes'>
 
 const sessionCopy: Record<SessionId, SessionCopy> = {
   'first-flight': {
-    label: 'FIRST FLIGHT',
-    tagline: 'Start properly.',
+    label: 'SESSION 1',
+    tagline: 'First Flight',
     summary:
       'Perfect if you’ve recently bought a drone, have never flown before, or don’t quite feel confident taking it out by yourself.',
     intro: [
@@ -46,12 +46,12 @@ const sessionCopy: Record<SessionId, SessionCopy> = {
     imageSlot: 'session-first-flight',
   },
   'fly-with-confidence': {
-    label: 'FLY WITH CONFIDENCE',
-    tagline: 'Turn basic flying into confident flying.',
+    label: 'SESSION 2',
+    tagline: 'Fly With Confidence',
     summary:
-      'You can already get your drone in the air — but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
+      'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
     intro: [
-      'You can already get your drone in the air — but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
+      'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
       'This session builds control, awareness and confidence through practical flying.',
       'Rather than following a rigid syllabus, we’ll identify the areas you want to improve and work directly on them.',
     ],
@@ -78,8 +78,8 @@ const sessionCopy: Record<SessionId, SessionCopy> = {
     imageSlot: 'session-fly-with-confidence',
   },
   'photo-video': {
-    label: 'PHOTO & VIDEO',
-    tagline: 'Stop just flying. Start creating.',
+    label: 'SESSION 3',
+    tagline: 'Photo & Video',
     summary:
       'Once you’re comfortable controlling the aircraft, the next challenge is making the footage actually look good.',
     intro: [

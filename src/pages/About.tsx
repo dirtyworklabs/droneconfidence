@@ -14,7 +14,7 @@ const About = () => {
   useSeo({
     title: 'About Drone Confidence | Private Drone Coaching Sydney',
     description:
-      'Drone Confidence is run by Tom Gerrard, professionally involved with drones since 2013 across commercial and government projects, with a photography background.',
+      'Drone Confidence is run by Tom Gerrard, professionally involved with drones since 2016 across commercial and government projects, with a photography background.',
     path: '/about',
     structuredData: [localBusinessSchema()],
   })
@@ -24,7 +24,6 @@ const About = () => {
       <PageHero
         eyebrow="About"
         title="Experience behind Drone Confidence."
-        intro={<p>Meet Tom Gerrard.</p>}
       />
 
       <Section tone="canvas" space="sm">
@@ -32,7 +31,12 @@ const About = () => {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
             <Reveal>
               <div className="lg:sticky lg:top-28">
-                <ImageFrame slot="about-tom" ratio="aspect-[4/3]" rounded="panel" />
+                <ImageFrame
+                  slot="about-tom"
+                  ratio="aspect-[4/3]"
+                  rounded="panel"
+                />
+
                 <p className="pt-4 text-[0.9rem] text-ink-muted">
                   Tom Gerrard · Founder, Drone Confidence
                 </p>
@@ -42,41 +46,45 @@ const About = () => {
             <Reveal delay={0.08} className="flex flex-col gap-6">
               <div className="space-y-5 text-[1.06rem] leading-relaxed text-ink-soft">
                 <p>
-                  Tom has been professionally involved with drones since 2016, including through In Motion Aero,
-                  which previously held a UAV Operator&rsquo;s Certificate (UOC) and conducted commercial unmanned
-                  aircraft operations in Australia.
+                  Tom has been professionally involved with drones since 2016,
+                  including through In Motion Aero, which held a UAV
+                  Operator&rsquo;s Certificate (UOC) and conducted commercial
+                  unmanned aircraft operations in Australia.
                 </p>
+
                 <p>
-                  In Motion Aero is no longer trading, but Tom currently holds RPA operator accreditation covering
-                  excluded RPA, micro RPA and model aircraft.
+                  He currently holds RPA operator accreditation covering
+                  excluded RPA, micro RPA and model aircraft. His work has
+                  included drone operations for major commercial and government
+                  clients across a range of real-world projects and
+                  environments.
                 </p>
+
                 <p>
-                  His work has included drone operations for major commercial and government clients across a range
-                  of real-world projects and environments.
+                  Tom also works professionally as a creative technologist and
+                  photographer, bringing practical experience in cameras,
+                  composition and image-making to Drone Confidence&rsquo;s
+                  Photo &amp; Video sessions.
                 </p>
+
                 <p>
-                  Through In Motion Aero, Tom also participated in industry discussions around Australia&rsquo;s
-                  developing drone regulatory framework, including contributing to CASA consultation on RPAS
-                  regulation.
-                </p>
-                <p>His professional background extends beyond operating drones.</p>
-                <p>
-                  Tom also works professionally in photography, bringing an understanding of cameras, composition
-                  and image-making to Drone Confidence&rsquo;s Photo &amp; Video sessions.
-                </p>
-                <p>
-                  After years of working around both professional operators and everyday drone owners, he kept
-                  seeing the same problem:
+                  After years of working with both professional operators and
+                  everyday drone owners, he kept seeing the same problem:
                 </p>
               </div>
 
               <blockquote className="rounded-[var(--radius-card)] border border-ink/8 bg-surface p-7 sm:p-8">
                 <Eyebrow>The gap</Eyebrow>
+
                 <div className="space-y-3 pt-4 font-display text-[clamp(1.15rem,2.3vw,1.4rem)] font-semibold leading-snug tracking-[-0.02em] text-eucalyptus">
-                  <p>Some people don&rsquo;t want a drone qualification.</p>
                   <p>
-                    They&rsquo;ve simply bought a drone and want an experienced person to spend an hour
-                    or two showing them how to use it properly.
+                    Some people don&rsquo;t want a drone qualification.
+                  </p>
+
+                  <p>
+                    They&rsquo;ve simply bought a drone and want an experienced
+                    person to spend an hour or two showing them how to use it
+                    properly.
                   </p>
                 </div>
               </blockquote>

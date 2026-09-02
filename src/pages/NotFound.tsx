@@ -23,12 +23,12 @@ const NotFound = () => {
 
       <Container className="relative">
         <Reveal className="flex flex-col gap-6">
-          <Eyebrow>Off course</Eyebrow>
+          <Eyebrow>Page not found - you're off course</Eyebrow>
           <h1 className="max-w-[24ch] text-[clamp(2.1rem,5vw,3.2rem)] font-bold leading-[1.06] tracking-[-0.035em]">
-            This page has drifted out of range.
+            Pull up, terrain.
           </h1>
           <p className="measure text-[1.06rem] leading-relaxed text-ink-soft">
-            The link may be old or slightly off. Everything on the site is one step away below.
+            The address may be old or slightly off. Everything available is below.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">

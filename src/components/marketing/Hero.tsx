@@ -81,7 +81,7 @@ export const Hero = () => {
 
             <motion.div {...step(0.26)} className="measure space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
               <p>
-                Bought a drone but still not completely comfortable flying it? Get practical,
+                Get practical,
                 one-on-one help with your own drone, from your first take-off to smoother flying and
                 better camera work.
               </p>
@@ -104,7 +104,7 @@ export const Hero = () => {
                 <span aria-hidden="true" className="hidden h-4 w-px bg-ink/12 sm:block" />
                 <span className="inline-flex items-center gap-1.5">
                   <MapPin aria-hidden="true" className="size-4 text-sage" />
-                  South Sydney + North Sydney training locations
+                  North + South Sydney training locations
                 </span>
               </div>
             </motion.div>

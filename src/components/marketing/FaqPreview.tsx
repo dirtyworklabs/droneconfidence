@@ -13,7 +13,7 @@ export const FaqPreview = () => (
     <Container>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
         <div className="flex flex-col gap-5">
-          <SectionHeading id="faq-preview-heading" title="Good to know." size="lg" />
+          <SectionHeading id="faq-preview-heading" title="Frequently Asked." size="lg" />
           <Reveal delay={0.06}>
             <LinkButton to={ROUTES.faq} variant="quiet">
               All FAQs
