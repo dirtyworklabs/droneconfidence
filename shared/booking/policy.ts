@@ -37,6 +37,17 @@ export const CANCELLATION_OUTCOMES: readonly CancellationOutcome[] = [
 export const isCancellationReason = (value: string): value is CancellationReason =>
   CANCELLATION_OUTCOMES.some((outcome) => outcome.reason === value)
 
+/**
+ * The friendly label for a stored cancellation reason.
+ *
+ * `bookings.cancellation_reason` keeps the identifier; no surface shows it. A
+ * value that is no longer in the list (an older row, a retired reason) is
+ * humanised rather than dropped, so the record still reads as something.
+ */
+export const cancellationReasonLabel = (reason: string): string =>
+  CANCELLATION_OUTCOMES.find((outcome) => outcome.reason === reason)?.label ??
+  reason.replace(/_/g, ' ').replace(/^./, (first) => first.toUpperCase())
+
 export const cancellationOutcome = (reason: CancellationReason): CancellationOutcome => {
   const match = CANCELLATION_OUTCOMES.find((outcome) => outcome.reason === reason)
   if (!match) throw new Error(`Unknown cancellation reason: ${reason}`)

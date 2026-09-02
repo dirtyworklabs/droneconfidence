@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
-import { CANCELLATION_OUTCOMES, cancellationOutcome } from '@shared/booking/policy'
+import {
+  CANCELLATION_OUTCOMES,
+  cancellationOutcome,
+  cancellationReasonLabel,
+} from '@shared/booking/policy'
+import {
+  cancelFlowStep,
+  cancellationPreview,
+  type CancelEvent,
+  type CancelStage,
+} from '@shared/booking/cancellationConfirm'
 import { experienceLabel } from '@shared/booking/experience'
 import { formatDateTime, formatMoneyCents, formatTimeRange } from '@shared/booking/format'
 import type {
@@ -10,6 +20,7 @@ import type {
 } from '@shared/booking/types'
 import { Button } from '@/components/ui/Button'
 import { AdminNotice, AdminPanel } from '@/components/admin/AdminShell'
+import { CancelBookingDialog } from '@/components/admin/CancelBookingDialog'
 import { type AdminRun, errorText } from '@/components/admin/types'
 import { SelectField } from '@/components/forms/Fields'
 import {
@@ -211,6 +222,7 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
   const [problem, setProblem] = useState<string | null>(null)
   const [outcome, setOutcome] = useState<string | null>(null)
   const [reason, setReason] = useState<string>('')
+  const [cancelStage, setCancelStage] = useState<CancelStage>('idle')
   const [busy, setBusy] = useState(false)
   const [moving, setMoving] = useState(false)
   const [slotDays, setSlotDays] = useState<AvailabilityDay[] | null>(null)
@@ -229,9 +241,8 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
     void load()
   }, [load])
 
-  const handleCancel = async () => {
+  const submitCancellation = async () => {
     if (booking === null || reason === '') return
-    setBusy(true)
     setProblem(null)
     setOutcome(null)
     try {
@@ -257,8 +268,21 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
     } catch (error) {
       setProblem(errorText(error))
     } finally {
-      setBusy(false)
+      setCancelStage((current) => cancelFlowStep(current, 'settled').stage)
     }
+  }
+
+  /**
+   * The only route to a cancellation. `cancelFlowStep` decides whether a step
+   * merely opens the dialog or is the one that sends the request, so pressing
+   * "Cancel booking" cannot mutate anything and a confirmed cancellation is
+   * submitted once.
+   */
+  const stepCancel = (event: CancelEvent) => {
+    if (booking === null || reason === '') return
+    const next = cancelFlowStep(cancelStage, event)
+    setCancelStage(next.stage)
+    if (next.submit) void submitCancellation()
   }
 
   const openReschedule = async () => {
@@ -319,6 +343,19 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
   const endsAt = new Date(booking.endsAt)
   const canAct = booking.status === 'confirmed' || booking.status === 'pending_payment'
   const slots = slotDays?.flatMap((day) => day.slots) ?? []
+  const cancelling = cancelStage === 'submitting'
+  // What the policy says would happen, restated for the owner before they
+  // commit. The server recalculates it when the cancellation is submitted.
+  const preview =
+    reason === ''
+      ? null
+      : cancellationPreview({
+          reason: reason as CancellationReason,
+          startsAt,
+          now: new Date(),
+          amountPaidCents: booking.amountPaidCents,
+          amountRefundedCents: booking.amountRefundedCents,
+        })
 
   return (
     <AdminPanel
@@ -351,7 +388,10 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
             <DetailRow label="Hold expires" value={formatDateTime(new Date(booking.holdExpiresAt))} />
           ) : null}
           {booking.cancellationReason ? (
-            <DetailRow label="Cancelled because" value={booking.cancellationReason} />
+            <DetailRow
+              label="Cancelled because"
+              value={cancellationReasonLabel(booking.cancellationReason)}
+            />
           ) : null}
           <DetailRow label="Booked" value={formatDateTime(new Date(booking.createdAt))} />
         </dl>
@@ -386,10 +426,10 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
                 type="button"
                 variant="secondary"
                 size="compact"
-                onClick={handleCancel}
-                disabled={busy || reason === ''}
+                onClick={() => stepCancel('request')}
+                disabled={busy || cancelling || reason === ''}
               >
-                {busy ? 'Working…' : 'Cancel booking'}
+                {cancelling ? 'Working…' : 'Cancel booking'}
               </Button>
               {booking.status === 'confirmed' ? (
                 <Button
@@ -397,7 +437,7 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
                   variant="quiet"
                   size="compact"
                   onClick={moving ? () => setMoving(false) : openReschedule}
-                  disabled={busy}
+                  disabled={busy || cancelling}
                 >
                   {moving ? 'Stop moving' : 'Reschedule'}
                 </Button>
@@ -436,7 +476,7 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
                         type="button"
                         size="compact"
                         onClick={handleReschedule}
-                        disabled={busy || chosenSlot === ''}
+                        disabled={busy || cancelling || chosenSlot === ''}
                       >
                         {busy ? 'Moving…' : 'Confirm new time'}
                       </Button>
@@ -446,6 +486,15 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
               </div>
             ) : null}
           </div>
+        ) : null}
+
+        {cancelStage !== 'idle' && preview !== null ? (
+          <CancelBookingDialog
+            preview={preview}
+            busy={cancelling}
+            onConfirm={() => stepCancel('confirm')}
+            onDismiss={() => stepCancel('dismiss')}
+          />
         ) : null}
 
         {booking.events.length > 0 ? (
