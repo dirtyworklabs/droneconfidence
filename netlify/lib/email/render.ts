@@ -1,10 +1,13 @@
 /**
- * Email rendering.
+ * Shared email rendering for Drone Confidence.
  *
  * Every customer-supplied value passes through `escapeHtml` before it reaches
  * the HTML body, and each message also carries a plain-text alternative built
- * from the same data. The layout is deliberately plain: no tracking pixels, no
- * remote images, no scripts.
+ * from the same data.
+ *
+ * The email layout is intentionally simple and email-client friendly:
+ * no tracking pixels, no scripts, and only the Drone Confidence brand logo
+ * is loaded remotely from the public website.
  */
 
 export const escapeHtml = (value: string): string =>
@@ -35,12 +38,19 @@ export type Block =
   | { kind: 'list'; items: string[] }
   | { kind: 'button'; label: string; href: string }
 
-const INK = '#23282a'
-const SOFT = '#4c5658'
+const INK = '#123f3f'
+const BODY = '#4c5658'
 const SAGE = '#5a7d63'
+const BORDER = '#e5e7e2'
+const BACKGROUND = '#f6f4ef'
+
+const LOGO_URL =
+  'https://droneconfidence.com/images/drone-confidence-email-logo.png'
+
+const WEBSITE_URL = 'https://droneconfidence.com'
 
 /**
- * Composes the HTML and text bodies from the same block list, so the two
+ * Composes the HTML and text bodies from the same block list so the two
  * versions of a message can't drift apart.
  */
 export const renderEmail = (subject: string, blocks: Block[]): EmailBody => {
@@ -51,41 +61,56 @@ export const renderEmail = (subject: string, blocks: Block[]): EmailBody => {
     switch (block.kind) {
       case 'heading':
         html.push(
-          `<h1 style="margin:0 0 18px;font-size:20px;line-height:1.3;font-weight:600;color:${INK};">${escapeHtml(block.text)}</h1>`,
+          `<h1 style="margin:0 0 18px;font-size:22px;line-height:1.3;font-weight:650;color:${INK};">${escapeHtml(block.text)}</h1>`,
         )
         text.push(block.text, '')
         break
+
       case 'paragraph':
         html.push(
-          `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${SOFT};">${escapeHtml(block.text)}</p>`,
+          `<p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:${BODY};">${escapeHtml(block.text)}</p>`,
         )
         text.push(block.text, '')
         break
+
       case 'label':
         html.push(
-          `<p style="margin:24px 0 6px;font-size:13px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:${SAGE};">${escapeHtml(block.text)}</p>`,
+          `<p style="margin:26px 0 7px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${SAGE};">${escapeHtml(block.text)}</p>`,
         )
         text.push(block.text.toUpperCase())
         break
+
       case 'lines':
         html.push(
-          `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:${INK};">${block.items
+          `<p style="margin:0 0 16px;font-size:15px;line-height:1.65;color:${INK};">${block.items
             .map((item) => escapeHtml(item))
             .join('<br />')}</p>`,
         )
         text.push(...block.items, '')
         break
+
       case 'list':
         html.push(
-          `<ul style="margin:0 0 16px;padding-left:20px;font-size:15px;line-height:1.6;color:${SOFT};">${block.items
-            .map((item) => `<li style="margin:0 0 4px;">${escapeHtml(item)}</li>`)
+          `<ul style="margin:0 0 16px;padding-left:21px;font-size:15px;line-height:1.65;color:${BODY};">${block.items
+            .map(
+              (item) =>
+                `<li style="margin:0 0 6px;">${escapeHtml(item)}</li>`,
+            )
             .join('')}</ul>`,
         )
         text.push(...block.items.map((item) => `- ${item}`), '')
         break
+
       case 'button':
         html.push(
-          `<p style="margin:24px 0;"><a href="${escapeHtml(block.href)}" style="display:inline-block;padding:12px 22px;border-radius:999px;background:${SAGE};color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;">${escapeHtml(block.label)}</a></p>`,
+          `<p style="margin:26px 0;">
+            <a
+              href="${escapeHtml(block.href)}"
+              style="display:inline-block;padding:12px 22px;border-radius:999px;background:${SAGE};color:#ffffff;font-size:15px;font-weight:650;text-decoration:none;"
+            >
+              ${escapeHtml(block.label)}
+            </a>
+          </p>`,
         )
         text.push(`${block.label}: ${block.href}`, '')
         break
@@ -93,15 +118,129 @@ export const renderEmail = (subject: string, blocks: Block[]): EmailBody => {
   }
 
   const document = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>${escapeHtml(subject)}</title></head>
-<body style="margin:0;padding:0;background:#f6f4ef;">
-<div style="max-width:560px;margin:0 auto;padding:32px 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-<div style="background:#ffffff;border:1px solid rgba(35,40,42,0.08);border-radius:18px;padding:28px 26px;">
-${html.join('\n')}
-<p style="margin:24px 0 0;font-size:15px;line-height:1.6;color:${INK};">Drone Confidence</p>
-</div>
-</div>
-</body></html>`
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <meta name="supported-color-schemes" content="light" />
+  <title>${escapeHtml(subject)}</title>
+</head>
 
-  return { subject, html: document, text: text.join('\n').trim() }
+<body style="margin:0;padding:0;background:${BACKGROUND};">
+
+  <div
+    style="
+      max-width:560px;
+      margin:0 auto;
+      padding:32px 20px;
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    "
+  >
+
+    <div
+      style="
+        text-align:center;
+        padding:4px 0 24px;
+      "
+    >
+      <a
+        href="${WEBSITE_URL}"
+        style="display:inline-block;text-decoration:none;"
+      >
+        <img
+          src="${LOGO_URL}"
+          width="135"
+          alt="Drone Confidence"
+          style="
+            display:block;
+            width:135px;
+            max-width:135px;
+            height:auto;
+            margin:0 auto;
+            border:0;
+          "
+        />
+      </a>
+    </div>
+
+    <div
+      style="
+        background:#ffffff;
+        border:1px solid ${BORDER};
+        border-radius:18px;
+        padding:30px 28px;
+      "
+    >
+      ${html.join('\n')}
+
+      <div
+        style="
+          margin-top:30px;
+          padding-top:22px;
+          border-top:1px solid ${BORDER};
+        "
+      >
+        <p
+          style="
+            margin:0 0 3px;
+            font-size:14px;
+            line-height:1.5;
+            font-weight:650;
+            color:${INK};
+          "
+        >
+          Drone Confidence
+        </p>
+
+        <p
+          style="
+            margin:0 0 7px;
+            font-size:13px;
+            line-height:1.5;
+            color:${BODY};
+          "
+        >
+          Private one-on-one drone coaching in Sydney
+        </p>
+
+        <p
+          style="
+            margin:0;
+            font-size:13px;
+            line-height:1.5;
+          "
+        >
+          <a
+            href="${WEBSITE_URL}"
+            style="color:${SAGE};text-decoration:none;"
+          >
+            droneconfidence.com
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <p
+      style="
+        margin:18px 0 0;
+        text-align:center;
+        font-size:11px;
+        line-height:1.5;
+        color:#7a8283;
+      "
+    >
+      This email was sent in relation to a Drone Confidence booking.
+    </p>
+
+  </div>
+
+</body>
+</html>`
+
+  return {
+    subject,
+    html: document,
+    text: text.join('\n').trim(),
+  }
 }
