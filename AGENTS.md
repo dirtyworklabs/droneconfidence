@@ -53,7 +53,8 @@ netlify/
                   admin-bookings, admin-availability, admin-settings
   lib/            supabase, store, availabilityService, bookingInput, stripe, refunds,
                   adminAuth, env, http, email/{render,templates,send}
-supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql
+supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql,
+                      0003_privilege_hardening.sql
 tests/            vitest — migrations run against real Postgres via PGlite
 ```
 
@@ -130,6 +131,13 @@ Supabase user who is not the owner is refused like an anonymous request. Panels 
 **RLS is on with zero policies.** Default deny. The service-role key, server-side only, is the only
 way to data. Do not disable RLS, and do not add an anon policy to "make something work" — move the
 work into a function instead.
+
+**Revoking a function from `anon` does nothing on its own.** Postgres grants EXECUTE on every new
+function to PUBLIC, and `anon` inherits it, so `0003_privilege_hardening.sql` revokes PUBLIC first and
+then grants EXECUTE back to `service_role` only. Any new function in `public` must be added to that
+migration's hardening list — `tests/migrations.test.ts` fails if one isn't. The definer RPCs run with
+`search_path = ''` (pinned by `alter function`, so 0002 stays the only copy of each body), which is
+only safe because every relation and type they name is schema-qualified. Keep new SQL qualified.
 
 **Netlify Forms needs `public/__forms.html`.** Netlify's build bot can't see client-rendered forms,
 so that hidden skeleton registers the `contact` form and every field name. Adding a field to a React
