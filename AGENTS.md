@@ -51,10 +51,10 @@ netlify/
   functions/      booking-availability, booking-checkout, booking-confirmation,
                   stripe-webhook, booking-reminders (hourly),
                   admin-bookings, admin-availability, admin-settings
-  lib/            supabase, store, availabilityService, bookingInput, stripe, refunds,
-                  adminAuth, env, http, email/{render,templates,send}
+  lib/            supabase, store, availabilityService, bookingAccess, bookingInput, stripe,
+                  refunds, adminAuth, env, http, email/{render,templates,send}
 supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql,
-                      0003_privilege_hardening.sql
+                      0003_privilege_hardening.sql, 0004_service_role_table_grants.sql
 tests/            vitest — migrations run against real Postgres via PGlite
 ```
 
@@ -83,7 +83,14 @@ operational language — never "coming soon", "being prepared" or a waitlist.
 
 **The booking master switch defaults to off.** `booking_settings.booking_enabled` ships `false`. With
 it off, `/book` still renders all four steps and reports at step 3 that online booking is
-unavailable. No marketing copy, FAQ, heading or step list may branch on it.
+unavailable. No marketing copy, FAQ, heading or step list may branch on it. The one exception is
+`netlify/lib/bookingAccess.ts`: `publicBookingAllowed(bookingEnabled)` is the single definition of
+"a customer may book now", and its local-only override requires `BOOKING_TEST_MODE=true` *and* an
+explicit `SITE_URL` of `http://localhost:8888` *and* a `sk_test_` Stripe key, all three at once, so
+`netlify dev` can exercise the flow against Stripe's sandbox while the shared database switch stays
+off. It is server-only, fails closed, is enforced in both `availabilityService` and
+`booking-checkout`, and must never gain a browser, URL, cookie or admin surface — see
+`docs/local-booking-test-mode.md`.
 
 **Concurrency is a database problem, and it is solved in the database.** `reserve_booking_hold`,
 `confirm_booking_payment` and `reschedule_booking` take an advisory lock on the Sydney booking day and

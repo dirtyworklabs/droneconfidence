@@ -29,6 +29,10 @@ Both are **server-only** and are read by Netlify Functions:
 | `STRIPE_SECRET_KEY` | `create-checkout`, `stripe-webhook`, refunds |
 | `STRIPE_WEBHOOK_SECRET` | `stripe-webhook` signature verification |
 
+`SITE_URL` is read alongside them: it builds the Checkout return URLs. In local development it is
+also one of the three conditions the local test-mode override checks — see
+[local-booking-test-mode.md](./local-booking-test-mode.md).
+
 Never expose either through a `VITE_*` variable — every `VITE_*` value is readable by the browser.
 Never paste a key into a commit, a comment or a log line.
 
@@ -59,6 +63,11 @@ or double-charge.
 - [ ] Reschedule a paid booking; confirm the payment is preserved and the customer is emailed.
 
 Only switch to live keys once every box above passes.
+
+To run that checklist locally through `netlify dev` while the database booking switch is off, set
+`BOOKING_TEST_MODE=true` for local development only, with `SITE_URL=http://localhost:8888` and a
+`sk_test_…` secret key: [local-booking-test-mode.md](./local-booking-test-mode.md). A `sk_live_…` key
+can never activate it.
 
 ## Refunds
 
