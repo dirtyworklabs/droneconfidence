@@ -25,9 +25,9 @@ export interface SessionCatalogEntry {
 }
 
 export const SESSION_CATALOG: readonly SessionCatalogEntry[] = [
-  { id: 'first-flight', name: 'First Flight', priceDollars: 179, durationMinutes: 60 },
-  { id: 'fly-with-confidence', name: 'Fly With Confidence', priceDollars: 239, durationMinutes: 90 },
-  { id: 'photo-video', name: 'Photo & Video', priceDollars: 269, durationMinutes: 90 },
+  { id: 'first-flight', name: 'First Flight', priceDollars: 180, durationMinutes: 60 },
+  { id: 'fly-with-confidence', name: 'Fly With Confidence', priceDollars: 240, durationMinutes: 90 },
+  { id: 'photo-video', name: 'Photo & Video', priceDollars: 280, durationMinutes: 90 },
 ]
 
 export interface LocationCatalogEntry {
