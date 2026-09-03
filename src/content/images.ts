@@ -40,36 +40,42 @@ export const imageSlots: Record<ImageSlotKey, ImageSlot> = {
     fallback: 'flight-path',
     fallbackCaption: '',
   },
+
   'session-first-flight': {
     src: '/images/dc-first-flight.jpg',
     alt: 'A small consumer camera drone being flown during a practical drone training session',
     fallback: 'controller',
     fallbackCaption: 'Pre-flight · controls · first hover',
   },
+
   'session-fly-with-confidence': {
     src: '/images/dc-fly-with-confidence.jpg',
     alt: 'A consumer camera drone flying while its pilot practises confident drone control',
     fallback: 'orbit',
     fallbackCaption: 'Orientation · turns · repeatable paths',
   },
+
   'session-photo-video': {
     src: '/images/dc-photo-video.jpg',
     alt: 'Aerial coastal landscape photography captured using a camera drone',
     fallback: 'framing',
     fallbackCaption: 'Exposure · movement · framing',
   },
+
   'location-south': {
-    src: '',
-    alt: 'Open green space in Sydney’s south used as a drone training area',
+    src: '/images/gwawley-park-location.jpg',
+    alt: 'Open green space at Gwawley Park, Taren Point in Sydney’s south',
     fallback: 'topography',
     fallbackCaption: 'Sydney south · Taren Point',
   },
+
   'location-north': {
-    src: '',
-    alt: 'Open green space in Sydney’s north used as a drone training area',
+    src: '/images/north-ryde-common-location.jpg',
+    alt: 'Open green space at North Ryde Common in Sydney’s north',
     fallback: 'topography',
     fallbackCaption: 'Sydney north · North Ryde',
   },
+
   'about-tom': {
     src: '/images/in-motion-aero-atc.jpg',
     alt: 'Tom Gerrard during commercial drone operations with In Motion Aero',
@@ -80,4 +86,5 @@ export const imageSlots: Record<ImageSlotKey, ImageSlot> = {
 
 export const getImageSlot = (key: ImageSlotKey): ImageSlot => imageSlots[key]
 
-export const hasPhoto = (key: ImageSlotKey): boolean => imageSlots[key].src.trim().length > 0
+export const hasPhoto = (key: ImageSlotKey): boolean =>
+  imageSlots[key].src.trim().length > 0

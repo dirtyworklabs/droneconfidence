@@ -305,6 +305,8 @@ export const BookingDetailsForm = ({
         I&rsquo;ve read and accept the{' '}
         <Link
           to={ROUTES.bookingPolicy}
+          target="_blank"
+          rel="noopener noreferrer"
           className="text-sage underline decoration-sage/30 underline-offset-4 transition-colors duration-200 ease-[var(--ease-calm)] hover:text-eucalyptus"
         >
           Booking &amp; Cancellation Policy
