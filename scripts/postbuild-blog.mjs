@@ -191,7 +191,7 @@ const staticArticle = (post) => {
       <p>${escapeHtml(post.category)}</p>
       <h1>${escapeHtml(post.title)}</h1>
       <p>${escapeHtml(post.excerpt)}</p>
-      <p>By <a href="${escapeHtml(post.authorPath)}">${escapeHtml(post.author)}</a> · ${post.readingMinutes} min read · Published ${escapeHtml(post.publishedAt)} · Fact checked ${escapeHtml(post.reviewedAt)}</p>
+      <p>By <a href="${escapeHtml(post.authorPath)}">${escapeHtml(post.author)}</a> · ${post.readingMinutes} min read · Published ${escapeHtml(post.publishedAt)}</p>
     </header>
     <section><h2>Quick answer</h2><p>${escapeHtml(post.quickAnswer)}</p></section>
     <section><h2>The important bits</h2><ul>${post.keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul></section>
