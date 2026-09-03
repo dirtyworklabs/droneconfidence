@@ -15,9 +15,15 @@ import { LocationSelector } from '@/components/booking/LocationSelector'
 import { BookingAvailability } from '@/components/booking/BookingAvailability'
 import { BookingDetailsForm } from '@/components/booking/BookingDetailsForm'
 import { useBookingSelection } from '@/components/booking/useBookingSelection'
+import { formatPrice, sessions } from '@/content/sessions'
 import { track } from '@/lib/analytics'
 import { useSeo } from '@/lib/seo'
 import { serviceSchema } from '@/lib/structuredData'
+
+/** "First Flight $180, Fly With Confidence $240, Photo & Video $280" — from the catalogue. */
+const sessionPriceList = sessions
+  .map((session) => `${session.name} ${formatPrice(session.price)}`)
+  .join(', ')
 
 /**
  * The permanent public booking entry point.
@@ -33,8 +39,7 @@ import { serviceSchema } from '@/lib/structuredData'
 const Book = () => {
   useSeo({
     title: 'Book a Drone Lesson Sydney | Drone Confidence',
-    description:
-      'Book a private one-on-one drone lesson in Sydney. First Flight $179, Fly With Confidence $239, Photo & Video $269. North and south Sydney training areas.',
+    description: `Book a private one-on-one drone lesson in Sydney. ${sessionPriceList}. North and south Sydney training areas.`,
     path: '/book',
     structuredData: [serviceSchema()],
   })

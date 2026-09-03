@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { findSession, sessionPriceCents } from '@shared/booking/catalog'
 import type { BookingRow } from '../../netlify/lib/store'
 import {
   cancellationEmail,
@@ -9,6 +10,9 @@ import {
 } from '../../netlify/lib/email/templates'
 import type { EmailBody } from '../../netlify/lib/email/render'
 
+// A current hypothetical booking, so the amounts come from the live catalogue.
+const PREVIEW_PRICE_CENTS = sessionPriceCents(findSession('fly-with-confidence')!)
+
 const MOCK_BOOKING: BookingRow = {
   id: 'preview-booking',
   reference: 'DC-7F3K2Q',
@@ -17,7 +21,7 @@ const MOCK_BOOKING: BookingRow = {
   session_slug: 'fly-with-confidence',
   session_name: 'Fly With Confidence',
   duration_minutes: 90,
-  price_cents: 23900,
+  price_cents: PREVIEW_PRICE_CENTS,
 
   location_slug: 'taren-point',
   location_name: 'South Sydney · Taren Point',
@@ -48,7 +52,7 @@ const MOCK_BOOKING: BookingRow = {
   stripe_payment_intent_id: 'pi_test_preview',
 
   currency: 'aud',
-  amount_paid_cents: 23900,
+  amount_paid_cents: PREVIEW_PRICE_CENTS,
   amount_refunded_cents: 0,
   payment_state: 'paid',
   stripe_refund_id: null,

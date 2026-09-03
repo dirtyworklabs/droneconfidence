@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { findSession, sessionPriceCents } from '@shared/booking/catalog'
 import { DEFAULT_BOOKING_SETTINGS, type BookingSettings } from '@shared/booking/rules'
 import type { AvailabilityOutcome } from '../netlify/lib/availabilityService'
 
@@ -84,6 +85,9 @@ vi.mock('../netlify/lib/supabase', async (importOriginal) => ({
 
 const checkout = (await import('../netlify/functions/booking-checkout.mts')).default
 
+// The price the RPC must receive is the catalogue's, never the payload's.
+const FIRST_FLIGHT = findSession('first-flight')!
+
 const post = () =>
   checkout(
     new Request('http://localhost:8888/.netlify/functions/booking-checkout', {
@@ -167,7 +171,7 @@ describe('checkout defence in depth', () => {
       'reserve_booking_hold',
       expect.objectContaining({
         p_session_slug: 'first-flight',
-        p_price_cents: 17900,
+        p_price_cents: sessionPriceCents(FIRST_FLIGHT),
         p_duration_minutes: 60,
       }),
     )

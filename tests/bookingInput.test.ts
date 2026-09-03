@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { sessionPriceCents } from '@shared/booking/catalog'
+import { findSession, sessionPriceCents } from '@shared/booking/catalog'
 import { validateCheckoutRequest } from '../netlify/lib/bookingInput'
 
 const valid = {
@@ -45,8 +45,10 @@ describe('server-side booking validation', () => {
       sessionName: 'Free lesson',
       amount: 0,
     })
-    // Whatever the browser claims, the charge comes from src/content/sessions.ts.
-    expect(sessionPriceCents(value.session)).toBe(17900)
+    // Whatever the browser claims, the charge comes from shared/booking/catalog.ts.
+    const firstFlight = findSession('first-flight')
+    expect(firstFlight).not.toBeNull()
+    expect(sessionPriceCents(value.session)).toBe(sessionPriceCents(firstFlight!))
     expect(value.session.durationMinutes).toBe(60)
     expect(value.session.name).toBe('First Flight')
     expect(Object.keys(value)).not.toContain('priceCents')

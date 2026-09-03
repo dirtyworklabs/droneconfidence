@@ -7,14 +7,14 @@ import { AboutTrust } from '@/components/marketing/AboutTrust'
 import { Testimonials } from '@/components/marketing/Testimonials'
 import { FaqPreview } from '@/components/marketing/FaqPreview'
 import { FinalCta } from '@/components/marketing/FinalCta'
+import { formatPrice, lowestSessionPrice } from '@/content/sessions'
 import { useSeo } from '@/lib/seo'
 import { localBusinessSchema, serviceSchema, websiteSchema } from '@/lib/structuredData'
 
 const Home = () => {
   useSeo({
     title: 'Drone Lessons Sydney | Private 1-on-1 Training',
-    description:
-      'Private one-on-one drone lessons in Sydney. Learn to fly confidently or capture better aerial photo/video. Sessions from $179.',
+    description: `Private one-on-one drone lessons in Sydney. Learn to fly confidently or capture better aerial photo/video. Sessions from ${formatPrice(lowestSessionPrice)}.`,
     path: '/',
     socialTitle: 'Drone Confidence | Private Drone Training Sydney',
     socialDescription:
