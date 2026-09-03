@@ -87,8 +87,20 @@ describe('transactional emails', () => {
   it('never emits an unescaped customer value', () => {
     for (const body of bodies()) {
       expect(body.html).not.toContain('<script>')
-      expect(body.html).not.toContain('<img')
       expect(body.html).not.toContain('<b>4K</b>')
+      expect(body.html).not.toContain('<img onerror=1>')
+    }
+  })
+
+  it('emits no image other than the first-party Drone Confidence logo', () => {
+    // The renderer's own logo is trusted markup. A second <img> would mean a
+    // customer value reached the HTML as a tag rather than as escaped text.
+    for (const body of bodies()) {
+      const images = body.html.match(/<img\b/g) ?? []
+      expect(images).toHaveLength(1)
+      expect(body.html).toContain(
+        'src="https://droneconfidence.com/images/drone-confidence-email-logo.png"',
+      )
     }
   })
 
