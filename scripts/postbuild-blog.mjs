@@ -1,6 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { TZDate } from '@date-fns/tz'
+
+const SYDNEY_TIME_ZONE = 'Australia/Sydney'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '..')
@@ -24,6 +27,14 @@ const absolute = (pathname) => pathname === '/' ? `${siteUrl}/` : `${siteUrl}${p
 const postPath = (post) => `/blog/${post.slug}`
 const publishedDate = (post) => post.publishedAt
 const modifiedDate = (post) => post.reviewedAt >= post.publishedAt ? post.reviewedAt : post.publishedAt
+
+// publishedAt stays an editorial YYYY-MM-DD, so RSS has to resolve it to a real
+// instant. A fixed +10:00 is wrong for half the year: Sydney is AEDT (+11:00)
+// from October to April. TZDate applies whichever offset that date actually had.
+const rssPublicationDate = (publishedAt) => {
+  const [year, month, day] = publishedAt.split('-').map(Number)
+  return new TZDate(year, month - 1, day, SYDNEY_TIME_ZONE).toUTCString()
+}
 
 const upsertMeta = (html, key, content, { property = false } = {}) => {
   const attr = property ? 'property' : 'name'
@@ -259,7 +270,7 @@ await writeFile(sitemapPath, sitemap)
 
 const rssItems = [...published]
   .sort((a, b) => `${b.publishedAt}:${b.slug}`.localeCompare(`${a.publishedAt}:${a.slug}`))
-  .map((post) => `    <item>\n      <title>${escapeXml(post.title)}</title>\n      <link>${escapeXml(absolute(postPath(post)))}</link>\n      <guid isPermaLink="true">${escapeXml(absolute(postPath(post)))}</guid>\n      <pubDate>${new Date(`${post.publishedAt}T00:00:00+10:00`).toUTCString()}</pubDate>\n      <description>${escapeXml(post.description)}</description>\n    </item>`)
+  .map((post) => `    <item>\n      <title>${escapeXml(post.title)}</title>\n      <link>${escapeXml(absolute(postPath(post)))}</link>\n      <guid isPermaLink="true">${escapeXml(absolute(postPath(post)))}</guid>\n      <pubDate>${rssPublicationDate(post.publishedAt)}</pubDate>\n      <description>${escapeXml(post.description)}</description>\n    </item>`)
   .join('\n')
 
 const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n  <channel>\n    <title>Drone Confidence Guides</title>\n    <link>${escapeXml(absolute('/blog'))}</link>\n    <description>Plain-English drone guides for Australian drone owners.</description>\n    <language>en-au</language>\n${rssItems}\n  </channel>\n</rss>\n`

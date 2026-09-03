@@ -8,6 +8,7 @@ import { Reveal } from '@/components/ui/Reveal'
 import { Section } from '@/components/ui/Section'
 import type { BlogPost } from '@/content/blog'
 import { getRelatedPublishedPosts } from '@/content/blog'
+import { cn } from '@/lib/cn'
 import { ROUTES } from '@/lib/routes'
 
 interface BlogArticleProps {
@@ -28,8 +29,21 @@ const slugifyHeading = (heading: string): string =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-const BlogTable = ({ headers, rows }: { headers: string[]; rows: string[][] }) => (
-  <div className="my-8 overflow-x-auto rounded-[var(--radius-control)] border border-ink/10 bg-surface">
+const BlogTable = ({
+  headers,
+  rows,
+  className,
+}: {
+  headers: string[]
+  rows: string[][]
+  className?: string
+}) => (
+  <div
+    className={cn(
+      'overflow-x-auto rounded-[var(--radius-control)] border border-ink/10 bg-surface',
+      className,
+    )}
+  >
     <table className="w-full min-w-[36rem] border-collapse text-left text-[0.92rem]">
       <thead className="bg-canvas-deep">
         <tr>
@@ -106,8 +120,6 @@ export const BlogArticle = ({ post }: BlogArticleProps) => {
                 <Clock aria-hidden="true" className="size-3.5" />
                 {post.readingMinutes} min read
               </span>
-              <span aria-hidden="true">·</span>
-              <span>Fact checked {formatDate(post.reviewedAt)}</span>
             </div>
           </Reveal>
         </Container>
@@ -162,6 +174,16 @@ export const BlogArticle = ({ post }: BlogArticleProps) => {
         <Container width="text">
           {post.sections.map((section) => {
             const id = slugifyHeading(section.heading)
+            const hasParagraphs = section.paragraphs.length > 0
+            const hasBullets = Boolean(section.bullets?.length)
+            const hasNumbered = Boolean(section.numbered?.length)
+            /**
+             * Editorial breathing room between a section heading and whatever
+             * opens the section — about 24px on mobile, 28px from sm up. Only
+             * the first block takes it; later blocks keep their own
+             * paragraph-to-block rhythm so the margins never compound.
+             */
+            const leadIn = 'mt-6 sm:mt-7'
             return (
               <Reveal key={section.heading}>
                 <section
@@ -172,14 +194,14 @@ export const BlogArticle = ({ post }: BlogArticleProps) => {
                     {section.heading}
                   </h2>
 
-                  {section.paragraphs.length > 0 ? (
-                    <div className="mt-5 space-y-5 text-[1.02rem] leading-[1.78] text-ink-soft">
+                  {hasParagraphs ? (
+                    <div className={cn(leadIn, 'space-y-5 text-[1.02rem] leading-[1.78] text-ink-soft')}>
                       {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
                     </div>
                   ) : null}
 
                   {section.bullets ? (
-                    <ul className="mt-6 space-y-3 pl-0">
+                    <ul className={cn(hasParagraphs ? 'mt-6' : leadIn, 'space-y-3 pl-0')}>
                       {section.bullets.map((item) => (
                         <li key={item} className="flex gap-3 leading-relaxed text-ink-soft">
                           <span aria-hidden="true" className="mt-[0.72em] size-1.5 shrink-0 rounded-full bg-sage" />
@@ -190,7 +212,12 @@ export const BlogArticle = ({ post }: BlogArticleProps) => {
                   ) : null}
 
                   {section.numbered ? (
-                    <ol className="mt-6 space-y-4 pl-6 text-ink-soft marker:font-display marker:font-semibold marker:text-eucalyptus">
+                    <ol
+                      className={cn(
+                        hasParagraphs || hasBullets ? 'mt-6' : leadIn,
+                        'space-y-4 pl-6 text-ink-soft marker:font-display marker:font-semibold marker:text-eucalyptus',
+                      )}
+                    >
                       {section.numbered.map((item) => (
                         <li key={item} className="pl-2 leading-relaxed">{item}</li>
                       ))}
@@ -198,7 +225,14 @@ export const BlogArticle = ({ post }: BlogArticleProps) => {
                   ) : null}
 
                   {section.table ? (
-                    <BlogTable headers={section.table.headers} rows={section.table.rows} />
+                    <BlogTable
+                      headers={section.table.headers}
+                      rows={section.table.rows}
+                      className={cn(
+                        hasParagraphs || hasBullets || hasNumbered ? 'mt-8' : leadIn,
+                        'mb-8',
+                      )}
+                    />
                   ) : null}
 
                   {section.callout ? (
