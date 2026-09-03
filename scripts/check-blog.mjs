@@ -1,11 +1,21 @@
 import { readFile } from 'node:fs/promises'
+import { TZDate } from '@date-fns/tz'
+
+const SYDNEY_TIME_ZONE = 'Australia/Sydney'
+const pad2 = (value) => String(value).padStart(2, '0')
+
+// Editorial publishing is judged against Sydney's calendar date, not the build
+// server's. Netlify runs in UTC, where Sydney is already on the next day for
+// 10-11 hours of every date, so a UTC truncation would reject a post published
+// "today" in Sydney as being in the future.
+const nowSydney = TZDate.tz(SYDNEY_TIME_ZONE)
+const today = `${nowSydney.getFullYear()}-${pad2(nowSydney.getMonth() + 1)}-${pad2(nowSydney.getDate())}`
 
 const posts = JSON.parse(await readFile(new URL('../src/content/blog/posts.json', import.meta.url), 'utf8'))
 const errors = []
 const warnings = []
 const slugs = new Set()
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-const today = new Date().toISOString().slice(0, 10)
 
 const wordsIn = (post) => {
   const text = [
