@@ -94,3 +94,66 @@ export const faqPageSchema = (): Record<string, unknown> => ({
     },
   })),
 })
+
+export interface BreadcrumbItem {
+  name: string
+  path: string
+}
+
+export const breadcrumbSchema = (items: BreadcrumbItem[]): Record<string, unknown> => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: absoluteUrl(item.path),
+  })),
+})
+
+export const blogPostingSchema = (post: import('@/content/blog').BlogPost): Record<string, unknown> => {
+  const path = `/blog/${post.slug}`
+  const publishedAt = post.publishedAt ?? post.reviewedAt
+  const modifiedAt = post.reviewedAt >= publishedAt ? post.reviewedAt : publishedAt
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    url: absoluteUrl(path),
+    mainEntityOfPage: absoluteUrl(path),
+    inLanguage: 'en-AU',
+    datePublished: publishedAt,
+    dateModified: modifiedAt,
+    articleSection: post.category,
+    image: `${siteConfig.siteUrl.replace(/\/+$/, '')}/social-card.png`,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+      url: absoluteUrl(post.authorPath),
+    },
+    publisher: { '@id': BUSINESS_ID },
+  }
+}
+
+export const blogCollectionSchema = (
+  posts: import('@/content/blog').BlogPost[],
+): Record<string, unknown> => ({
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Drone Confidence Guides',
+  description: 'Practical, plain-English drone guides for Australian drone owners.',
+  url: absoluteUrl('/blog'),
+  inLanguage: 'en-AU',
+  publisher: { '@id': BUSINESS_ID },
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: posts.map((post, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: post.title,
+      url: absoluteUrl(`/blog/${post.slug}`),
+    })),
+  },
+})

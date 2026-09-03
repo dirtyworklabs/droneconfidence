@@ -15,6 +15,8 @@ const Sessions = lazy(() => import('@/pages/Sessions'))
 const Locations = lazy(() => import('@/pages/Locations'))
 const About = lazy(() => import('@/pages/About'))
 const Faq = lazy(() => import('@/pages/Faq'))
+const Blog = lazy(() => import('@/pages/Blog'))
+const BlogPost = lazy(() => import('@/pages/BlogPost'))
 const Book = lazy(() => import('@/pages/Book'))
 const Contact = lazy(() => import('@/pages/Contact'))
 const Privacy = lazy(() => import('@/pages/Privacy'))
@@ -105,6 +107,24 @@ const App = () => (
           element={
             <Suspense fallback={<RouteFallback />}>
               <Faq />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path={ROUTES.blog}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <Blog />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path={ROUTES.blogPost}
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <BlogPost />
             </Suspense>
           }
         />

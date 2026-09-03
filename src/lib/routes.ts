@@ -8,6 +8,9 @@ export const ROUTES = {
   locations: '/locations',
   about: '/about',
   faq: '/faq',
+  blog: '/blog',
+  /** React Router pattern only. Use blogPostPath() when linking. */
+  blogPost: '/blog/:slug',
   book: '/book',
   contact: '/contact',
   privacy: '/privacy',
@@ -18,6 +21,9 @@ export const ROUTES = {
   adminLogin: '/admin/login',
   admin: '/admin',
 } as const
+
+export const blogPostPath = (slug: string): string =>
+  `${ROUTES.blog}/${encodeURIComponent(slug)}`
 
 /**
  * Query parameters understood by /book. They carry a session, a training area

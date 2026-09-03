@@ -5,10 +5,16 @@
   "type": "module",
   "description": "Booking website and first-party booking system for Drone Confidence — private one-on-one drone training in Sydney.",
   "scripts": {
+    "predev": "node scripts/prepare-blog.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/prepare-blog.mjs && node scripts/check-blog.mjs",
     "build": "tsc -b && vite build",
+    "postbuild": "node scripts/postbuild-blog.mjs && node scripts/verify-blog-dist.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit",
+    "blog:prepare": "node scripts/prepare-blog.mjs",
+    "blog:check": "node scripts/check-blog.mjs",
+    "blog:verify-dist": "node scripts/verify-blog-dist.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
