@@ -15,7 +15,7 @@ Which message is sent when:
 | 2. 24-hour reminder | hourly schedule, ~24 hours before the lesson | `booking-reminders` |
 | 3. Weather reschedule | owner reschedules in `/admin` | `admin-bookings` |
 | 4. Cancellation | owner cancels in `/admin` | `admin-bookings` |
-| Owner notification | every confirmed booking | `stripe-webhook` |
+| 5. Owner notification | every confirmed booking | `stripe-webhook` |
 
 Two rules the code enforces:
 
@@ -45,7 +45,14 @@ Two rules the code enforces:
 > [TIME]
 > [TRAINING AREA]
 >
-> We'll review the information about your drone and confirm your meeting point before the lesson.
+> **Booking details**
+> Booking reference: [REFERENCE]
+> Paid: [AMOUNT]
+> Aircraft: [AIRCRAFT]
+> Controller / RC: [CONTROLLER]
+>
+> We'll review the information about your aircraft and controller and confirm your meeting point
+> before the lesson.
 >
 > **Please bring:**
 > - Your drone
@@ -141,9 +148,39 @@ decision from a weather API.
 from the published policy in `shared/booking/policy.ts` — full refund, or 50% refunded and 50%
 retained, or free reschedule/full refund for a weather change.
 
+`[AIRCRAFT]` and `[CONTROLLER]` are the human-readable names chosen at step 4 of `/book`, stored on
+the booking as written. A booking taken before the controller was collected shows
+`Controller / RC: Not recorded` rather than a guessed value.
+
 ---
 
-## 5. Meeting details
+## 5. Owner notification
+
+Internal only, sent to `ADMIN_NOTIFICATION_EMAIL` alongside every confirmation. Sections, in order:
+
+> **New booking confirmed.**
+>
+> **Session** — session and duration, date, time, training area, amount paid, reference
+>
+> **Customer** — name, email, mobile
+>
+> **Aircraft and controller**
+> Aircraft: [AIRCRAFT]
+> Controller / RC: [CONTROLLER]
+> Experience: [EXPERIENCE LEVEL]
+>
+> **What they want help with** — the customer's own words
+>
+> **Additional notes** — only when the customer added some
+>
+> [Open admin dashboard]
+
+The equipment block is what the lesson is prepared around, so it names the aircraft and the
+controller separately rather than as one free-text line.
+
+---
+
+## 6. Meeting details
 
 Meeting details are confirmed by the owner directly, not automatically. Whichever message carries
 them should include:

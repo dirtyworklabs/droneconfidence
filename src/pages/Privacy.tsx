@@ -37,10 +37,10 @@ const privacySections: PrivacySection[] = [
         </ul>
         <p>
           When you book a session, we store the booking details you provide — your name, email
-          address, mobile number, chosen session, training area, appointment time, drone make and
-          model, experience level, what you&rsquo;d like help with and any notes you add — so the
-          session can be arranged and delivered. We also store the payment status of your booking
-          and the reference our payment provider gives us for it.
+          address, mobile number, chosen session, training area, appointment time, aircraft make and
+          model, controller/RC model, experience level, what you&rsquo;d like help with and any
+          notes you add — so the session can be arranged and delivered. We also store the payment
+          status of your booking and the reference our payment provider gives us for it.
         </p>
         <p>
           Our hosting provider ({hosting}) also processes standard technical information such as IP

@@ -38,6 +38,7 @@ const MOCK_BOOKING: BookingRow = {
   mobile: '0400 123 456',
 
   drone_model: 'DJI Mini 4 Pro',
+  controller_model: 'DJI RC 2',
   experience_code: 'some',
   help_with:
     'Return-to-Home, smoother flight controls, camera settings and feeling more confident flying independently.',

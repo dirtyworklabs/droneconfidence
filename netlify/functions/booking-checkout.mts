@@ -106,6 +106,7 @@ export default async (request: Request, _context: Context): Promise<Response> =>
       p_email: input.email,
       p_mobile: input.mobile,
       p_drone_model: input.droneModel,
+      p_controller_model: input.controllerModel,
       p_experience_code: input.experienceCode,
       p_help_with: input.helpWith,
       p_notes: input.notes,

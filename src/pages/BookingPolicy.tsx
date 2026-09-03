@@ -186,7 +186,7 @@ const policySections: PolicySection[] = [
           relevant app installed.
         </p>
         <p>
-          Tell us your drone model when you book. Lengthy firmware downloads and account setup can
+          Tell us your aircraft and controller/RC models when you book. Lengthy firmware downloads and account setup can
           reduce flying time, so we may send you a few simple preparation steps beforehand. You
           remain responsible for your own equipment and for any registration or account requirements
           that apply to it.

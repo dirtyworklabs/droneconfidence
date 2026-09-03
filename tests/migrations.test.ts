@@ -21,6 +21,7 @@ const MIGRATIONS = [
   'supabase/migrations/0001_booking_core.sql',
   'supabase/migrations/0002_booking_functions.sql',
   'supabase/migrations/0003_privilege_hardening.sql',
+  'supabase/migrations/0006_booking_controller.sql',
 ]
 
 /** Every function the migrations define. All of them must be unreachable to PUBLIC. */
@@ -66,7 +67,7 @@ const reserve = async ({
        $1, 'first-flight', 'First Flight', $2, 17900,
        $3, 'South Sydney', $4, $5, $6, 'Australia/Sydney',
        'Test Customer', 'test@example.com', '0400000000', 'DJI Mini 4K',
-       'new', 'Confidence in the air', null, $7, $8)`,
+       'DJI RC-N1', 'new', 'Confidence in the air', null, $7, $8)`,
     [
       attempt,
       durationMinutes,
@@ -97,6 +98,7 @@ const rawInsert = (locationSlug: string, name: string, start: string, reference:
        reference, session_slug, session_name, duration_minutes, price_cents,
        location_slug, location_name, starts_at, ends_at, occupied_until,
        customer_name, email, mobile, drone_model, experience_code, help_with)
+     -- No controller_model: the shape of a booking taken before 0006.
      values ($1, 'first-flight', 'First Flight', 60, 17900, $2, $3, $4,
        $4::timestamptz + interval '60 minutes',
        $4::timestamptz + interval '90 minutes',
@@ -116,7 +118,7 @@ afterAll(async () => {
 })
 
 describe('schema', () => {
-  it('applies both migrations cleanly', async () => {
+  it('applies every migration in the sequence cleanly', async () => {
     const tables = await db.query<{ relname: string }>(
       `select relname from pg_class
        where relnamespace = 'public'::regnamespace and relkind = 'r' order by relname`,
@@ -192,6 +194,37 @@ describe('reserve_booking_hold', () => {
     expect(row.rows[0]!.status).toBe('pending_payment')
     expect(row.rows[0]!.payment_state).toBe('unpaid')
     expect(row.rows[0]!.hold_expires_at).not.toBeNull()
+  })
+
+  it('stores the aircraft and the controller it was reserved with', async () => {
+    const equipment = await db.query<{ drone_model: string; controller_model: string | null }>(
+      `select drone_model, controller_model from bookings where attempt_id = $1`,
+      ['11111111-1111-4111-8111-111111111111'],
+    )
+    expect(equipment.rows[0]).toEqual({
+      drone_model: 'DJI Mini 4K',
+      controller_model: 'DJI RC-N1',
+    })
+  })
+
+  it('exists as exactly one signature after 0006 replaced it', async () => {
+    // Changing a parameter list creates an overload rather than replacing the
+    // function, so a hold could silently be reserved without its controller.
+    const overloads = await db.query<{ n: number }>(
+      `select count(*)::int as n from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+       where n.nspname = 'public' and p.proname = 'reserve_booking_hold'`,
+    )
+    expect(overloads.rows[0]!.n).toBe(1)
+  })
+
+  it('leaves a booking taken before 0006 loadable with a null controller', async () => {
+    await rawInsert('south-sydney', 'South Sydney', '2027-03-02T22:00:00Z', 'DC-LEGACY-1')
+    const row = await db.query<{ controller_model: string | null }>(
+      `select controller_model from bookings where reference = 'DC-LEGACY-1'`,
+    )
+    expect(row.rows[0]!.controller_model).toBeNull()
+    await db.query(`delete from bookings where reference = 'DC-LEGACY-1'`)
   })
 
   it('returns the same booking for a repeated attempt id', async () => {

@@ -28,6 +28,18 @@ const sessionLines = (booking: BookingRow): string[] => [
   booking.location_name,
 ]
 
+/**
+ * The equipment pair, for preparing the lesson.
+ *
+ * `controller_model` is null on bookings taken before it was collected, and is
+ * reported as such rather than left blank or guessed at.
+ */
+const equipmentLines = (booking: BookingRow): string[] => [
+  `Aircraft: ${booking.drone_model}`,
+  `Controller / RC: ${booking.controller_model ?? 'Not recorded'}`,
+  `Experience: ${experienceLabel(booking.experience_code)}`,
+]
+
 const BRING = [
   'Your drone',
   'Your controller',
@@ -76,12 +88,14 @@ export const confirmationEmail = (booking: BookingRow): EmailBody =>
           booking.amount_paid_cents,
           booking.currency,
         )}`,
+        `Aircraft: ${booking.drone_model}`,
+        `Controller / RC: ${booking.controller_model ?? 'Not recorded'}`,
       ],
     },
 
     {
       kind: 'paragraph',
-      text: "I'll review the information you provided about your drone and send through the exact meeting point before your session.",
+      text: "I'll review the information you provided about your aircraft and controller, and send through the exact meeting point before your session.",
     },
 
     {
@@ -443,14 +457,11 @@ export const ownerNotificationEmail = (
 
       {
         kind: 'label',
-        text: 'Drone and experience',
+        text: 'Aircraft and controller',
       },
       {
         kind: 'lines',
-        items: [
-          booking.drone_model,
-          experienceLabel(booking.experience_code),
-        ],
+        items: equipmentLines(booking),
       },
 
       {

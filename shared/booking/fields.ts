@@ -8,6 +8,8 @@
  * never part of a submitted payload.
  */
 
+import { findAircraft, isCompatiblePair, isKnownController } from './hardware'
+
 export type FieldErrors<T extends string> = Partial<Record<T, string>>
 
 export const MAX = {
@@ -16,6 +18,7 @@ export const MAX = {
   mobile: 30,
   shortText: 120,
   droneModel: 100,
+  controllerModel: 100,
   helpWith: 600,
   message: 2000,
   notes: 1500,
@@ -61,6 +64,7 @@ export type BookingDetailField =
   | 'email'
   | 'mobile'
   | 'droneModel'
+  | 'controllerModel'
   | 'experienceCode'
   | 'helpWith'
   | 'notes'
@@ -71,6 +75,7 @@ export const BOOKING_FIELD_ORDER: BookingDetailField[] = [
   'email',
   'mobile',
   'droneModel',
+  'controllerModel',
   'experienceCode',
   'helpWith',
   'notes',
@@ -82,6 +87,7 @@ export interface BookingDetailValues {
   email: string
   mobile: string
   droneModel: string
+  controllerModel: string
   experienceCode: string
   helpWith: string
   notes: string
@@ -93,10 +99,36 @@ export const emptyBookingDetails: BookingDetailValues = {
   email: '',
   mobile: '',
   droneModel: '',
+  controllerModel: '',
   experienceCode: '',
   helpWith: '',
   notes: '',
   policyAccepted: false,
+}
+
+/**
+ * The controller half of the equipment pair.
+ *
+ * Required first, then cross-checked against the aircraft. Compatibility is
+ * only asserted when *both* sides are models the catalogue knows: an
+ * "Other / not listed" aircraft, or a controller the customer described
+ * themselves, has no listed pairing to judge it against, so it is accepted on
+ * its own terms rather than guessed at.
+ */
+export const hardwarePairing = (
+  droneModel: string,
+  controllerModel: string,
+): string | undefined => {
+  const required = requireText(controllerModel, 'Controller / RC model', MAX.controllerModel)
+  if (required) return required
+
+  const controller = controllerModel.trim()
+  const aircraft = findAircraft(droneModel.trim())
+  if (!aircraft || !isKnownController(controller)) return undefined
+
+  return isCompatiblePair(aircraft.name, controller)
+    ? undefined
+    : `${controller} isn’t compatible with the ${aircraft.name}. Please choose one of the listed controllers.`
 }
 
 export const validateBookingDetails = (
@@ -107,7 +139,8 @@ export const validateBookingDetails = (
     customerName: requireText(values.customerName, 'Full name', MAX.name),
     email: requireEmail(values.email),
     mobile: requireMobile(values.mobile),
-    droneModel: requireText(values.droneModel, 'Drone make and model', MAX.droneModel),
+    droneModel: requireText(values.droneModel, 'Aircraft make and model', MAX.droneModel),
+    controllerModel: hardwarePairing(values.droneModel, values.controllerModel),
     experienceCode: isBlank(values.experienceCode)
       ? requireChoice(values.experienceCode, 'your experience level')
       : isExperienceCode(values.experienceCode.trim())

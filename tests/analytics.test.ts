@@ -66,6 +66,7 @@ describe('analytics payload sanitisation', () => {
       phone: '0400 000 000',
       mobile: '0400 000 000',
       droneModel: 'DJI Mini 4 Pro',
+      controllerModel: 'DJI RC 2',
       experience: 'I have flown twice in a park',
       helpWith: 'I want to feel calm in wind',
       notes: 'Meeting near the car park',
@@ -91,7 +92,7 @@ describe('analytics payload sanitisation', () => {
     // field it might have landed in.
     const stored = JSON.stringify(event)
     for (const secret of [
-      'Jordan', 'example.com', '0400', 'DJI', 'wind', 'car park',
+      'Jordan', 'example.com', '0400', 'DJI', 'RC 2', 'wind', 'car park',
       'DC-4821', 'cs_test', 'pi_3', 're_3', '203.0.113', 'Mozilla', 'https',
     ]) {
       expect(stored).not.toContain(secret)

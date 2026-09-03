@@ -47,7 +47,10 @@ export interface CheckoutRequest {
   customerName: string
   email: string
   mobile: string
+  /** Human-readable aircraft make and model, e.g. "DJI Mini 4 Pro". */
   droneModel: string
+  /** Human-readable controller model, e.g. "DJI RC 2". */
+  controllerModel: string
   experienceCode: string
   helpWith: string
   notes?: string
@@ -118,6 +121,8 @@ export interface AdminBookingRow {
 export interface AdminBookingDetail extends AdminBookingRow {
   mobile: string
   droneModel: string
+  /** Null on bookings taken before the controller was collected. */
+  controllerModel: string | null
   experienceCode: string
   helpWith: string
   notes: string | null

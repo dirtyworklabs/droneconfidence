@@ -25,6 +25,7 @@ export interface ValidatedBooking {
   email: string
   mobile: string
   droneModel: string
+  controllerModel: string
   experienceCode: string
   helpWith: string
   notes: string | null
@@ -67,6 +68,7 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
     email: str(body.email, MAX.email + 1),
     mobile: str(body.mobile, MAX.mobile + 1),
     droneModel: str(body.droneModel, MAX.droneModel + 1),
+    controllerModel: str(body.controllerModel, MAX.controllerModel + 1),
     experienceCode: str(body.experienceCode, 40),
     helpWith: str(body.helpWith, MAX.helpWith + 1),
     notes: str(body.notes, MAX.notes + 1),
@@ -89,6 +91,7 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
       email: details.email.toLowerCase(),
       mobile: details.mobile,
       droneModel: details.droneModel,
+      controllerModel: details.controllerModel,
       experienceCode: details.experienceCode,
       helpWith: details.helpWith,
       notes: details.notes.length > 0 ? details.notes : null,
