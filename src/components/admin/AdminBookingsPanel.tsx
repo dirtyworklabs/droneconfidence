@@ -380,7 +380,10 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
           />
           <DetailRow label="Email" value={booking.email} />
           <DetailRow label="Mobile" value={booking.mobile} />
-          <DetailRow label="Drone" value={booking.droneModel} />
+          <DetailRow label="Aircraft" value={booking.droneModel} />
+          {/* Bookings taken before the controller was collected have none, and a
+              value is never invented for them. */}
+          <DetailRow label="Controller / RC" value={booking.controllerModel ?? 'Not recorded'} />
           <DetailRow label="Experience" value={experienceLabel(booking.experienceCode)} />
           <DetailRow label="Wants help with" value={booking.helpWith} />
           {booking.notes ? <DetailRow label="Notes" value={booking.notes} /> : null}

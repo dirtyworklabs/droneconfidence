@@ -11,6 +11,7 @@ const valid = {
   email: 'Alex@Example.com',
   mobile: '0400 000 000',
   droneModel: 'DJI Mini 4K',
+  controllerModel: 'DJI RC-N1',
   experienceCode: 'new',
   helpWith: 'Getting confident flying in a park',
   policyAccepted: true,
@@ -87,6 +88,8 @@ describe('server-side booking validation', () => {
     expect(reject({ email: 'not-an-email' }).length).toBeGreaterThan(0)
     expect(reject({ mobile: '' }).length).toBeGreaterThan(0)
     expect(reject({ droneModel: '' }).length).toBeGreaterThan(0)
+    expect(reject({ controllerModel: '' }).length).toBeGreaterThan(0)
+    expect(reject({ controllerModel: undefined }).length).toBeGreaterThan(0)
     expect(reject({ helpWith: '' }).length).toBeGreaterThan(0)
   })
 
@@ -94,6 +97,52 @@ describe('server-side booking validation', () => {
     expect(accept({ notes: '  ' }).notes).toBeNull()
     expect(accept({ notes: 'Parking is tricky near me.' }).notes).toBe('Parking is tricky near me.')
     expect(reject({ notes: 'x'.repeat(5000) }).length).toBeGreaterThan(0)
+  })
+
+  it('accepts a controller the catalogue lists for the chosen aircraft', () => {
+    // The DJI compatibility matrix is the only authority, on the server as well
+    // as in the form.
+    expect(accept({ droneModel: 'DJI Mini 4 Pro', controllerModel: 'DJI RC 2' }).controllerModel)
+      .toBe('DJI RC 2')
+    expect(accept({ droneModel: 'DJI Mini 4K', controllerModel: 'DJI RC-N1C' }).controllerModel)
+      .toBe('DJI RC-N1C')
+  })
+
+  it('rejects a controller that is not compatible with the aircraft', () => {
+    // A tampered POST cannot assert a pairing the form would never have offered.
+    expect(reject({ droneModel: 'DJI Mini 4K', controllerModel: 'DJI RC 2' })).toContain(
+      'DJI RC 2 isn’t compatible with the DJI Mini 4K. Please choose one of the listed controllers.',
+    )
+    expect(
+      reject({ droneModel: 'DJI Avata', controllerModel: 'DJI Smart Controller' }).length,
+    ).toBeGreaterThan(0)
+  })
+
+  it('rejects DJI Avata 360 with DJI RC Pro 2, which is future support only', () => {
+    // The matrix marks that pairing with an asterisk — "support in future
+    // updates" — so it is not current compatibility and must not be accepted.
+    expect(reject({ droneModel: 'DJI Avata 360', controllerModel: 'DJI RC Pro 2' }).length)
+      .toBeGreaterThan(0)
+    // Its genuinely current controllers still pass.
+    expect(accept({ droneModel: 'DJI Avata 360', controllerModel: 'DJI RC Motion 3' }).droneModel)
+      .toBe('DJI Avata 360')
+  })
+
+  it('takes unlisted hardware at its word rather than inventing compatibility', () => {
+    const custom = accept({
+      droneModel: 'Autel EVO Lite+',
+      controllerModel: 'Autel Smart Controller SE',
+    })
+    expect(custom.droneModel).toBe('Autel EVO Lite+')
+    expect(custom.controllerModel).toBe('Autel Smart Controller SE')
+
+    // A known aircraft with a controller we have never heard of is also fine:
+    // there is no listed pairing to contradict.
+    expect(accept({ droneModel: 'DJI Mini 4K', controllerModel: 'A modified RC-N1' }).controllerModel)
+      .toBe('A modified RC-N1')
+
+    // Length is still enforced on the free-text path.
+    expect(reject({ controllerModel: 'x'.repeat(200) }).length).toBeGreaterThan(0)
   })
 
   it('rejects anything that is not an object', () => {

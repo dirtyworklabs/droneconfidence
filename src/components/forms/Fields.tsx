@@ -102,13 +102,30 @@ const optionValue = (option: SelectOption): string =>
 const optionLabel = (option: SelectOption): string =>
   typeof option === 'string' ? option : option.label
 
+/**
+ * A labelled set of options, rendered as a real `<optgroup>`.
+ *
+ * Additive: a field that passes only `options` behaves exactly as before. When
+ * both are given, groups render first and `options` after them, which is how
+ * the booking aircraft field puts "Other / not listed" beneath the DJI families.
+ */
+export interface SelectOptionGroup {
+  label: string
+  options: ReadonlyArray<SelectOption>
+}
+
+const Choice = ({ option }: { option: SelectOption }) => (
+  <option value={optionValue(option)}>{optionLabel(option)}</option>
+)
+
 interface SelectFieldProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange' | 'value' | 'id' | 'name'> {
   id: string
   name: string
   label: string
   value: string
   onChange: (value: string) => void
-  options: ReadonlyArray<SelectOption>
+  options?: ReadonlyArray<SelectOption>
+  groups?: ReadonlyArray<SelectOptionGroup>
   placeholder?: string
   error?: string
   hint?: string
@@ -122,6 +139,7 @@ export const SelectField = ({
   value,
   onChange,
   options,
+  groups,
   placeholder = 'Please choose…',
   error,
   hint,
@@ -136,7 +154,10 @@ export const SelectField = ({
       onChange={(event) => onChange(event.target.value)}
       aria-invalid={error ? true : undefined}
       aria-describedby={describedBy(id, error, hint)}
-      className={cn(controlClass, 'appearance-none bg-[length:16px] pr-10')}
+      className={cn(
+        controlClass,
+        'appearance-none bg-[length:16px] pr-10 disabled:cursor-not-allowed disabled:border-ink/8 disabled:bg-canvas disabled:text-ink-muted',
+      )}
       style={{
         backgroundImage:
           "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2366716D' stroke-width='1.5'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E\")",
@@ -146,10 +167,15 @@ export const SelectField = ({
       {...rest}
     >
       <option value="">{placeholder}</option>
-      {options.map((option) => (
-        <option key={optionValue(option)} value={optionValue(option)}>
-          {optionLabel(option)}
-        </option>
+      {groups?.map((group) => (
+        <optgroup key={group.label} label={group.label}>
+          {group.options.map((option) => (
+            <Choice key={optionValue(option)} option={option} />
+          ))}
+        </optgroup>
+      ))}
+      {options?.map((option) => (
+        <Choice key={optionValue(option)} option={option} />
       ))}
     </select>
   </FieldShell>

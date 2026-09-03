@@ -12,6 +12,12 @@ import {
   firstErrorKey,
   validateBookingDetails,
 } from '@shared/booking/fields'
+import {
+  AIRCRAFT_FAMILIES,
+  OTHER_HARDWARE,
+  OTHER_HARDWARE_LABEL,
+  compatibleControllers,
+} from '@shared/booking/hardware'
 import { formatLongDate, formatTimeRange } from '@shared/booking/format'
 import type { CheckoutResponse } from '@shared/booking/types'
 import { findLocation } from '@shared/booking/catalog'
@@ -43,12 +49,33 @@ const FIELD_IDS: Record<BookingDetailField, string> = {
   customerName: 'booking-name',
   email: 'booking-email',
   mobile: 'booking-mobile',
-  droneModel: 'booking-drone',
+  droneModel: 'booking-aircraft',
+  controllerModel: 'booking-controller',
   experienceCode: 'booking-experience',
   helpWith: 'booking-help',
   notes: 'booking-notes',
   policyAccepted: 'booking-policy',
 }
+
+/**
+ * The two "Other / not listed" text inputs.
+ *
+ * `droneModel` and `controllerModel` are each collected by either a select or a
+ * text input depending on the escape hatch, so error focus has to follow
+ * whichever control is on screen.
+ */
+const OTHER_IDS = {
+  aircraft: 'booking-aircraft-other',
+  controller: 'booking-controller-other',
+} as const
+
+/** DJI families as real `<optgroup>`s, in catalogue order. */
+const AIRCRAFT_GROUPS = AIRCRAFT_FAMILIES.map((family) => ({
+  label: family.name,
+  options: family.aircraft.map((aircraft) => aircraft.name),
+}))
+
+const OTHER_OPTION = [{ value: OTHER_HARDWARE, label: OTHER_HARDWARE_LABEL }]
 
 const ReviewRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-baseline justify-between gap-4 border-t border-ink/8 py-2.5 first:border-t-0 first:pt-0">
@@ -80,6 +107,11 @@ export const BookingDetailsForm = ({
   onSlotRejected,
 }: BookingDetailsFormProps) => {
   const [values, setValues] = useState<BookingDetailValues>(emptyBookingDetails)
+  // What the two equipment selects are showing. The stored values live in
+  // `values.droneModel` / `values.controllerModel`, which is what is submitted —
+  // these only decide whether that value came from the list or from a text box.
+  const [aircraftChoice, setAircraftChoice] = useState('')
+  const [controllerChoice, setControllerChoice] = useState('')
   const [errors, setErrors] = useState<FieldErrors<BookingDetailField>>({})
   const [submitting, setSubmitting] = useState(false)
   const [problem, setProblem] = useState<string | null>(null)
@@ -111,6 +143,38 @@ export const BookingDetailsForm = ({
     [],
   )
 
+  const aircraftIsOther = aircraftChoice === OTHER_HARDWARE
+  const controllerIsOther = controllerChoice === OTHER_HARDWARE
+  const aircraftChosen = aircraftChoice.length > 0
+
+  /**
+   * Changing the aircraft invalidates the controller.
+   *
+   * A controller that suited the previous aircraft must not survive the change,
+   * so both the selection and the stored value are cleared — `update` also drops
+   * the field's validation error.
+   */
+  const handleAircraftChange = (next: string) => {
+    setAircraftChoice(next)
+    update('droneModel', next === OTHER_HARDWARE ? '' : next)
+    setControllerChoice('')
+    update('controllerModel', '')
+  }
+
+  const handleControllerChange = (next: string) => {
+    setControllerChoice(next)
+    update('controllerModel', next === OTHER_HARDWARE ? '' : next)
+  }
+
+  /** Where to send focus for a field whose control depends on the escape hatch. */
+  const focusId = (key: BookingDetailField): string => {
+    if (key === 'droneModel' && aircraftIsOther) return OTHER_IDS.aircraft
+    if (key === 'controllerModel' && (aircraftIsOther || controllerIsOther)) {
+      return OTHER_IDS.controller
+    }
+    return FIELD_IDS[key]
+  }
+
   const failWith = (message: string) => {
     setProblem(message)
     setSubmitting(false)
@@ -127,7 +191,7 @@ export const BookingDetailsForm = ({
       setProblem(null)
       const firstKey = firstErrorKey(found, BOOKING_FIELD_ORDER)
       requestAnimationFrame(() => {
-        if (firstKey) document.getElementById(FIELD_IDS[firstKey])?.focus()
+        if (firstKey) document.getElementById(focusId(firstKey))?.focus()
       })
       return
     }
@@ -145,6 +209,7 @@ export const BookingDetailsForm = ({
       email: values.email,
       mobile: values.mobile,
       droneModel: values.droneModel,
+      controllerModel: values.controllerModel,
       experienceCode: values.experienceCode,
       helpWith: values.helpWith,
       notes: values.notes.trim().length > 0 ? values.notes : undefined,
@@ -226,16 +291,89 @@ export const BookingDetailsForm = ({
           maxLength={MAX.mobile}
           hint="So we can reach you on the day."
         />
-        <TextField
-          id={FIELD_IDS.droneModel}
-          name="droneModel"
-          label="Drone make and model"
-          value={values.droneModel}
-          onChange={(value) => update('droneModel', value)}
-          error={errors.droneModel}
-          maxLength={MAX.droneModel}
-          hint="For example, DJI Mini 4 Pro."
-        />
+        {/*
+          Equipment. The aircraft decides which controllers exist, so the two
+          read as a pair: side by side on desktop, stacked on mobile, with each
+          "Other / not listed" text field directly beneath its own control.
+        */}
+        <div className="grid gap-5 sm:col-span-2 sm:grid-cols-2">
+          <div className="flex flex-col gap-5">
+            <SelectField
+              id={FIELD_IDS.droneModel}
+              name="aircraft"
+              label="Aircraft model"
+              value={aircraftChoice}
+              onChange={handleAircraftChange}
+              groups={AIRCRAFT_GROUPS}
+              options={OTHER_OPTION}
+              placeholder="Choose your aircraft…"
+              hint="Choose the drone you’ll bring to your session."
+              error={aircraftIsOther ? undefined : errors.droneModel}
+            />
+            {aircraftIsOther ? (
+              <TextField
+                id={OTHER_IDS.aircraft}
+                name="droneModel"
+                label="Aircraft make and model"
+                value={values.droneModel}
+                onChange={(value) => update('droneModel', value)}
+                error={errors.droneModel}
+                maxLength={MAX.droneModel}
+                hint="The make and model as the manufacturer names it."
+              />
+            ) : null}
+          </div>
+
+          <div className="flex flex-col gap-5">
+            {aircraftIsOther ? (
+              // Outside the catalogue there is no compatibility to calculate,
+              // so the controller is asked for plainly rather than guessed at.
+              <TextField
+                id={OTHER_IDS.controller}
+                name="controllerModel"
+                label="Controller / RC make and model"
+                value={values.controllerModel}
+                onChange={(value) => update('controllerModel', value)}
+                error={errors.controllerModel}
+                maxLength={MAX.controllerModel}
+                hint="Whatever you fly it with."
+              />
+            ) : (
+              <>
+                <SelectField
+                  id={FIELD_IDS.controllerModel}
+                  name="controller"
+                  label="Controller / RC"
+                  value={controllerChoice}
+                  onChange={handleControllerChange}
+                  options={
+                    aircraftChosen
+                      ? [...compatibleControllers(aircraftChoice), ...OTHER_OPTION]
+                      : []
+                  }
+                  placeholder={
+                    aircraftChosen ? 'Choose your controller…' : 'Choose your aircraft first…'
+                  }
+                  disabled={!aircraftChosen}
+                  hint="Only controllers compatible with this aircraft are shown."
+                  error={controllerIsOther ? undefined : errors.controllerModel}
+                />
+                {controllerIsOther ? (
+                  <TextField
+                    id={OTHER_IDS.controller}
+                    name="controllerModel"
+                    label="Controller / RC model"
+                    value={values.controllerModel}
+                    onChange={(value) => update('controllerModel', value)}
+                    error={errors.controllerModel}
+                    maxLength={MAX.controllerModel}
+                    hint="Tell us what it says on the controller."
+                  />
+                ) : null}
+              </>
+            )}
+          </div>
+        </div>
         <SelectField
           id={FIELD_IDS.experienceCode}
           name="experienceCode"
@@ -287,6 +425,13 @@ export const BookingDetailsForm = ({
           <ReviewRow label="Date" value={formatLongDate(startsAt, timeZone)} />
           <ReviewRow label="Time" value={formatTimeRange(startsAt, endsAt, timeZone)} />
           <ReviewRow label="Training area" value={location.enquiryValue} />
+          {/* A last chance to notice the wrong aircraft or controller was picked. */}
+          {values.droneModel.trim().length > 0 ? (
+            <ReviewRow label="Aircraft" value={values.droneModel} />
+          ) : null}
+          {values.controllerModel.trim().length > 0 ? (
+            <ReviewRow label="Controller / RC" value={values.controllerModel} />
+          ) : null}
           <ReviewRow label="Total due today" value={formatPrice(session.price)} />
         </dl>
         <p className="mt-4 text-[0.87rem] leading-relaxed text-ink-muted">

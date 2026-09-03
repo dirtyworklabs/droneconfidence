@@ -30,6 +30,8 @@ export interface BookingRow {
   email: string
   mobile: string
   drone_model: string
+  /** Nullable: bookings taken before the controller was collected have none. */
+  controller_model: string | null
   experience_code: string
   help_with: string
   notes: string | null
@@ -53,7 +55,7 @@ export interface BookingRow {
 export const BOOKING_COLUMNS =
   'id, reference, attempt_id, session_slug, session_name, duration_minutes, price_cents, ' +
   'location_slug, location_name, starts_at, ends_at, occupied_until, booking_day, time_zone, ' +
-  'customer_name, email, mobile, drone_model, experience_code, help_with, notes, ' +
+  'customer_name, email, mobile, drone_model, controller_model, experience_code, help_with, notes, ' +
   'status, is_active, hold_expires_at, stripe_checkout_session_id, stripe_payment_intent_id, ' +
   'currency, amount_paid_cents, amount_refunded_cents, payment_state, stripe_refund_id, ' +
   'cancellation_reason, created_at, updated_at, confirmed_at, cancelled_at'

@@ -102,6 +102,7 @@ const post = () =>
         email: 'alex@example.com',
         mobile: '0400 000 000',
         droneModel: 'DJI Mini 4K',
+        controllerModel: 'DJI RC-N1',
         experienceCode: 'new',
         helpWith: 'Getting confident flying in a park',
         policyAccepted: true,
@@ -173,6 +174,9 @@ describe('checkout defence in depth', () => {
         p_session_slug: 'first-flight',
         p_price_cents: sessionPriceCents(FIRST_FLIGHT),
         p_duration_minutes: 60,
+        // The equipment pair reaches the reservation function as submitted.
+        p_drone_model: 'DJI Mini 4K',
+        p_controller_model: 'DJI RC-N1',
       }),
     )
   })

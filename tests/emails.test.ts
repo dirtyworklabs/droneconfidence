@@ -35,6 +35,7 @@ const booking: BookingRow = {
   email: 'alex@example.com',
   mobile: '0400000000',
   drone_model: `DJI Mini <b>4K</b>`,
+  controller_model: `DJI <b>RC-N1</b>`,
   experience_code: 'new',
   help_with: `Flying near trees & powerlines ${HOSTILE}`,
   notes: `Nothing "special" <img onerror=1>`,
@@ -88,6 +89,7 @@ describe('transactional emails', () => {
     for (const body of bodies()) {
       expect(body.html).not.toContain('<script>')
       expect(body.html).not.toContain('<b>4K</b>')
+      expect(body.html).not.toContain('<b>RC-N1</b>')
       expect(body.html).not.toContain('<img onerror=1>')
     }
   })
@@ -126,6 +128,26 @@ describe('transactional emails', () => {
     expect(html).toContain('alex@example.com')
     expect(html).toContain('0400000000')
     expect(html).toContain('https://example.test/admin')
+    // The aircraft and the controller are what the lesson is prepared around.
+    expect(html).toContain('Aircraft and controller')
+    expect(html).toContain('Controller / RC: DJI &lt;b&gt;RC-N1&lt;/b&gt;')
+  })
+
+  it('reports a legacy booking with no controller as unrecorded', () => {
+    // Bookings taken before the field existed are not given a guessed value.
+    const legacy = { ...booking, controller_model: null }
+    for (const html of [
+      ownerNotificationEmail(legacy, 'https://example.test/admin').html,
+      confirmationEmail(legacy).html,
+    ]) {
+      expect(html).toContain('Not recorded')
+    }
+  })
+
+  it('records the equipment the customer told us about', () => {
+    const html = confirmationEmail(booking).html
+    expect(html).toContain('Aircraft: DJI Mini &lt;b&gt;4K&lt;/b&gt;')
+    expect(html).toContain('Controller / RC: DJI &lt;b&gt;RC-N1&lt;/b&gt;')
   })
 
   it('tells a refunded customer what was returned', () => {
