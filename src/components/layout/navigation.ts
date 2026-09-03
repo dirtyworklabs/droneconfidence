@@ -7,6 +7,7 @@ export interface NavLinkItem {
 export const primaryNav: NavLinkItem[] = [
   { label: 'Sessions', to: '/sessions' },
   { label: 'Locations', to: '/locations' },
+  { label: 'Guides', to: '/blog' },
   { label: 'About', to: '/about' },
   { label: 'FAQs', to: '/faq' },
 ]
@@ -14,6 +15,7 @@ export const primaryNav: NavLinkItem[] = [
 export const footerNav: NavLinkItem[] = [
   { label: 'Sessions', to: '/sessions' },
   { label: 'Locations', to: '/locations' },
+  { label: 'Guides', to: '/blog' },
   { label: 'About', to: '/about' },
   { label: 'FAQs', to: '/faq' },
   { label: 'Book', to: '/book' },

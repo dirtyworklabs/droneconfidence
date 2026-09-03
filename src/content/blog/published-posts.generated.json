@@ -1,0 +1,1247 @@
+[
+  {
+    "slug": "drone-laws-australia",
+    "status": "published",
+    "title": "Drone Laws in Australia: What Beginners Need to Know",
+    "seoTitle": "Drone Laws Australia: Beginner Guide (2026)",
+    "description": "Plain-English guide to Australia’s recreational drone laws: height, people, airports, visual line of sight, daylight flying and where to check before take-off.",
+    "excerpt": "Bought a drone and not sure what the rules actually mean? Start here. This is the practical version of Australia’s recreational drone rules, without the aviation jargon.",
+    "category": "Rules & safety",
+    "targetQuery": "drone laws Australia",
+    "secondaryKeywords": [
+      "CASA drone rules",
+      "drone regulations Australia",
+      "recreational drone rules Australia"
+    ],
+    "searchIntent": "informational",
+    "readingMinutes": 6,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "If you are flying a normal consumer drone purely for fun in Australia, you generally do not need a drone licence, operator accreditation or registration. You do, however, need to follow CASA’s recreational drone safety rules every time you fly, and you still need to check airspace plus any rules imposed by the owner or manager of the place you launch from.",
+    "keyPoints": [
+      "Maximum height is generally 120 metres above the ground or water directly below the drone.",
+      "Keep at least 30 metres horizontally from other people and never fly over a person.",
+      "Do not fly in a populous area, including a busy beach, park, road or event where a failure could put people at risk.",
+      "Keep the drone within visual line of sight with your own eyes; the camera screen is not a substitute.",
+      "Fly only during daylight for ordinary recreational operations.",
+      "Airport rules depend partly on whether the drone is 250 g or less, so check a CASA-verified app before every flight.",
+      "Airspace permission and permission to use the land are separate questions."
+    ],
+    "sections": [
+      {
+        "heading": "The short version: the rules are simpler than they look",
+        "paragraphs": [
+          "Australia’s recreational rules are designed around one basic idea: you are sharing the sky and the ground with other people. A modern camera drone may feel like a gadget, but once it is airborne you are operating an aircraft. The practical job is to give crewed aircraft absolute priority, keep a meaningful buffer from people, stay where you can see the drone and choose a location where a problem would not endanger anyone.",
+          "CASA’s current guidance says recreational flyers do not need a licence or operator accreditation and do not need to register a drone flown for fun. That includes micro drones under 250 g. If you move from recreation into paid work or business use, the requirements change, which we cover separately in our licence guide."
+        ]
+      },
+      {
+        "heading": "1. Stay at or below 120 metres",
+        "paragraphs": [
+          "The general ceiling is 120 metres, or 400 feet, above ground level. The important part is “above the ground”: it is measured from the ground or water directly beneath the aircraft, not simply from your take-off point. On rising terrain, you need to think about the changing ground below you rather than treating 120 metres on the controller as a permanent entitlement.",
+          "Also remember that 120 metres is a ceiling, not a target. Visual line of sight, nearby airspace, people, weather and the site itself can all require you to stay much lower."
+        ]
+      },
+      {
+        "heading": "2. Keep away from people — and never fly over them",
+        "paragraphs": [
+          "For ordinary recreational flying, keep at least 30 metres horizontally from people who are not essential to controlling the drone. CASA measures that horizontal distance from the point on the ground directly beneath the aircraft. Flying higher does not turn an overflight into a safe or permitted one.",
+          "The simplest beginner habit is to give yourself more than the minimum. People move, dogs run, cyclists appear and a park that looked empty can change in two minutes. If your buffer is constantly collapsing, the site is probably not a good place to practise."
+        ]
+      },
+      {
+        "heading": "3. A park or beach is not automatically a flying site",
+        "paragraphs": [
+          "CASA says you must not fly in a populous area — somewhere people are living or gathered where a drone failure could create an unreasonable risk. Its examples include residential areas, parks, beaches, roads, footpaths, festivals and sporting events. That does not mean every beach or every park is permanently banned. It means you have to assess the actual place and how it is being used at the time.",
+          "There is a second layer as well: the landowner or land manager can have rules about launching, landing or operating from its land. National parks, council reserves and managed public domains can all have their own requirements. A green patch on an airspace map is therefore not the same thing as permission to take off."
+        ]
+      },
+      {
+        "heading": "4. Keep the drone within visual line of sight",
+        "paragraphs": [
+          "You need to be able to see the drone with your own eyes well enough to monitor its position and orientation and avoid conflicts. Watching the live camera feed does not replace that. Neither do FPV goggles for ordinary recreational flying unless you are operating under a specific approved arrangement.",
+          "For beginners, this rule is also a useful practical limit. If the drone has become a tiny speck and you cannot confidently tell which way it is pointing, bring it closer. You will usually get better footage and make better decisions anyway."
+        ]
+      },
+      {
+        "heading": "5. Recreational flying is a daylight activity",
+        "paragraphs": [
+          "Ordinary recreational flying is during daylight. Adding bright navigation lights does not turn a night flight into a recreationally compliant flight. CASA has separate pathways for appropriately qualified and authorised operators to fly at night.",
+          "CASA’s recreational advisory material defines night around civil twilight rather than simply the instant the sun touches the horizon. For a beginner, the safer practical approach is not to squeeze the last possible minute out of marginal light. Allow enough daylight to return, land and pack up without rushing."
+        ]
+      },
+      {
+        "heading": "6. Airports are where weight starts to matter",
+        "paragraphs": [
+          "Near a controlled airport, a drone heavier than 250 g generally must not be flown within 5.5 km of the airport or in the runway approach and departure paths. CASA also applies restrictions farther along those paths. For a drone of 250 g or less, CASA allows limited flying up to 45 metres within 5.5 km of a controlled airport, but not over or in approach/departure paths, inside the airport boundary or in a way that creates a hazard.",
+          "Near a non-controlled airport, the rules are different: recreational flying can be possible within 5.5 km, but if you become aware of a crewed aircraft you must not launch, or must manoeuvre away and land as soon as safely possible. Helicopter landing sites have their own proximity considerations too."
+        ],
+        "callout": "Do not try to memorise an airport map from a blog post. Airspace changes. Check a CASA-verified drone safety app at the location, on the day, before you fly."
+      },
+      {
+        "heading": "7. Keep away from emergency operations",
+        "paragraphs": [
+          "Do not fly over or near an area affecting public safety or where emergency operations are underway. A drone can force firefighting, police or rescue aircraft to change or stop an operation. If an incident starts near you while you are flying, land and give responders space."
+        ]
+      },
+      {
+        "heading": "The two checks beginners often confuse",
+        "paragraphs": [
+          "Before a flight, ask two separate questions. First: is the airspace suitable under CASA’s rules? Second: am I allowed to launch and operate from this piece of land? CASA-verified apps help with aviation restrictions and can surface some local information, but CASA itself says you must still check local, state and territory rules.",
+          "In NSW national parks, for example, you need NPWS approval to launch, land or operate a drone, and some parks do not allow recreational drone use at all. That is a land-management rule layered on top of the aviation rules."
+        ]
+      },
+      {
+        "heading": "A practical pre-flight rule check",
+        "paragraphs": [
+          "You do not need to turn every recreational flight into a paperwork exercise. Build a repeatable two-minute routine instead."
+        ],
+        "bullets": [
+          "Open a CASA-verified drone safety app and check the exact location.",
+          "Check the land manager: council, NPWS, private owner or other authority.",
+          "Look at the site itself: people, roads, houses, animals, powerlines, trees and emergency activity.",
+          "Check wind, gusts, rain and visibility.",
+          "Confirm your Home Point and Return-to-Home behaviour before you head away.",
+          "If the location only works while everything goes perfectly, choose another location."
+        ]
+      },
+      {
+        "heading": "When the flight is for work rather than fun",
+        "paragraphs": [
+          "The rules above describe ordinary recreational flying. Once the purpose becomes paid work or part of a business or job, registration and operator requirements apply even to small drones. Depending on aircraft weight and the type of operation, that can mean operator accreditation, a RePL, a ReOC or other approvals. Do not assume “under 250 g” means “commercially unregulated” in Australia."
+        ]
+      },
+      {
+        "heading": "The rule worth remembering",
+        "paragraphs": [
+          "A good location is not merely somewhere the app does not colour red. It is somewhere you can keep the drone visible, stay well clear of people, give way to aircraft, handle a return or forced landing safely and operate with permission from the land manager. If you build that judgement early, the legal rules become much easier to live with."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      },
+      {
+        "name": "CASA — Flying near airports",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-near-airports",
+        "role": "Primary airport rules"
+      },
+      {
+        "name": "CASA — Flying in populous areas",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-populous-areas",
+        "role": "Primary people/populous-area rules"
+      },
+      {
+        "name": "CASA — Drone safety apps",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-safety-apps",
+        "role": "Primary airspace guidance"
+      },
+      {
+        "name": "Federal Register of Legislation — Civil Aviation Safety Regulations 1998",
+        "url": "https://www.legislation.gov.au/F1998B00220/",
+        "role": "Legislative cross-check"
+      },
+      {
+        "name": "NSW National Parks — Drones in parks",
+        "url": "https://www.nationalparks.nsw.gov.au/conservation-and-heritage/care-for-parks/drones-in-parks",
+        "role": "NSW land-manager rules"
+      }
+    ],
+    "relatedSlugs": [
+      "do-i-need-drone-licence-australia",
+      "where-can-i-fly-drone-sydney"
+    ],
+    "cta": {
+      "sessionId": "first-flight",
+      "title": "Want to learn the rules while you actually fly?",
+      "body": "First Flight combines the essentials with practical one-on-one flying on your own drone in Sydney.",
+      "label": "Book First Flight"
+    }
+  },
+  {
+    "slug": "do-i-need-drone-licence-australia",
+    "status": "published",
+    "title": "Do I Need a Licence to Fly a Drone in Australia?",
+    "seoTitle": "Do I Need a Drone Licence in Australia? (2026)",
+    "description": "Do recreational drone pilots need a licence in Australia? The plain-English answer, including when registration, accreditation, RePL or ReOC can apply.",
+    "excerpt": "For most people flying a consumer drone for fun, the answer is simpler than expected: no recreational drone licence is required. The moment the purpose becomes work or business, though, the picture changes.",
+    "category": "Rules & safety",
+    "targetQuery": "do I need a licence to fly a drone in Australia",
+    "secondaryKeywords": [
+      "drone licence Australia",
+      "RePL recreational drone",
+      "drone registration Australia"
+    ],
+    "searchIntent": "informational",
+    "readingMinutes": 4,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "For ordinary recreational flying in Australia, you do not need a Remote Pilot Licence (RePL), operator accreditation or drone registration. You still have to follow CASA’s drone safety rules. If you fly for business or as part of your job, registration and operator requirements apply, even for very small drones.",
+    "keyPoints": [
+      "Flying purely for fun: generally no licence, operator accreditation or registration.",
+      "Flying for work: the drone must be registered and you need the appropriate operator authority.",
+      "For many commercial operations with a drone up to 2 kg, operator accreditation can be used under the excluded category rather than a RePL/ReOC.",
+      "Heavier or more complex commercial operations can require a RePL, ReOC and/or CASA approvals.",
+      "A coaching session that teaches you how to use your drone is not a CASA licence course."
+    ],
+    "sections": [
+      {
+        "heading": "If you are flying for fun",
+        "paragraphs": [
+          "CASA’s current recreational guidance is clear: there is no general drone licence requirement for flying for fun. You do not need operator accreditation and you do not need to register the aircraft. That applies to the normal consumer camera drones beginners are likely to buy, including models under 250 g.",
+          "The absence of a licence does not remove the operating rules. You still need to stay under the height limit, keep clear of people, avoid populous areas, maintain visual line of sight, fly in daylight, respect airport restrictions and check where you can fly."
+        ]
+      },
+      {
+        "heading": "So what is a RePL?",
+        "paragraphs": [
+          "A Remote Pilot Licence, usually shortened to RePL, is a professional aviation qualification used for certain remotely piloted aircraft operations. It is not the Australian equivalent of a recreational “driving licence for drones”. A beginner who bought a Mini, Flip, Neo, Lito, Air or Mavic simply to fly as a hobby does not need to obtain a RePL before their first legal recreational flight."
+        ]
+      },
+      {
+        "heading": "What changes if I make money with the drone?",
+        "paragraphs": [
+          "CASA treats flying for business or as part of your job differently from flying for fun. A commercial aircraft has to be registered, and the person or organisation needs the authority appropriate to the operation.",
+          "For a micro RPA of 250 g or less, or a very small RPA over 250 g and up to 2 kg, many straightforward commercial operations can be conducted in the excluded category with operator accreditation and aircraft registration rather than a RePL and ReOC. The standard operating conditions still apply.",
+          "Once aircraft, locations or operating conditions move beyond those excluded pathways, a RePL, a remotely piloted aircraft operator’s certificate (ReOC), specific permissions or a combination of them can become necessary. Commercial drone regulation is therefore about the whole operation, not just whether somebody has a pilot card in their wallet."
+        ]
+      },
+      {
+        "heading": "Does under 250 g mean “no rules”?",
+        "paragraphs": [
+          "No. This is one of the most common misunderstandings imported from overseas videos. In Australia, sub-250 g aircraft still have to follow the recreational drone safety rules. Their small weight does make a difference to some airport restrictions: CASA allows limited flight up to 45 metres within 5.5 km of a controlled airport for a drone of 250 g or less, subject to strict exclusions around approach/departure paths, the airport boundary and hazards to aircraft.",
+          "But a 249 g drone is not a free pass to fly over people, through a busy beach, at night or outside visual line of sight."
+        ]
+      },
+      {
+        "heading": "Do I need training even if I do not need a licence?",
+        "paragraphs": [
+          "Legally requiring a licence and personally benefiting from instruction are different questions. Modern drones can hold position, brake and return home automatically, which makes the first take-off surprisingly easy. The harder part is understanding what the aircraft will do when GPS changes, the wind picks up, the battery gets low, signal is lost or somebody walks into your operating area.",
+          "That is the gap practical coaching can fill. Drone Confidence teaches everyday owners how to use their own aircraft with better judgement and confidence; it does not issue a RePL or claim to provide CASA certification."
+        ]
+      },
+      {
+        "heading": "A simple way to work out which bucket you are in",
+        "paragraphs": [
+          "Ask what the flight is for. If the honest answer is “I am doing this because I enjoy flying or taking personal photos”, start with the recreational rules. If the flight is part of paid work, supports a business, produces imagery you are being paid to obtain, or is performed as part of your job, check the commercial requirements before take-off."
+        ],
+        "bullets": [
+          "Fun or personal hobby → recreational rules.",
+          "Paid/business/job purpose → commercial requirements; register the aircraft and check the correct operator pathway.",
+          "Unusual airspace, night operations, flight near people or other non-standard conditions → extra approvals may be required regardless of experience."
+        ]
+      },
+      {
+        "heading": "Bottom line",
+        "paragraphs": [
+          "You do not need to become a licensed commercial drone pilot just to learn how to safely enjoy a consumer drone. You do need to understand the rules that apply to the flight you are actually conducting. If your use changes from hobby to work later, revisit CASA’s requirements before you assume yesterday’s recreational setup still applies."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      },
+      {
+        "name": "CASA — Drone safety rules",
+        "url": "https://www.casa.gov.au/drones/drone-rules/drone-safety-rules",
+        "role": "Primary rule summary"
+      },
+      {
+        "name": "CASA — Flying near airports",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-near-airports",
+        "role": "Primary airport rules"
+      },
+      {
+        "name": "Federal Register of Legislation — Civil Aviation Safety Regulations 1998",
+        "url": "https://www.legislation.gov.au/F1998B00220/",
+        "role": "Legislative cross-check"
+      },
+      {
+        "name": "CASA — Drone weight categories and requirements",
+        "url": "https://www.casa.gov.au/drones/operator-accreditation-certificate/drone-weight-categories-and-requirements",
+        "role": "Primary commercial category requirements"
+      },
+      {
+        "name": "CASA — Get your ReOC",
+        "url": "https://www.casa.gov.au/drones/remotely-piloted-aircraft-operators-certificate/get-your-reoc",
+        "role": "Primary ReOC cross-check"
+      }
+    ],
+    "relatedSlugs": [
+      "drone-laws-australia",
+      "drone-flight-101",
+      "where-can-i-fly-drone-sydney"
+    ],
+    "cta": {
+      "sessionId": "first-flight",
+      "title": "No licence course. Just practical help with your drone.",
+      "body": "If your goal is “I bought a drone — can someone show me how to use it properly?”, that is exactly what First Flight is built for.",
+      "label": "Book First Flight"
+    }
+  },
+  {
+    "slug": "where-can-i-fly-drone-sydney",
+    "status": "published",
+    "title": "Where Can I Fly a Drone in Sydney? A Beginner’s Guide",
+    "seoTitle": "Where Can I Fly a Drone in Sydney? (2026 Guide)",
+    "description": "How to find a legal, practical drone flying location in Sydney, including CASA airspace, Sydney Basin changes, parks, beaches and local rules.",
+    "excerpt": "There is no trustworthy permanent list of “Sydney drone spots”. Airspace and site conditions change. Here is the repeatable process for finding somewhere suitable each time.",
+    "category": "Sydney flying",
+    "targetQuery": "where can I fly a drone in Sydney",
+    "secondaryKeywords": [
+      "drone flying Sydney",
+      "Sydney drone rules",
+      "drone parks Sydney",
+      "where to fly DJI Sydney"
+    ],
+    "searchIntent": "local informational",
+    "readingMinutes": 4,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "In Sydney, choose a flying site by checking three things together: current CASA airspace, the land manager’s rules, and what is physically happening at the location. The Sydney Basin airspace changed on 9 July 2026 when Western Sydney International was integrated alongside Sydney, Bankstown and Camden control zones, so old screenshots and forum lists are particularly risky right now.",
+    "keyPoints": [
+      "Use a CASA-verified drone safety app on the day you fly.",
+      "Sydney Basin airspace changed on 9 July 2026; do not rely on old maps.",
+      "Sydney Harbour and surrounding restricted airspace is generally not an ordinary recreational flying area.",
+      "Aviation permission does not automatically give permission to launch from a park, reserve, beach or national park.",
+      "Busy parks and beaches can become populous areas even if airspace itself looks clear.",
+      "For beginners, a boring open area with wide margins is usually better than an iconic location."
+    ],
+    "sections": [
+      {
+        "heading": "Why “just give me a list of parks” is the wrong answer",
+        "paragraphs": [
+          "A list of locations looks useful until it sends somebody to a park on a Saturday morning with a football game underway, an updated local restriction, a temporary airspace issue or a new controlled-airspace boundary. Whether a site works depends on more than the pin on the map.",
+          "For Sydney in particular, CASA says the airspace structure changed on 9 July 2026 with the introduction of Western Sydney International (Nancy-Bird Walton) Airport. The basin now has four neighbouring control zones: Western Sydney International, Sydney Kingsford Smith, Bankstown and Camden. That is a strong reason to use live, verified information instead of an old blog map."
+        ]
+      },
+      {
+        "heading": "Step 1: check the airspace",
+        "paragraphs": [
+          "Open a CASA-verified drone safety app and inspect the exact point you intend to use. CASA currently lists several verified mobile and web apps for recreational operators. These tools show aviation restrictions and are the right starting point for airport zones and restricted airspace.",
+          "Do not stop at the colour of the map. Read the detail shown for the location and make sure the aircraft weight is entered correctly where the app uses it. Near a controlled airport, the rules differ for drones of 250 g or less and those over 250 g."
+        ]
+      },
+      {
+        "heading": "Step 2: check who manages the ground",
+        "paragraphs": [
+          "Airspace and land access are separate. A location can be clear from an aviation perspective while the council, park authority, private owner or other land manager restricts launching or operating a drone from that land. CASA explicitly tells drone pilots to check local, state and territory rules as well as the aviation map.",
+          "In NSW national parks and reserves managed by NPWS, you need approval to launch, land or operate a drone. Recreational requests should be sent to the relevant park at least 10 days beforehand, and some parks do not allow recreational drone use at all."
+        ]
+      },
+      {
+        "heading": "Step 3: look at the people, not just the map",
+        "paragraphs": [
+          "CASA prohibits flight in a populous area and uses parks and beaches as examples of places that can be populous. You must also keep at least 30 metres horizontally from people and never fly over them.",
+          "A quiet oval at 7 am can be a completely different operating environment at 10 am. A beach that is empty in winter can be packed after lunch. If your flight relies on strangers staying perfectly still or never entering your buffer, you do not have a robust plan."
+        ]
+      },
+      {
+        "heading": "What about Sydney Harbour?",
+        "paragraphs": [
+          "For an ordinary recreational beginner, Sydney Harbour and the surrounding restricted airspace should not be treated as a casual drone destination. CASA describes the Harbour and surrounding area as a no-drone zone in its traveller guidance because of low-flying helicopters, seaplanes and restricted airspace.",
+          "There are current automated authorisation pathways in restricted areas R407A and R407B, but those are for eligible ReOC holders with the required professional credentials. That is not the pathway for somebody heading out for a recreational first flight."
+        ]
+      },
+      {
+        "heading": "What about beaches?",
+        "paragraphs": [
+          "A beach is not automatically illegal and it is not automatically suitable. You have the same CASA rules about people, populous areas, visual line of sight and airspace, plus whatever rules apply to the land. Coastal locations can also introduce wildlife restrictions. In NSW, the general drone approach distance for observing whales, dolphins and dugongs is at least 100 metres vertically and horizontally, and current wildlife directions can require greater separation in particular circumstances, including around calves or protected animals. Check current NSW wildlife guidance before a coastal flight.",
+          "Add salt spray, wind, moving people and birds and you can see why “the beach” is not a simple yes/no category. We have a separate guide dedicated to this."
+        ]
+      },
+      {
+        "heading": "What a good beginner flying site actually looks like",
+        "paragraphs": [
+          "For learning, scenery is much less important than margins. Look for a broad open area where you can stay well away from people, trees, powerlines, roads and buildings; maintain visual line of sight easily; take off and land from a clear surface; and bring the drone back without crossing a hazard.",
+          "If you are practising orientation or Return-to-Home, an uncomplicated environment is an advantage. The goal of an early flight is to build reliable habits, not to prove that obstacle avoidance works."
+        ]
+      },
+      {
+        "heading": "A five-minute Sydney site check",
+        "paragraphs": [
+          "Use the same sequence every time and it quickly becomes automatic."
+        ],
+        "bullets": [
+          "CASA app: check aviation restrictions at the exact location.",
+          "Land manager: check council, NPWS, private-property or venue rules.",
+          "People: can you maintain a generous buffer for the whole flight?",
+          "Obstacles and forced-landing options: what happens if the drone has to land early?",
+          "Weather: check wind and gusts, then verify conditions at the site.",
+          "Home Point and RTH: choose a sensible take-off point and confirm what the aircraft will do if signal is lost."
+        ]
+      },
+      {
+        "heading": "Why Drone Confidence does not publish a permanent “safe parks” map",
+        "paragraphs": [
+          "It would look great for SEO and age badly for safety. The better approach is to teach you how to assess a site yourself. Our own Sydney training locations are checked for the session and remain subject to weather, airspace, venue access and actual operating conditions on the day.",
+          "That judgement is transferable. Once you can confidently answer “airspace, land, people, weather, aircraft” for a new location, you are no longer dependent on somebody else’s list."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "CASA — Changes to Sydney Basin airspace are now in effect",
+        "url": "https://www.casa.gov.au/about-us/news-media-releases-and-speeches/changes-sydney-basin-airspace-are-now-effect",
+        "role": "Current Sydney airspace update"
+      },
+      {
+        "name": "CASA — Drone safety apps",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-safety-apps",
+        "role": "Primary airspace guidance"
+      },
+      {
+        "name": "CASA — Flying near airports",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-near-airports",
+        "role": "Primary airport rules"
+      },
+      {
+        "name": "CASA — Flying in populous areas",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-populous-areas",
+        "role": "Primary people/populous-area rules"
+      },
+      {
+        "name": "CASA — Automated airspace authorisations",
+        "url": "https://www.casa.gov.au/drones/flight-authorisations/automated-airspace-authorisations",
+        "role": "Current Sydney Harbour/controlled-airspace context"
+      },
+      {
+        "name": "NSW National Parks — Drones in parks",
+        "url": "https://www.nationalparks.nsw.gov.au/conservation-and-heritage/care-for-parks/drones-in-parks",
+        "role": "NSW land-manager rules"
+      },
+      {
+        "name": "NSW Environment — Approach distances for whales, dolphins and dugongs",
+        "url": "https://www.environment.nsw.gov.au/topics/animals-and-plants/native-animals/approaching-marine-mammals-in-nsw/approach-distances-for-whales-dolphins-and-dugongs",
+        "role": "NSW wildlife rules"
+      }
+    ],
+    "relatedSlugs": [
+      "drone-laws-australia",
+      "drone-flight-101"
+    ],
+    "cta": {
+      "sessionId": "first-flight",
+      "title": "Want to learn how to assess a location in the real world?",
+      "body": "Location and airspace judgement are built into every Drone Confidence session, alongside actual flying time.",
+      "label": "Book First Flight"
+    }
+  },
+  {
+    "slug": "which-drone-is-right-for-me",
+    "status": "published",
+    "title": "Which Drone Is Right for Me? A Plain-English Buying Guide",
+    "seoTitle": "Which Drone Should I Buy in Australia? (2026)",
+    "description": "Choosing your first camera drone in Australia? Compare current DJI Neo, Lito, Flip, Mini, Air and Mavic options by how you will actually use them.",
+    "excerpt": "The best drone is not automatically the most expensive one. Start with what you want to shoot, how often you will carry it and how much complexity you actually want.",
+    "category": "Choosing a drone",
+    "targetQuery": "which drone should I buy Australia",
+    "secondaryKeywords": [
+      "best drone for beginners Australia",
+      "best DJI drone Australia",
+      "first drone DJI",
+      "DJI Mini 5 Pro vs Air 3S"
+    ],
+    "searchIntent": "commercial investigation",
+    "readingMinutes": 6,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "For most new owners who genuinely want to learn camera-drone flying, a compact controller-based model is the sweet spot. The Mini 5 Pro is the strongest all-round premium beginner choice if budget allows; DJI’s Lito range and Mini 4K make more affordable entry points; Neo 2 and Flip suit people who prioritise easy self-filming; Air 3S is the step up for serious photography; Mavic 4 Pro is overkill for most first-time recreational buyers.",
+    "keyPoints": [
+      "Buy for your use case, not the longest feature list.",
+      "In Australia, under 250 g does not exempt you from the recreational safety rules, although weight affects some airport restrictions.",
+      "Obstacle sensing is useful, but it is not collision insurance.",
+      "A controller with a proper flight interface is valuable if your goal is to learn traditional camera-drone flying.",
+      "Budget for spare batteries, a sensible controller option and replacement propellers — not just the aircraft.",
+      "Prices and bundles change quickly; the guide was range-checked against DJI Australia on 3 September 2026."
+    ],
+    "sections": [
+      {
+        "heading": "First decide what kind of drone owner you want to be",
+        "paragraphs": [
+          "There are really three different beginner goals hiding inside the question “which drone should I buy?” One person wants effortless follow-me clips while travelling. Another wants to learn to fly a camera in three dimensions. Another is already a photographer and wants a serious aerial camera.",
+          "Those people should not all buy the same aircraft. The easiest way to avoid overspending is to decide what success looks like six months after purchase."
+        ]
+      },
+      {
+        "heading": "The current DJI range in plain English",
+        "paragraphs": [
+          "DJI’s Australian store is unusually crowded in 2026. Alongside Neo, Flip, Mini, Air and Mavic, DJI now lists the entry-level Lito and Lito X1. Rather than turning this into a giant spec table, these are the models that make the clearest sense for a new consumer buyer."
+        ],
+        "table": {
+          "headers": [
+            "Model",
+            "Best for",
+            "What stands out"
+          ],
+          "rows": [
+            [
+              "DJI Neo 2",
+              "Easy self-filming and travel",
+              "Very small follow-me drone; simple ways to capture yourself without starting with a full camera-drone workflow."
+            ],
+            [
+              "DJI Mini 4K",
+              "Lowest-cost traditional flying",
+              "A compact controller-based 4K camera drone. Little obstacle-sensing safety net, so it rewards careful flying."
+            ],
+            [
+              "DJI Lito 1",
+              "New all-round entry option",
+              "Under 250 g, 4K and omnidirectional sensing; positioned by DJI as beginner-friendly."
+            ],
+            [
+              "DJI Flip",
+              "Vlogging with propeller protection",
+              "Under 249 g, full-coverage foldable prop guards, 1/1.3-inch camera and 4K/60 HDR."
+            ],
+            [
+              "DJI Lito X1",
+              "Premium beginner value",
+              "Under 249 g, 1/1.3-inch camera, omnidirectional sensing plus forward LiDAR and up to 36-minute standard-battery flight time."
+            ],
+            [
+              "DJI Mini 5 Pro",
+              "Best compact all-rounder",
+              "1-inch 50 MP camera, advanced sensing and a roughly 249 g standard aircraft weight; a premium compact all-rounder."
+            ],
+            [
+              "DJI Air 3S",
+              "Serious photography and video",
+              "Larger 724 g aircraft with 1-inch main camera plus 70 mm medium tele camera and longer endurance."
+            ],
+            [
+              "DJI Mavic 4 Pro",
+              "High-end creative/pro work",
+              "Large triple-camera flagship with a 100 MP 4/3 main camera; expensive and unnecessary for most first-time owners."
+            ]
+          ]
+        }
+      },
+      {
+        "heading": "If you mostly want clips of yourself: Neo 2",
+        "paragraphs": [
+          "Neo 2 makes sense when the drone is primarily a camera that happens to fly. It is small, portable and designed around easy follow-me capture. That can be brilliant for walks, travel and family clips.",
+          "The trade-off is that a selfie/follow drone is not the same learning experience as a Mini, Lito, Air or Mavic used with a conventional controller. If your goal is “I want to learn proper camera-drone flying”, make sure the control setup you buy supports that goal rather than choosing only for palm-launch convenience."
+        ]
+      },
+      {
+        "heading": "If budget is the main constraint: Mini 4K",
+        "paragraphs": [
+          "The Mini 4K remains a straightforward way into stabilised 4K aerial footage and conventional stick flying. Its lack of sophisticated obstacle sensing is both a limitation and a useful reminder: you need to choose open environments and fly deliberately.",
+          "If you know you are nervous around trees or want tracking and more safety assistance, spending more on a newer model may buy features you will genuinely use rather than spec-sheet luxuries."
+        ]
+      },
+      {
+        "heading": "If you want a new-generation beginner all-rounder: Lito 1 or Lito X1",
+        "paragraphs": [
+          "DJI’s Lito line is now explicitly positioned as beginner-friendly. Lito 1 sits lower in the range, while Lito X1 adds a larger 1/1.3-inch sensor, forward-facing LiDAR and more advanced imaging. Both remain around the 249 g class in standard configuration.",
+          "Lito X1 is especially interesting because it narrows the gap between an entry model and the more premium Mini 5 Pro. If you are buying now rather than upgrading from an existing Mini, it deserves to be on the shortlist."
+        ]
+      },
+      {
+        "heading": "If propeller protection and easy vlogging matter: Flip",
+        "paragraphs": [
+          "Flip’s distinctive full-coverage foldable propeller guards make it less intimidating around close-range filming than a conventional exposed-propeller camera drone. It also carries a capable 1/1.3-inch sensor and records 4K/60 HDR.",
+          "Do not translate “guarded” into “safe to fly around people”. CASA’s people and populous-area rules still apply, and no propeller guard makes poor site selection okay. Think of the guards as aircraft protection and confidence support, not a legal exemption."
+        ]
+      },
+      {
+        "heading": "If you want one compact drone to grow into: Mini 5 Pro",
+        "paragraphs": [
+          "The Mini 5 Pro is the strongest all-round recommendation in the compact class if the price is comfortable. DJI pairs a 1-inch 50 MP sensor with advanced sensing and flight features in a standard aircraft weight around the 249 g mark. Exact take-off weight can vary with configuration and manufacturing tolerance, so use the actual aircraft and current CASA rules when a weight threshold matters. Independent reviewers also place the Mini 5 Pro among the strongest current DJI and premium beginner options.",
+          "It is expensive for a first experiment. If you are unsure whether drone flying will become a real hobby, a cheaper model is sensible. But if you already know you care about image quality and intend to keep the aircraft for years, buying the model you will grow into can cost less than upgrading twice."
+        ]
+      },
+      {
+        "heading": "If photography is the point: Air 3S",
+        "paragraphs": [
+          "Air 3S is where the camera system starts to justify carrying a larger aircraft. Its 1-inch main camera is paired with a 70 mm-equivalent medium tele camera, giving you genuinely different perspectives rather than relying on digital zoom. It also has stronger wind performance and longer endurance than the tiny beginner class.",
+          "The cost is size, weight and commitment. In Australia a heavier drone does not suddenly require a recreational licence, but weight does affect some airport rules, and a bigger aircraft needs more room and feels more consequential in the air."
+        ]
+      },
+      {
+        "heading": "If you are asking whether you need a Mavic 4 Pro, you probably do not",
+        "paragraphs": [
+          "Mavic 4 Pro is an extraordinary flying camera with a triple-camera system and a 100 MP 4/3 main sensor. It is also a 1 kg-class flagship designed for people who know why they need its lenses, image pipeline and endurance.",
+          "For a first recreational drone, spending the difference on more flying time, extra batteries and learning will usually improve your results more than owning the flagship. Buy the Mavic because a specific creative requirement demands it, not because the spec table is longest."
+        ]
+      },
+      {
+        "heading": "What under 250 g actually means in Australia",
+        "paragraphs": [
+          "Do not copy buying advice from the US, UK or Europe without translating the regulations. Australia does not require recreational registration or a recreational drone licence for normal consumer aircraft simply because they are over 250 g. The 250 g line does matter near controlled airports, where CASA gives micro drones some additional limited flexibility.",
+          "It also matters in practical terms: a lighter drone is easier to carry and less imposing. But it still must stay away from people, out of populous areas, within visual line of sight and under the recreational rules."
+        ]
+      },
+      {
+        "heading": "My buying checklist for a first drone",
+        "paragraphs": [
+          "Before you pay, answer these questions honestly."
+        ],
+        "bullets": [
+          "Will I mostly film myself, or do I want to learn conventional stick flying?",
+          "Do I care about still photography and editing RAW files, or mainly social video?",
+          "Will I actually carry a larger Air/Mavic on casual outings?",
+          "Do I want a controller with its own screen, or am I happy connecting a phone?",
+          "How many batteries can I afford as part of the real purchase?",
+          "Am I paying for obstacle sensing because it genuinely helps my use, or because I expect it to make the drone crash-proof?",
+          "Would a cheaper drone plus a one-on-one lesson get me flying more confidently than the flagship alone?"
+        ]
+      },
+      {
+        "heading": "The simplest recommendation",
+        "paragraphs": [
+          "If you want to learn camera-drone flying and can afford it, start your comparison around Mini 5 Pro and Lito X1. If you want to spend less, look at Lito 1 and Mini 4K. If your priority is effortless self-capture, compare Neo 2 and Flip. Move to Air 3S when photography is important enough to justify a larger dual-camera aircraft, and to Mavic 4 Pro only when you can name the shots or professional requirements that need it."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "DJI Store Australia — Camera drones",
+        "url": "https://store.dji.com/au/selection/camera-drones",
+        "role": "Current Australian range and pricing"
+      },
+      {
+        "name": "DJI Store Australia",
+        "url": "https://store.dji.com/au",
+        "role": "Current Australian range and pricing cross-check"
+      },
+      {
+        "name": "TechRadar — Best DJI drones 2026",
+        "url": "https://www.techradar.com/best/best-dji-drone",
+        "role": "Independent product cross-check"
+      },
+      {
+        "name": "TechRadar — Best beginner drones 2026",
+        "url": "https://www.techradar.com/best/best-beginner-drones",
+        "role": "Independent beginner-use cross-check"
+      },
+      {
+        "name": "CASA — Flying near airports",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-near-airports",
+        "role": "Primary airport rules"
+      },
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      }
+    ],
+    "relatedSlugs": [
+      "drone-flight-101",
+      "dji-return-to-home-explained"
+    ],
+    "cta": {
+      "sessionId": "first-flight",
+      "title": "Already bought one — or still deciding?",
+      "body": "Drone Confidence sessions are built around the aircraft you actually own, and we can help you understand its controls, settings and safety features.",
+      "label": "Book First Flight"
+    }
+  },
+  {
+    "slug": "drone-flight-101",
+    "status": "published",
+    "title": "Drone Flight 101: Your First Flight, Step by Step",
+    "seoTitle": "How to Fly a Drone: First Flight Guide (Australia)",
+    "description": "A calm, practical first-flight guide for new drone owners in Australia: checks, take-off, hovering, orientation, simple manoeuvres, Return-to-Home and landing.",
+    "excerpt": "Your first flight should be deliberately boring. A wide open site, simple movements and a generous battery margin teach you more than trying cinematic moves straight away.",
+    "category": "Flying skills",
+    "targetQuery": "how to fly a drone for beginners",
+    "secondaryKeywords": [
+      "drone flight 101",
+      "first drone flight",
+      "DJI beginner flying guide"
+    ],
+    "searchIntent": "informational",
+    "readingMinutes": 5,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "For a first flight, choose a legal open area, check the aircraft and weather, wait for a confirmed Home Point, lift into a low hover and spend most of the battery learning orientation close to you. Do not make distance, height or intelligent flight modes the goal. The first win is landing with the drone, your confidence and your understanding all intact.",
+    "keyPoints": [
+      "Choose the location before worrying about camera settings.",
+      "Inspect propellers, battery, controller and app warnings before take-off.",
+      "Wait for a stable position solution and confirmed Home Point before flying away.",
+      "Start with a low hover and small movements.",
+      "Practise nose-away and nose-toward-you orientation deliberately.",
+      "Turn back early; battery percentages are not a challenge to beat.",
+      "Learn how to trigger and cancel Return-to-Home while you still have plenty of battery."
+    ],
+    "sections": [
+      {
+        "heading": "Before you leave home",
+        "paragraphs": [
+          "Charge the aircraft batteries, controller and phone or tablet if your setup uses one. Make sure the flight app opens and you are signed in. Install a memory card if required and check that firmware or account prompts are not waiting to steal half of your session at the park.",
+          "Then check the location. Use a CASA-verified drone safety app, check the land manager’s rules and look at the weather. The best first-flight site is wide, open and uninteresting: no crowd, no road running through it, no line of trees you feel tempted to fly behind and no need to launch from sand or long wet grass."
+        ]
+      },
+      {
+        "heading": "Do a physical aircraft check",
+        "paragraphs": [
+          "Before fitting or powering the battery, look at the aircraft rather than assuming a new drone is automatically ready. Check each propeller for chips, cracks, distortion or looseness. Make sure the arms are fully unfolded, the gimbal protector is removed where applicable and nothing blocks the motors or sensors.",
+          "DJI’s own pre-flight guidance also recommends confirming battery power, propeller condition, controller link, app self-check status and the refreshed Home Point before take-off."
+        ]
+      },
+      {
+        "heading": "Set up the important safety items first",
+        "paragraphs": [
+          "You do not need to understand every menu. For flight one, focus on the settings that can change what the aircraft does when something unexpected happens."
+        ],
+        "bullets": [
+          "Confirm the Home Point is recorded at the correct place.",
+          "Know what the signal-loss action is set to do: Return-to-Home, hover or land, depending on the model/setup.",
+          "Understand the RTH altitude or RTH mode your model uses.",
+          "Check obstacle avoidance is in the mode you expect, remembering Sport mode can disable it on many DJI aircraft.",
+          "Confirm maximum altitude/distance settings are not doing something surprising.",
+          "Look for any compass, IMU, GNSS, battery or vision-system warning before launch."
+        ]
+      },
+      {
+        "heading": "Take off and stop at a low hover",
+        "paragraphs": [
+          "Lift to roughly head height or a little above, then do nothing for a moment. Is the drone holding position? Does the camera horizon look normal? Are there warnings? Does the aircraft respond predictably to a tiny control input?",
+          "That 20-second pause is valuable. It gives you a safe opportunity to notice a propeller vibration, location problem or setup issue before the drone is 80 metres away."
+        ]
+      },
+      {
+        "heading": "Learn the sticks without travelling far",
+        "paragraphs": [
+          "With the nose pointing away from you, use very small inputs: up, down, forward, backward, left and right. Then practise a gentle yaw turn. Keep the aircraft close enough that orientation is obvious.",
+          "Next, turn the drone 90 degrees and repeat. Finally, point the nose toward yourself. This is where new pilots discover that left and right feel reversed because you are now looking at the front of the aircraft. Do not rush past that discomfort — working through it close to you is exactly how orientation becomes instinctive."
+        ]
+      },
+      {
+        "heading": "Fly a box before you fly a “shot”",
+        "paragraphs": [
+          "A simple rectangular circuit teaches more than an automated orbit on day one. Fly forward, stop, turn 90 degrees, fly the next side and repeat. Try to stop in the same places and keep a constant height.",
+          "When that feels easy, fly the same shape while keeping the camera pointed roughly at the centre. You are now beginning to coordinate yaw and translation — the foundation of smooth video — without letting the aircraft disappear into the distance."
+        ]
+      },
+      {
+        "heading": "Pay attention to the wind on the return leg",
+        "paragraphs": [
+          "A drone can look extremely capable while flying downwind because the air mass is helping it. The problem appears when you turn home and ask it to fight the wind on a lower battery.",
+          "For early flights, keep the drone upwind or crosswind where practical, stay close and return with a large battery reserve. Forecast wind is only part of the story: the Bureau of Meteorology notes that gusts can be around 40 per cent stronger than average winds and wind usually increases with height."
+        ]
+      },
+      {
+        "heading": "Practise Return-to-Home before you need it",
+        "paragraphs": [
+          "RTH is a safety system, not a panic button you should meet for the first time during a signal loss. With the aircraft nearby, high battery and an open return path, trigger RTH and watch what your particular model does. Then practise cancelling it and taking over.",
+          "Newer DJI aircraft can calculate sophisticated return paths when their sensing systems and lighting allow it; older or degraded conditions may rely more heavily on preset altitude and direct return behaviour. Your manual matters."
+        ]
+      },
+      {
+        "heading": "Land before the battery makes the decision for you",
+        "paragraphs": [
+          "Do not stretch the first flight for “one more shot”. Bring the drone back while you still have time to reposition, deal with a person walking into the landing area or respond to a wind change. Land on a clean, stable surface and stop the motors before approaching.",
+          "A calm landing with 25 or 30 per cent remaining teaches better habits than a dramatic low-battery arrival. Exact margins depend on aircraft, wind, temperature and distance, so treat battery as a planning resource rather than a countdown timer."
+        ]
+      },
+      {
+        "heading": "What to practise on flights two and three",
+        "paragraphs": [
+          "Repeat the basics until they feel boring, then add one new variable at a time."
+        ],
+        "bullets": [
+          "Consistent take-offs and landings.",
+          "Nose-in hovering and orientation.",
+          "Circles and figure-eights.",
+          "Smooth combined yaw/forward movement.",
+          "Camera tilt while maintaining a flight path.",
+          "RTH from different safe positions.",
+          "Judging wind and planning the return before the app tells you to."
+        ]
+      },
+      {
+        "heading": "The goal is not to be fearless",
+        "paragraphs": [
+          "Confident flying is not ignoring risk. It is knowing what the aircraft is doing, keeping enough margin that you have options and recognising when a flight is becoming unnecessarily difficult. Your first few flights should make the controls less mentally expensive so you have more attention left for airspace, people, weather and composition."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      },
+      {
+        "name": "CASA — Drone safety apps",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-safety-apps",
+        "role": "Primary airspace guidance"
+      },
+      {
+        "name": "DJI Support — Flight Safety Guidelines",
+        "url": "https://repair.dji.com/help/content?customId=en-us03400006768&spaceId=34",
+        "role": "Manufacturer pre-flight guidance"
+      },
+      {
+        "name": "DJI Support — Drone RTH Logic",
+        "url": "https://repair.dji.com/help/content?customId=en-us03400006776&documentType=artical&lang=en&paperDocType=paper&re=US&spaceId=34",
+        "role": "Manufacturer RTH guidance"
+      },
+      {
+        "name": "DJI — Mini 5 Pro User Manual",
+        "url": "https://dl.djicdn.com/downloads/DJI_Mini_5_Pro/UM/2025/DJI_Mini_5_Pro_User_Manual_en.pdf",
+        "role": "Current model manual cross-check"
+      },
+      {
+        "name": "Bureau of Meteorology — About forecast wind",
+        "url": "https://www.bom.gov.au/watl/about/about-forecast-wind.shtml",
+        "role": "Australian weather guidance"
+      }
+    ],
+    "relatedSlugs": [
+      "dji-return-to-home-explained",
+      "beginner-drone-mistakes",
+      "drone-laws-australia"
+    ],
+    "cta": {
+      "sessionId": "first-flight",
+      "title": "Prefer to do your first flight with someone beside you?",
+      "body": "First Flight is 60 minutes of practical one-on-one help using your own drone, from setup and take-off through to orientation, RTH and landing.",
+      "label": "Book First Flight"
+    }
+  },
+  {
+    "slug": "dji-return-to-home-explained",
+    "status": "published",
+    "title": "DJI Return-to-Home Explained: What RTH Actually Does",
+    "seoTitle": "DJI Return to Home (RTH) Explained for Beginners",
+    "description": "Understand DJI Return-to-Home before you need it: Home Point, Smart RTH, low-battery RTH, signal loss, RTH altitude, obstacle sensing and common mistakes.",
+    "excerpt": "Return-to-Home is one of the best safety tools on a DJI drone — and one of the easiest to misunderstand. The exact behaviour varies by model and conditions.",
+    "category": "Drone features",
+    "targetQuery": "DJI Return to Home explained",
+    "secondaryKeywords": [
+      "DJI RTH altitude",
+      "DJI signal lost return to home",
+      "how does return to home work DJI"
+    ],
+    "searchIntent": "informational",
+    "readingMinutes": 5,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "DJI RTH sends the aircraft toward its most recently recorded Home Point when you trigger it, when the battery reaches certain calculated thresholds, or — if configured that way — after control signal is lost. It is not a universal “fly straight up to my chosen height and come home” routine: newer aircraft can plan more advanced paths, and behaviour changes with distance, lighting, sensors, GNSS and the model you own.",
+    "keyPoints": [
+      "Wait for the correct Home Point before flying away.",
+      "Check the signal-loss action before each flight.",
+      "Understand whether your model uses a preset RTH altitude, an optimal path, or both depending on conditions.",
+      "RTH obstacle sensing has limitations; wires, branches, glass and poor light can still matter.",
+      "High wind can prevent or slow a return even when the software is working perfectly.",
+      "Practise triggering and cancelling RTH in an open area before you ever need it under stress."
+    ],
+    "sections": [
+      {
+        "heading": "Start with the Home Point",
+        "paragraphs": [
+          "RTH can only be useful if the aircraft knows where “home” is. DJI aircraft record a Home Point when the required positioning conditions are met. On a Mini 5 Pro, for example, the Home Point is recorded at take-off when GNSS is strong enough or the lighting conditions support the positioning system, and DJI Fly provides a prompt when it has been recorded.",
+          "If you launch before the Home Point is correctly recorded, move after launch, or take off from a boat or other changing position, you need to understand how your particular aircraft handles Home Point updates. For a normal beginner flight from a fixed location, the habit is simple: wait for the confirmation and verify the point looks correct on the map."
+        ]
+      },
+      {
+        "heading": "The three common ways RTH starts",
+        "paragraphs": [
+          "Across current DJI camera drones, you will commonly encounter three RTH triggers."
+        ],
+        "bullets": [
+          "Smart/manual RTH: you deliberately press and hold the RTH control or use the app.",
+          "Low-battery RTH: the aircraft calculates that battery is becoming only just sufficient for a safe return and prompts or initiates the return process.",
+          "Failsafe RTH: if control signal is lost and the signal-loss action is set to RTH, the aircraft can begin an automated return after the model-specific delay."
+        ]
+      },
+      {
+        "heading": "RTH altitude is important — but newer drones are more complicated",
+        "paragraphs": [
+          "Older explanations often say “the drone climbs to your RTH altitude, flies straight home, then lands”. That is still a useful mental model for some aircraft and some conditions, but it is not a complete description of current DJI systems.",
+          "On Air 3S, DJI’s manual says the Optimal Advanced RTH mode can automatically plan a route and adjust altitude when lighting and the environment are suitable. If conditions are not suitable for the vision system, it falls back to Preset RTH based on the RTH altitude setting. Mini 5 Pro has similarly advanced behaviour.",
+          "That means the right beginner advice is not “always set RTH to exactly X metres”. It is: understand your model, set a sensible preset height for the environment, and know when the aircraft may choose an advanced route instead."
+        ]
+      },
+      {
+        "heading": "How to choose a sensible preset RTH height",
+        "paragraphs": [
+          "Where your aircraft uses a preset altitude, the number should clear the relevant obstacles on the return path without being unnecessarily high. Think about trees, light poles, buildings, ridges and cranes — not just what is next to the take-off point.",
+          "Remember the legal ceiling still applies. You cannot use an RTH setting as a reason to exceed the permitted operating height. The better solution to a return path with a 140-metre obstacle is not a 150-metre RTH setting; it is choosing a different flight path or site."
+        ]
+      },
+      {
+        "heading": "Obstacle avoidance does not make RTH infallible",
+        "paragraphs": [
+          "Current DJI systems are impressive, but the sensors depend on light, texture, object size and direction. DJI’s manuals warn about transparent or reflective surfaces, powerlines, small branches, water and low-light conditions. Sport mode can also disable obstacle avoidance on models such as Mini 5 Pro.",
+          "RTH should therefore be planned as if you are responsible for the route — because you are. Do not deliberately hide the drone behind trees or buildings and assume it will solve the maze on the way back."
+        ]
+      },
+      {
+        "heading": "What happens when signal is lost?",
+        "paragraphs": [
+          "Signal loss does not automatically mean every DJI drone instantly flies home. The action is configurable on many models and can be set to RTH, hover or land. The delay and path logic also vary.",
+          "DJI’s current RTH guidance says Failsafe RTH requires a successfully recorded Home Point and functioning positioning/compass conditions. Some aircraft can retrace part of the original route before continuing home; others use different model-specific logic. This is why checking the actual signal-loss setting is more useful than memorising a YouTube video about a different DJI model."
+        ]
+      },
+      {
+        "heading": "Wind can beat good software",
+        "paragraphs": [
+          "RTH cannot create thrust the aircraft does not have. If you fly a long distance downwind, the return may be into a much stronger headwind, at a lower battery state, and possibly at a higher altitude where wind is stronger.",
+          "DJI explicitly warns in its RTH material that an aircraft may not be able to return when wind speed is too high. Build margin by staying closer in wind, flying the upwind leg first where practical and returning before the battery warning becomes the plan."
+        ]
+      },
+      {
+        "heading": "The best RTH drill for a new owner",
+        "paragraphs": [
+          "Practise on a calm day in a large open area. Confirm the Home Point, fly a modest distance away with plenty of battery, trigger RTH and watch the full sequence. Pay attention to whether it climbs, changes route, approaches at the current altitude or behaves differently because of distance. Then cancel RTH and take manual control.",
+          "Do that once or twice and the feature stops being mysterious. More importantly, you will know where the cancel control is when you need to stop an automated return because a landing area has become occupied."
+        ]
+      },
+      {
+        "heading": "RTH is a backup, not the flight plan",
+        "paragraphs": [
+          "Use Return-to-Home as a well-understood safety layer. Fly so that you normally bring the aircraft back yourself, while knowing exactly what the automated system is likely to do if you lose signal, misjudge battery or decide to trigger it. The best outcome is not “RTH saved me again”; it is “I rarely need it, and I trust it because I have tested and understood it.”"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "DJI Support — Drone RTH Logic",
+        "url": "https://repair.dji.com/help/content?customId=en-us03400006776&documentType=artical&lang=en&paperDocType=paper&re=US&spaceId=34",
+        "role": "Manufacturer RTH guidance"
+      },
+      {
+        "name": "DJI — Mini 5 Pro User Manual",
+        "url": "https://dl.djicdn.com/downloads/DJI_Mini_5_Pro/UM/2025/DJI_Mini_5_Pro_User_Manual_en.pdf",
+        "role": "Current model manual cross-check"
+      },
+      {
+        "name": "DJI — Air 3S User Manual",
+        "url": "https://dl.djicdn.com/downloads/DJI_Air_3S/UM/20260423/DJI_Air_3S_um_en1.pdf",
+        "role": "Current model manual cross-check"
+      },
+      {
+        "name": "DJI Support — Aircraft obstacle avoidance systems",
+        "url": "https://repair.dji.com/help/content?customId=01700006547&lang=en&paperDocType=ARTICLE&re=US&spaceId=17",
+        "role": "Manufacturer sensing overview"
+      },
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      }
+    ],
+    "relatedSlugs": [
+      "drone-flight-101"
+    ],
+    "cta": {
+      "sessionId": "fly-with-confidence",
+      "title": "Want to see exactly how RTH behaves on your drone?",
+      "body": "Fly With Confidence can include a practical RTH setup and demonstration on your own aircraft, in a controlled environment.",
+      "label": "Book Fly With Confidence"
+    }
+  },
+  {
+    "slug": "beginner-drone-mistakes",
+    "status": "published",
+    "title": "10 Mistakes New Drone Pilots Make — and How to Avoid Them",
+    "seoTitle": "10 Beginner Drone Mistakes (and How to Avoid Them)",
+    "description": "Ten common beginner drone mistakes: wrong location, poor RTH setup, wind, orientation, obstacle sensors, battery planning and more — with practical fixes.",
+    "excerpt": "Most beginner crashes and stressful flights are not caused by one dramatic failure. They come from small margins disappearing one at a time.",
+    "category": "Flying skills",
+    "targetQuery": "beginner drone mistakes",
+    "secondaryKeywords": [
+      "drone flying mistakes",
+      "new drone pilot tips",
+      "DJI beginner mistakes"
+    ],
+    "searchIntent": "informational",
+    "readingMinutes": 4,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "The biggest beginner mistake is treating the drone’s automation as a replacement for planning. Choose an uncomplicated legal site, keep the aircraft close, understand RTH, respect wind and battery, and leave yourself more space than the minimum rules require. Those habits prevent far more trouble than memorising every feature in the app.",
+    "keyPoints": [
+      "Being able to take off is not the same as being ready to fly away.",
+      "Many problems begin with a poor location rather than poor stick control.",
+      "Obstacle sensing, RTH and battery warnings are safety layers, not permission to reduce your own margins.",
+      "Orientation should be practised close to you before it becomes an emergency at distance.",
+      "Coming home early is a skill, not wasted battery."
+    ],
+    "sections": [
+      {
+        "heading": "1. Choosing a location because the map looks clear",
+        "paragraphs": [
+          "A CASA app is the aviation check, not the whole site assessment. Beginners sometimes see a location that is not restricted and assume the park or beach is therefore suitable. Then they arrive to find walkers, houses, a road, dogs, sport or a land-manager restriction.",
+          "Fix it: check airspace and land rules, then assess people, obstacles, forced-landing options and weather. If you cannot keep a generous buffer without constantly moving, go somewhere easier."
+        ]
+      },
+      {
+        "heading": "2. Flying away before the Home Point is confirmed",
+        "paragraphs": [
+          "RTH is only as useful as the Home Point it has recorded. Taking off and immediately heading into the distance can leave you unsure whether “home” is actually where you expect.",
+          "Fix it: wait for the app’s Home Point confirmation, glance at the map and make RTH setup part of your pre-flight routine."
+        ]
+      },
+      {
+        "heading": "3. Setting an RTH altitude once and never thinking about it again",
+        "paragraphs": [
+          "The correct return strategy depends on the site, and newer DJI drones can use advanced RTH logic that changes with sensing conditions. A number that cleared last week’s trees may be wrong around today’s light poles, terrain or buildings.",
+          "Fix it: before each flight, look at the return path and understand how your model will use its preset or optimal RTH behaviour."
+        ]
+      },
+      {
+        "heading": "4. Flying downwind because it feels easy",
+        "paragraphs": [
+          "The drone races away with a tailwind and everything looks fantastic. Then you turn home with less battery and discover the aircraft has to fight the wind all the way back.",
+          "Fix it: in meaningful wind, keep more distance and battery margin, and consider making the early leg upwind so the easier direction is home. Remember forecast gusts can be substantially stronger than the average wind."
+        ]
+      },
+      {
+        "heading": "5. Letting the drone get too small to read",
+        "paragraphs": [
+          "A live camera feed can make you feel connected long after the aircraft itself is a speck. That is both a visual-line-of-sight problem and an orientation problem.",
+          "Fix it: use the drone itself as the distance cue. If you cannot confidently see its position and orientation, bring it closer instead of zooming the map."
+        ]
+      },
+      {
+        "heading": "6. Panicking when the nose points toward you",
+        "paragraphs": [
+          "With the drone facing you, its left is visually on your right. New pilots who have only flown nose-away can make an incorrect corrective input when they become disoriented.",
+          "Fix it: practise nose-in hovering in a large open area at short range. Make tiny inputs and stop between them until reversing the perspective feels normal."
+        ]
+      },
+      {
+        "heading": "7. Flying backwards for the shot without checking behind",
+        "paragraphs": [
+          "Pull-away shots are visually satisfying and naturally put the camera on the subject — which means your attention is often looking forward through the camera while the aircraft travels backward toward something you cannot see in that view.",
+          "Fix it: inspect the entire intended path first, maintain visual awareness of the aircraft and do not treat rear sensing as a substitute for checking the space."
+        ]
+      },
+      {
+        "heading": "8. Treating obstacle avoidance as a force field",
+        "paragraphs": [
+          "Even omnidirectional systems have limitations. Wires, small branches, glass, water, repetitive textures, low light and Sport mode can all reduce or disable sensing depending on the model.",
+          "Fix it: plan a path that would still be sensible if obstacle avoidance did nothing. Let the sensors be the second set of eyes, not the first."
+        ]
+      },
+      {
+        "heading": "9. Using the battery percentage as a permission meter",
+        "paragraphs": [
+          "“I still have 35 per cent” tells you almost nothing without distance, wind, temperature and a safe landing plan. Low-battery RTH is calculated support, not a target to reach on every flight.",
+          "Fix it: turn home while you still have choices. A battery reserve lets you wait for a person to clear the landing area, reposition in wind or deal with a warning without rushing."
+        ]
+      },
+      {
+        "heading": "10. Trying every intelligent mode on flight one",
+        "paragraphs": [
+          "Tracking, QuickShots, waypoint-style features and automated orbits are fun, but they add aircraft behaviour before you have built a mental model of manual control.",
+          "Fix it: learn take-off, hover, orientation, a basic circuit, RTH and landing first. Add one automated feature at a time and understand how to cancel it."
+        ]
+      },
+      {
+        "heading": "The common thread",
+        "paragraphs": [
+          "All ten mistakes are really margin problems. Distance margin, battery margin, people margin, wind margin and attention margin. Experienced pilots do not avoid every unexpected event; they arrange the flight so an unexpected event stays manageable."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "CASA — Drone rules",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-rules",
+        "role": "Primary rule summary"
+      },
+      {
+        "name": "CASA — Flying in populous areas",
+        "url": "https://www.casa.gov.au/drones/drone-rules/flying-populous-areas",
+        "role": "Primary people/populous-area rules"
+      },
+      {
+        "name": "CASA — Drone safety apps",
+        "url": "https://www.casa.gov.au/knowyourdrone/drone-safety-apps",
+        "role": "Primary airspace guidance"
+      },
+      {
+        "name": "DJI Support — Drone RTH Logic",
+        "url": "https://repair.dji.com/help/content?customId=en-us03400006776&documentType=artical&lang=en&paperDocType=paper&re=US&spaceId=34",
+        "role": "Manufacturer RTH guidance"
+      },
+      {
+        "name": "DJI Support — Aircraft obstacle avoidance systems",
+        "url": "https://repair.dji.com/help/content?customId=01700006547&lang=en&paperDocType=ARTICLE&re=US&spaceId=17",
+        "role": "Manufacturer sensing overview"
+      },
+      {
+        "name": "DJI — Mini 5 Pro User Manual",
+        "url": "https://dl.djicdn.com/downloads/DJI_Mini_5_Pro/UM/2025/DJI_Mini_5_Pro_User_Manual_en.pdf",
+        "role": "Current model manual cross-check"
+      },
+      {
+        "name": "Bureau of Meteorology — About forecast wind",
+        "url": "https://www.bom.gov.au/watl/about/about-forecast-wind.shtml",
+        "role": "Australian weather guidance"
+      }
+    ],
+    "relatedSlugs": [
+      "drone-flight-101",
+      "dji-return-to-home-explained"
+    ],
+    "cta": {
+      "sessionId": "fly-with-confidence",
+      "title": "Recognise a few of these?",
+      "body": "Fly With Confidence is built for owners who can get airborne but want better orientation, judgement and control when the flight stops feeling automatic.",
+      "label": "Book Fly With Confidence"
+    }
+  },
+  {
+    "slug": "crashed-my-drone-what-now",
+    "status": "published",
+    "title": "I Crashed My Drone. What Now?",
+    "seoTitle": "Crashed Your Drone? What to Do Next",
+    "description": "Crashed a DJI or camera drone? A safe step-by-step guide to batteries, propellers, arms, gimbal damage, water, flight data, repair and when not to fly again.",
+    "excerpt": "After a crash, the first question is not “does it still turn on?” It is whether the aircraft and lithium battery are safe to handle and whether hidden damage could make the next flight worse.",
+    "category": "Troubleshooting",
+    "targetQuery": "I crashed my drone what now",
+    "secondaryKeywords": [
+      "DJI drone crash what to do",
+      "drone crash repair",
+      "damaged drone battery"
+    ],
+    "searchIntent": "problem solving",
+    "readingMinutes": 4,
+    "author": "Tom Gerrard",
+    "authorPath": "/about",
+    "publishedAt": "2026-09-03",
+    "reviewedAt": "2026-09-03",
+    "quickAnswer": "After a crash, power down and inspect before trying to fly again. Treat any swollen, leaking, dented, punctured, crushed, overheated or water-damaged lithium battery as unsafe: do not use or charge it. Replace damaged propellers. If the aircraft has structural, gimbal, motor, sensor or internal damage — or you are simply unsure after a meaningful impact — DJI recommends professional diagnosis rather than another test flight.",
+    "keyPoints": [
+      "If a battery is damaged, hot, swelling, leaking or has been submerged, do not charge or reuse it.",
+      "Do not straighten and reuse a damaged propeller; replace it.",
+      "Check arms, motors, gimbal, camera and shell for movement, cracks or deformation.",
+      "Water damage is different from a dry bump: remove the battery where safe, do not power the aircraft back on, and arrange assessment.",
+      "Back up flight records, photos and useful details before a repair process.",
+      "If a crash was hard enough to make you question structural or internal damage, do not “just hover it and see”."
+    ],
+    "sections": [
+      {
+        "heading": "First: make the battery safe",
+        "paragraphs": [
+          "Lithium batteries deserve priority after an impact. DJI advises checking for leakage or swelling after a collision and not using a battery that shows those signs. Fire and Rescue NSW goes further for general lithium-ion safety: a battery or device that is swollen, leaking, cracked, dented, punctured, crushed, overheated or water-damaged should not be used or charged.",
+          "If the battery is smoking, off-gassing, very hot or involved in fire, move away from danger and follow emergency guidance; call Triple Zero (000) for a fire or immediate threat. Do not carry a suspect hot battery into the house to inspect it more closely."
+        ]
+      },
+      {
+        "heading": "Do not put a damaged lithium battery in the bin",
+        "paragraphs": [
+          "Lithium-ion batteries can start fires in garbage trucks and waste facilities. Fire and Rescue NSW says damaged batteries should not go in household rubbish, recycling or normal battery collection bins. Leaking or damaged batteries that are not overheated or off-gassing can be taken using the specific damaged-battery process to a Community Recycling Centre or Household Chemical CleanOut event.",
+          "The exact handling depends on the condition of the battery, so use current NSW fire-service/EPA guidance rather than improvising with a damaged pack."
+        ]
+      },
+      {
+        "heading": "Inspect the propellers — and be strict",
+        "paragraphs": [
+          "A propeller is cheap compared with an aircraft. If a blade is chipped, cracked, bent, heavily scuffed or has taken a meaningful strike, replace it. DJI specifically recommends replacing damaged propellers or propeller guards before take-off.",
+          "Do not heat, bend or “balance out” a visibly damaged folding propeller. A small deformation becomes a large vibration at flight RPM and can load the motor, gimbal and flight controller."
+        ]
+      },
+      {
+        "heading": "Look for structural damage",
+        "paragraphs": [
+          "With the battery removed, compare arms and hinges side to side. Look for hairline cracks, a motor that sits at a different angle, a shell seam that has opened, loose parts or anything that flexes when it should not. Spin motors gently by hand only if the manufacturer’s design allows it; they should not grind or bind.",
+          "Check the gimbal and camera without forcing them through their travel. A camera sitting crooked, gimbal arm deformation, strong vibration, blurry imagery or self-test failure after impact is a reason for diagnosis rather than another flight."
+        ]
+      },
+      {
+        "heading": "If it went into water, stop the “does it still work?” experiment",
+        "paragraphs": [
+          "DJI’s current water-damage guidance says to remove the battery, dry the aircraft in a cool ventilated place and not power it back on after drying; it recommends sending the aircraft for diagnosis. Water can leave corrosion and conductive contamination even when the outside looks fine.",
+          "For the battery, treat liquid ingress as damage. Fire and Rescue NSW also classifies submerged or water-affected lithium batteries as damaged."
+        ]
+      },
+      {
+        "heading": "Save the useful evidence",
+        "paragraphs": [
+          "Before sending an aircraft for service, keep the information that may help explain what happened. Sync or preserve the flight record if available. Save photos of the aircraft, the crash location and any app warnings. Back up photos and videos stored on internal memory because DJI warns devices may be formatted during repair.",
+          "If you have DJI Care Refresh, check the current terms for your exact aircraft before choosing a normal repair or replacement route. Collision and water damage are among the scenarios DJI lists for camera-drone coverage, but fees, eligibility and flyaway coverage vary."
+        ]
+      },
+      {
+        "heading": "Should I do a test hover?",
+        "paragraphs": [
+          "Not automatically. DJI’s post-collision guidance says a drop or collision can cause structural or internal electronic damage that creates later flight-safety risks, and it recommends diagnosis when aircraft damage is involved.",
+          "If the incident was truly minor and the only issue is a clearly replaceable sacrificial part such as a propeller, follow your model’s manual after replacement and complete all ground checks and app self-checks before considering flight. If an arm, motor, gimbal, battery, sensor or body took a significant hit, a “quick hover” puts an unverified aircraft back into the air and can turn an inexpensive repair into a second crash."
+        ]
+      },
+      {
+        "heading": "Work out why it crashed before you repeat the flight",
+        "paragraphs": [
+          "Repairing the hardware is only half the job. Was the aircraft flying backward into something outside the camera view? Did Sport mode remove obstacle avoidance? Was RTH set for the site? Did wind make the return difficult? Did you lose orientation, fly too close to a branch or rely on sensors to see a wire?",
+          "If you cannot explain the event, review the flight record and conditions before returning to the same scenario. The valuable outcome of a crash is changing the decision that caused it, not simply fitting new propellers."
+        ]
+      },
+      {
+        "heading": "When professional assessment is the sensible call",
+        "paragraphs": [
+          "Arrange manufacturer or authorised service when there is visible structural damage, a hard impact, water ingress, motor/gimbal abnormality, unexplained app errors, unstable hover, strong vibration or any doubt about the battery or flight-critical parts. DJI’s online repair process accepts aircraft that have been collided, dropped, crashed, water damaged or otherwise malfunctioned."
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "name": "DJI Support — Aircraft damage due to collision or dropping",
+        "url": "https://repair.dji.com/help/content?customId=01700006752&lang=en&spaceId=17",
+        "role": "Manufacturer post-crash guidance"
+      },
+      {
+        "name": "DJI Support — Damaged aircraft accessory",
+        "url": "https://repair.dji.com/help/content?customId=01700006748&documentType=&lang=en&paperDocType=ARTICLE&re=US&spaceId=17",
+        "role": "Manufacturer battery/propeller guidance"
+      },
+      {
+        "name": "DJI Support — Repair service application instructions",
+        "url": "https://repair.dji.com/help/content?customId=en-us03400006865&lang=en&re=US&spaceId=34",
+        "role": "Manufacturer repair process"
+      },
+      {
+        "name": "DJI Support — Aircraft water damage issue",
+        "url": "https://repair.dji.com/help/content?customId=01700006751&lang=en&paperDocType=ARTICLE&re=US&spaceId=17",
+        "role": "Manufacturer water-damage guidance"
+      },
+      {
+        "name": "Fire and Rescue NSW — Lithium-ion battery safety",
+        "url": "https://www.fire.nsw.gov.au/fire-safety/home-fire-safety/topics/shop-charge-and-recycle-safely",
+        "role": "Independent battery/fire-safety cross-check"
+      },
+      {
+        "name": "Fire and Rescue NSW — Battery disposal",
+        "url": "https://www.fire.nsw.gov.au/fire-safety/home-fire-safety/battery-and-charging-safety/disposal",
+        "role": "NSW disposal guidance"
+      }
+    ],
+    "relatedSlugs": [
+      "beginner-drone-mistakes"
+    ],
+    "cta": {
+      "sessionId": "fly-with-confidence",
+      "title": "Lost confidence after a crash?",
+      "body": "Once the aircraft is confirmed airworthy, we can work through the flight skills and decision-making that make the next outing feel controlled again.",
+      "label": "Book Fly With Confidence"
+    }
+  }
+]
