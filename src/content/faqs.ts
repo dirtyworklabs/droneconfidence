@@ -106,7 +106,7 @@ export const faqs: Faq[] = [
     question: 'Can someone come with me?',
     answer: [
       'Generally yes, provided the session remains suitable and safe.',
-      'The training itself is one-on-one and designed around the person who booked. Let us know beforehand if someone else will be attending.',
+      'The training itself is one-on-one and designed around the person who booked. You can let us know when you book if someone will be attending with you.',
     ],
   },
   {

@@ -8,6 +8,7 @@
  * never part of a submitted payload.
  */
 
+import { isGuestAttendanceCode } from './guest'
 import { findAircraft, isCompatiblePair, isKnownController } from './hardware'
 
 export type FieldErrors<T extends string> = Partial<Record<T, string>>
@@ -60,9 +61,11 @@ export const firstErrorKey = <T extends string>(errors: FieldErrors<T>, order: T
 
 /** The fields step 4 collects, in the order they appear and are announced. */
 export type BookingDetailField =
-  | 'customerName'
+  | 'firstName'
+  | 'lastName'
   | 'email'
   | 'mobile'
+  | 'guestAttendance'
   | 'droneModel'
   | 'controllerModel'
   | 'experienceCode'
@@ -71,9 +74,11 @@ export type BookingDetailField =
   | 'policyAccepted'
 
 export const BOOKING_FIELD_ORDER: BookingDetailField[] = [
-  'customerName',
+  'firstName',
+  'lastName',
   'email',
   'mobile',
+  'guestAttendance',
   'droneModel',
   'controllerModel',
   'experienceCode',
@@ -83,9 +88,12 @@ export const BOOKING_FIELD_ORDER: BookingDetailField[] = [
 ]
 
 export interface BookingDetailValues {
-  customerName: string
+  firstName: string
+  lastName: string
   email: string
   mobile: string
+  /** A `GuestAttendanceCode`, or '' until the customer has answered. */
+  guestAttendance: string
   droneModel: string
   controllerModel: string
   experienceCode: string
@@ -95,9 +103,13 @@ export interface BookingDetailValues {
 }
 
 export const emptyBookingDetails: BookingDetailValues = {
-  customerName: '',
+  firstName: '',
+  lastName: '',
   email: '',
   mobile: '',
+  // Deliberately unanswered: the guest question is never pre-selected, because
+  // an untouched default would record a claim the customer never made.
+  guestAttendance: '',
   droneModel: '',
   controllerModel: '',
   experienceCode: '',
@@ -136,9 +148,13 @@ export const validateBookingDetails = (
   isExperienceCode: (code: string) => boolean,
 ): FieldErrors<BookingDetailField> => {
   const errors: FieldErrors<BookingDetailField> = {
-    customerName: requireText(values.customerName, 'Full name', MAX.name),
+    firstName: requireText(values.firstName, 'First name', MAX.name),
+    lastName: requireText(values.lastName, 'Last name', MAX.name),
     email: requireEmail(values.email),
     mobile: requireMobile(values.mobile),
+    guestAttendance: isGuestAttendanceCode(values.guestAttendance.trim())
+      ? undefined
+      : 'Please tell us whether anyone will be coming with you.',
     droneModel: requireText(values.droneModel, 'Aircraft make and model', MAX.droneModel),
     controllerModel: hardwarePairing(values.droneModel, values.controllerModel),
     experienceCode: isBlank(values.experienceCode)

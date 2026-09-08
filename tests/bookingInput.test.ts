@@ -7,9 +7,11 @@ const valid = {
   sessionId: 'first-flight',
   locationId: 'south-sydney',
   startsAt: '2026-10-05T21:00:00.000Z',
-  customerName: 'Alex Taylor',
+  firstName: 'Alex',
+  lastName: 'Taylor',
   email: 'Alex@Example.com',
   mobile: '0400 000 000',
+  guestAttendance: 'just-me',
   droneModel: 'DJI Mini 4K',
   controllerModel: 'DJI RC-N1',
   experienceCode: 'new',
@@ -33,6 +35,7 @@ describe('server-side booking validation', () => {
   it('accepts a complete submission and normalises the email', () => {
     const value = accept()
     expect(value.email).toBe('alex@example.com')
+    expect(value.customerName).toBe('Alex Taylor')
     expect(value.session.id).toBe('first-flight')
     expect(value.location.id).toBe('south-sydney')
     expect(value.notes).toBeNull()
@@ -84,7 +87,10 @@ describe('server-side booking validation', () => {
   })
 
   it('requires the fields the lesson actually needs', () => {
-    expect(reject({ customerName: '' }).length).toBeGreaterThan(0)
+    expect(reject({ firstName: '' })).toContain('First name is required.')
+    expect(reject({ lastName: '' })).toContain('Last name is required.')
+    expect(reject({ firstName: undefined })).toContain('First name is required.')
+    expect(reject({ lastName: '   ' })).toContain('Last name is required.')
     expect(reject({ email: 'not-an-email' }).length).toBeGreaterThan(0)
     expect(reject({ mobile: '' }).length).toBeGreaterThan(0)
     expect(reject({ droneModel: '' }).length).toBeGreaterThan(0)
@@ -143,6 +149,27 @@ describe('server-side booking validation', () => {
 
     // Length is still enforced on the free-text path.
     expect(reject({ controllerModel: 'x'.repeat(200) }).length).toBeGreaterThan(0)
+  })
+
+  it('derives the stored name from the two halves, never from the payload', () => {
+    // `customer_name` stays the one canonical stored name, and the browser is
+    // not authoritative for it: a combined value in the body is ignored.
+    expect(accept({ firstName: '  Jo  ', lastName: '  Van  Dyke ' }).customerName)
+      .toBe('Jo Van Dyke')
+    expect(accept({ customerName: 'Someone Else Entirely' }).customerName).toBe('Alex Taylor')
+  })
+
+  it('requires an explicit guest-attendance answer', () => {
+    expect(accept({ guestAttendance: 'just-me' }).guestAttending).toBe(false)
+    expect(accept({ guestAttendance: 'one-guest' }).guestAttending).toBe(true)
+
+    const missing = 'Please tell us whether anyone will be coming with you.'
+    expect(reject({ guestAttendance: '' })).toContain(missing)
+    expect(reject({ guestAttendance: undefined })).toContain(missing)
+    // A stable code or nothing — the visible wording is never the logic.
+    expect(reject({ guestAttendance: 'Yes, one guest' })).toContain(missing)
+    expect(reject({ guestAttendance: 'maybe-two' })).toContain(missing)
+    expect(reject({ guestAttendance: true })).toContain(missing)
   })
 
   it('rejects anything that is not an object', () => {

@@ -40,6 +40,18 @@ const equipmentLines = (booking: BookingRow): string[] => [
   `Experience: ${experienceLabel(booking.experience_code)}`,
 ]
 
+/**
+ * Guest attendance, in one consistent line.
+ *
+ * Null is reported as unrecorded rather than as "No": a booking taken before
+ * the question was asked never answered it, and stating otherwise would invent
+ * operational information.
+ */
+const guestLine = (booking: BookingRow): string => {
+  if (booking.guest_attending === null) return 'Guest attending: Not recorded'
+  return booking.guest_attending ? 'Guest attending: Yes — one guest' : 'Guest attending: No'
+}
+
 const BRING = [
   'Your drone',
   'Your controller',
@@ -90,6 +102,7 @@ export const confirmationEmail = (booking: BookingRow): EmailBody =>
         )}`,
         `Aircraft: ${booking.drone_model}`,
         `Controller / RC: ${booking.controller_model ?? 'Not recorded'}`,
+        guestLine(booking),
       ],
     },
 
@@ -452,6 +465,7 @@ export const ownerNotificationEmail = (
           booking.customer_name,
           booking.email,
           booking.mobile,
+          guestLine(booking),
         ],
       },
 

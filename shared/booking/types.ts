@@ -7,6 +7,7 @@
  */
 
 import type { LocationId, SessionId } from './catalog'
+import type { GuestAttendanceCode } from './guest'
 
 // Re-exported so a consumer of these contracts needs only one import.
 export type { LocationId, SessionId } from './catalog'
@@ -44,9 +45,16 @@ export interface CheckoutRequest {
   locationId: LocationId
   /** ISO instant of the chosen slot, as returned by the availability endpoint. */
   startsAt: string
-  customerName: string
+  /**
+   * The two halves of the name. The server combines them into the stored
+   * `customer_name`, so the browser is not authoritative for the whole thing.
+   */
+  firstName: string
+  lastName: string
   email: string
   mobile: string
+  /** Whether one guest is coming. A stable code, resolved server-side. */
+  guestAttendance: GuestAttendanceCode
   /** Human-readable aircraft make and model, e.g. "DJI Mini 4 Pro". */
   droneModel: string
   /** Human-readable controller model, e.g. "DJI RC 2". */
@@ -123,6 +131,8 @@ export interface AdminBookingDetail extends AdminBookingRow {
   droneModel: string
   /** Null on bookings taken before the controller was collected. */
   controllerModel: string | null
+  /** Null on bookings taken before guest attendance was asked. */
+  guestAttending: boolean | null
   experienceCode: string
   helpWith: string
   notes: string | null

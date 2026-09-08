@@ -36,6 +36,7 @@ const booking: BookingRow = {
   mobile: '0400000000',
   drone_model: `DJI Mini <b>4K</b>`,
   controller_model: `DJI <b>RC-N1</b>`,
+  guest_attending: true,
   experience_code: 'new',
   help_with: `Flying near trees & powerlines ${HOSTILE}`,
   notes: `Nothing "special" <img onerror=1>`,
@@ -141,6 +142,37 @@ describe('transactional emails', () => {
       confirmationEmail(legacy).html,
     ]) {
       expect(html).toContain('Not recorded')
+    }
+  })
+
+  it('states guest attendance in both the confirmation and the owner notification', () => {
+    for (const html of [
+      confirmationEmail(booking).html,
+      ownerNotificationEmail(booking, 'https://example.test/admin').html,
+    ]) {
+      expect(html).toContain('Guest attending: Yes — one guest')
+    }
+
+    const alone = { ...booking, guest_attending: false }
+    for (const html of [
+      confirmationEmail(alone).html,
+      ownerNotificationEmail(alone, 'https://example.test/admin').html,
+    ]) {
+      expect(html).toContain('Guest attending: No')
+      expect(html).not.toContain('Guest attending: Yes')
+    }
+  })
+
+  it('never claims a legacy booking said no to a guest', () => {
+    // Null predates the question. "No" would be an answer the customer's
+    // booking never gave.
+    const legacy = { ...booking, guest_attending: null }
+    for (const html of [
+      confirmationEmail(legacy).html,
+      ownerNotificationEmail(legacy, 'https://example.test/admin').html,
+    ]) {
+      expect(html).toContain('Guest attending: Not recorded')
+      expect(html).not.toContain('Guest attending: No<')
     }
   })
 

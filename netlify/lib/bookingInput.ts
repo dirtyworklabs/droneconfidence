@@ -15,12 +15,18 @@ import {
 } from '../../shared/booking/catalog'
 import { isExperienceCode } from '../../shared/booking/experience'
 import { MAX, validateBookingDetails } from '../../shared/booking/fields'
+import { type GuestAttendanceCode, guestAttending } from '../../shared/booking/guest'
 
 export interface ValidatedBooking {
   attemptId: string
   session: SessionCatalogEntry
   location: LocationCatalogEntry
   startsAt: Date
+  /**
+   * Derived here from the submitted first and last name, never taken from the
+   * request. `customer_name` stays the one canonical stored name, so every
+   * existing admin heading, email greeting and historical row keeps working.
+   */
   customerName: string
   email: string
   mobile: string
@@ -29,6 +35,8 @@ export interface ValidatedBooking {
   experienceCode: string
   helpWith: string
   notes: string | null
+  /** Resolved from the validated guest-attendance code, not from the payload. */
+  guestAttending: boolean
 }
 
 export type ValidationResult =
@@ -64,9 +72,11 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
   }
 
   const details = {
-    customerName: str(body.customerName, MAX.name + 1),
+    firstName: str(body.firstName, MAX.name + 1),
+    lastName: str(body.lastName, MAX.name + 1),
     email: str(body.email, MAX.email + 1),
     mobile: str(body.mobile, MAX.mobile + 1),
+    guestAttendance: str(body.guestAttendance, 40),
     droneModel: str(body.droneModel, MAX.droneModel + 1),
     controllerModel: str(body.controllerModel, MAX.controllerModel + 1),
     experienceCode: str(body.experienceCode, 40),
@@ -87,7 +97,9 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
       session,
       location,
       startsAt,
-      customerName: details.customerName,
+      // The stored name is composed on the server from the two validated
+      // halves; a combined `customerName` in the payload is never read.
+      customerName: `${details.firstName} ${details.lastName}`.replace(/\s+/g, ' ').trim(),
       email: details.email.toLowerCase(),
       mobile: details.mobile,
       droneModel: details.droneModel,
@@ -95,6 +107,7 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
       experienceCode: details.experienceCode,
       helpWith: details.helpWith,
       notes: details.notes.length > 0 ? details.notes : null,
+      guestAttending: guestAttending(details.guestAttendance as GuestAttendanceCode),
     },
   }
 }

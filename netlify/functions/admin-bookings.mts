@@ -54,6 +54,7 @@ const toDetail = (booking: BookingRow, events: AdminBookingEvent[]): AdminBookin
   mobile: booking.mobile,
   droneModel: booking.drone_model,
   controllerModel: booking.controller_model,
+  guestAttending: booking.guest_attending,
   experienceCode: booking.experience_code,
   helpWith: booking.help_with,
   notes: booking.notes,
