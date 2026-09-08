@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { ChevronLeft, ChevronRight, Pause, Play, X } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ChevronLeft, ChevronRight, Maximize2, Pause, Play, X } from 'lucide-react'
 import { aboutGalleryImages } from '@/content/aboutGallery'
 import { calm } from '@/lib/motion'
 import { cn } from '@/lib/cn'
 
-/** One photograph roughly every six and a half seconds — calm, not restless. */
-const AUTOPLAY_MS = 6500
+/** One photograph roughly every five seconds — calm, not restless. */
+const AUTOPLAY_MS = 5000
 
 const GALLERY_LABEL = 'Drone operations photo gallery'
 
@@ -45,7 +45,7 @@ export const AboutGallery = () => {
   // Only manual moves are announced — a six-second cycle should stay silent.
   const [liveMessage, setLiveMessage] = useState('')
 
-  const expandRef = useRef<HTMLButtonElement>(null)
+  const imageButtonRef = useRef<HTMLButtonElement>(null)
 
   const image = aboutGalleryImages[index]
 
@@ -93,7 +93,7 @@ export const AboutGallery = () => {
 
   const closeLightbox = useCallback(() => {
     setLightboxOpen(false)
-    expandRef.current?.focus({ preventScroll: true })
+    imageButtonRef.current?.focus({ preventScroll: true })
   }, [])
 
   return (
@@ -129,11 +129,11 @@ export const AboutGallery = () => {
           keyboard and screen-reader route, so this adds no duplicate tab stop.
         */}
         <button
+          ref={imageButtonRef}
           type="button"
-          tabIndex={-1}
-          aria-hidden="true"
           onClick={() => setLightboxOpen(true)}
-          className="absolute inset-0 z-10 size-full cursor-zoom-in"
+          aria-label="View photographs full screen"
+          className="absolute inset-0 z-10 size-full cursor-zoom-in rounded-[var(--radius-panel)] focus-visible:outline-2 focus-visible:outline-canvas focus-visible:outline-offset-[-3px]"
         />
 
         <div className="pointer-events-none absolute inset-0 z-20 opacity-90 transition-opacity duration-200 ease-[var(--ease-calm)] group-hover/gallery:opacity-100 group-focus-within/gallery:opacity-100">
@@ -155,36 +155,23 @@ export const AboutGallery = () => {
             <ChevronRight aria-hidden="true" className="size-5" />
           </button>
 
-          <button
-            ref={expandRef}
-            type="button"
-            onClick={() => setLightboxOpen(true)}
-            aria-label="View photographs full screen"
-            className={cn(controlClass, 'pointer-events-auto absolute right-3 top-3')}
-          >
-            <Maximize2 aria-hidden="true" className="size-[1.05rem]" />
-          </button>
-
-          <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3">
-            <span className={chipClass} aria-hidden="true">
-              {counter(index)}
-            </span>
-
-            {reduced ? null : (
-              <button
-                type="button"
-                onClick={() => setUserPaused((paused) => !paused)}
-                aria-label={userPaused ? 'Play the photo gallery' : 'Pause the photo gallery'}
-                className={cn(controlClass, 'pointer-events-auto')}
-              >
-                {userPaused ? (
-                  <Play aria-hidden="true" className="size-[1.05rem]" />
-                ) : (
-                  <Pause aria-hidden="true" className="size-[1.05rem]" />
-                )}
-              </button>
-            )}
-          </div>
+                    {reduced ? null : (
+            <button
+              type="button"
+              onClick={() => setUserPaused((paused) => !paused)}
+              aria-label={userPaused ? 'Play the photo gallery' : 'Pause the photo gallery'}
+              className={cn(
+                controlClass,
+                'pointer-events-auto absolute bottom-3 left-3',
+              )}
+            >
+              {userPaused ? (
+                <Play aria-hidden="true" className="size-[1.05rem]" />
+              ) : (
+                <Pause aria-hidden="true" className="size-[1.05rem]" />
+              )}
+            </button>
+          )}
         </div>
       </div>
 
