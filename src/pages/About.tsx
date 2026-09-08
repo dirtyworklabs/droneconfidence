@@ -4,7 +4,7 @@ import { PageHero } from '@/components/marketing/PageHero'
 import { ExperienceStrip } from '@/components/marketing/ExperienceStrip'
 import { NotALicence } from '@/components/marketing/NotALicence'
 import { FinalCta } from '@/components/marketing/FinalCta'
-import { ImageFrame } from '@/components/visuals/ImageFrame'
+import { AboutGallery } from '@/components/marketing/AboutGallery'
 import { Reveal } from '@/components/ui/Reveal'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { useSeo } from '@/lib/seo'
@@ -32,11 +32,7 @@ const About = () => {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16">
             <Reveal>
               <div className="lg:sticky lg:top-28">
-                <ImageFrame
-                  slot="about-tom"
-                  ratio="aspect-[4/3]"
-                  rounded="panel"
-                />
+                <AboutGallery />
 
                 <p className="pt-4 text-[0.9rem] text-ink-muted">
                   Tom Gerrard · Founder, Drone Confidence
