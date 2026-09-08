@@ -28,10 +28,10 @@ export const AboutTrust = () => (
 
           <div className="measure space-y-4 text-[1.03rem] leading-relaxed text-ink-soft">
             <p>
-              Tom Gerrard has been professionally involved with drones since 2016,
-              including through In Motion Aero, which previously held a UAV
-              Operator&rsquo;s Certificate (UOC) and conducted commercial unmanned
-              aircraft operations in Australia.
+              Tom Gerrard has more than a decade of professional drone experience,
+              including founding and operating In Motion Aero, which delivered commercial
+              drone projects across Australia under a UAV Operator&rsquo;s Certificate
+              (UOC).
             </p>
           </div>
 

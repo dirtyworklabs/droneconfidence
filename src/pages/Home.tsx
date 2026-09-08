@@ -30,8 +30,8 @@ const Home = () => {
   return (
     <>
       <Hero />
-      <HowItWorks />
       <Introduction />
+      <HowItWorks />
       <SessionsOverview />
       <Differentiator />
       <AboutTrust />

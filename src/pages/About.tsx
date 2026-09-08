@@ -24,6 +24,7 @@ const About = () => {
       <PageHero
         eyebrow="About"
         title="Experience behind Drone Confidence."
+        className="!pb-2 sm:!pb-4"
       />
 
       <Section tone="canvas" space="sm">
@@ -46,30 +47,27 @@ const About = () => {
             <Reveal delay={0.08} className="flex flex-col gap-6">
               <div className="space-y-5 text-[1.06rem] leading-relaxed text-ink-soft">
                 <p>
-                  Tom has been professionally involved with drones since 2016,
-                  including through In Motion Aero, which held a UAV
-                  Operator&rsquo;s Certificate (UOC) and conducted commercial
-                  unmanned aircraft operations in Australia.
+                  Tom has worked professionally with drones since 2016, including founding
+                  and operating In Motion Aero, which delivered commercial drone projects
+                  across Australia under a UAV Operator&rsquo;s Certificate (UOC).
                 </p>
 
                 <p>
-                  He currently holds RPA operator accreditation covering
-                  excluded RPA, micro RPA and model aircraft. His work has
-                  included drone operations for major commercial and government
-                  clients across a range of real-world projects and
-                  environments.
+                  He currently holds RPA operator accreditation covering excluded RPA, micro
+                  RPA and model aircraft. Over the years, his drone work has taken him across
+                  a wide range of real-world environments, working with major commercial and
+                  government clients.
                 </p>
 
                 <p>
-                  Tom also works professionally as a creative technologist and
-                  photographer, bringing practical experience in cameras,
-                  composition and image-making to Drone Confidence&rsquo;s
-                  Photo &amp; Video sessions.
+                  Alongside drones, Tom works professionally as a creative technologist and
+                  photographer. That experience with cameras, composition and image-making
+                  also shapes Drone Confidence&rsquo;s Photo &amp; Video sessions.
                 </p>
 
                 <p>
-                  After years of working with both professional operators and
-                  everyday drone owners, he kept seeing the same problem:
+                  Through years of working with professional operators and everyday drone
+                  owners, one thing kept coming up:
                 </p>
               </div>
 
