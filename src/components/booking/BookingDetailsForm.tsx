@@ -1,7 +1,12 @@
 import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Lock, ShieldCheck } from 'lucide-react'
+import { AlertCircle, Check, Lock, ShieldCheck } from 'lucide-react'
 import { EXPERIENCE_LEVELS, isExperienceCode } from '@shared/booking/experience'
+import {
+  GUEST_ATTENDANCE_OPTIONS,
+  type GuestAttendanceCode,
+  isGuestAttendanceCode,
+} from '@shared/booking/guest'
 import {
   BOOKING_FIELD_ORDER,
   MAX,
@@ -29,6 +34,7 @@ import {
   TextField,
   TextareaField,
 } from '@/components/forms/Fields'
+import { cn } from '@/lib/cn'
 import { formatDuration, formatPrice } from '@/content/sessions'
 import { track } from '@/lib/analytics'
 import { ROUTES } from '@/lib/routes'
@@ -46,9 +52,11 @@ interface BookingDetailsFormProps {
 }
 
 const FIELD_IDS: Record<BookingDetailField, string> = {
-  customerName: 'booking-name',
+  firstName: 'booking-first-name',
+  lastName: 'booking-last-name',
   email: 'booking-email',
   mobile: 'booking-mobile',
+  guestAttendance: 'booking-guest',
   droneModel: 'booking-aircraft',
   controllerModel: 'booking-controller',
   experienceCode: 'booking-experience',
@@ -76,6 +84,91 @@ const AIRCRAFT_GROUPS = AIRCRAFT_FAMILIES.map((family) => ({
 }))
 
 const OTHER_OPTION = [{ value: OTHER_HARDWARE, label: OTHER_HARDWARE_LABEL }]
+
+interface GuestAttendanceFieldProps {
+  id: string
+  value: string
+  onChange: (code: GuestAttendanceCode) => void
+  error?: string
+}
+
+/**
+ * "Will anyone be coming with you?" — two real radios in a real fieldset.
+ *
+ * Deliberately modest: this is one operational answer, not a step of its own,
+ * so it borrows the form's own label, hint and error treatment rather than
+ * becoming another card. Nothing is pre-selected, because an untouched default
+ * would record an answer the customer never gave, and the first radio carries
+ * `id` so the same first-error focus flow as every other step 4 field reaches
+ * it. No detail about the guest is asked for anywhere.
+ */
+const GuestAttendanceField = ({ id, value, onChange, error }: GuestAttendanceFieldProps) => (
+  // `min-w-0` because a fieldset defaults to min-content width, which would let
+  // it push the grid wider than the viewport on a narrow screen. The fieldset is
+  // left as a plain block so the legend renders as a legend in every browser
+  // rather than being treated as a flex item.
+  <fieldset className="min-w-0 sm:col-span-2">
+    <legend className="mb-1.5 font-display text-[0.95rem] font-semibold tracking-[-0.01em]">
+      Will anyone be coming with you?
+    </legend>
+    <p id={`${id}-hint`} className="text-[0.87rem] leading-snug text-ink-muted">
+      The session remains one-on-one and focused on the person who booked. You&rsquo;re welcome to
+      bring one guest if the session remains suitable and safe.
+    </p>
+    <div className="mt-2.5 grid gap-3 sm:grid-cols-2">
+      {GUEST_ATTENDANCE_OPTIONS.map((option, index) => {
+        const selected = value === option.code
+        return (
+          <label key={option.code} className="block cursor-pointer">
+            <input
+              // Only the first option owns the field id: a radio group is one
+              // field, and that is where an error sends focus.
+              id={index === 0 ? id : `${id}-${option.code}`}
+              type="radio"
+              name="guestAttendance"
+              value={option.code}
+              checked={selected}
+              onChange={() => onChange(option.code)}
+              aria-invalid={error ? true : undefined}
+              aria-describedby={`${id}-hint${error ? ` ${id}-error` : ''}`}
+              className="peer sr-only"
+            />
+            <span
+              className={cn(
+                'flex min-h-12 items-center gap-2.5 rounded-[var(--radius-control)] border px-4 py-3 text-[0.95rem] transition-[border-color,background-color,box-shadow] duration-200 ease-[var(--ease-calm)]',
+                'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sage',
+                selected
+                  ? 'border-sage/55 bg-sage-soft/40 font-medium text-eucalyptus'
+                  : 'border-ink/12 bg-surface text-ink-soft hover:border-sage/30',
+                error && !selected ? 'border-red-700/45' : '',
+              )}
+            >
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'flex size-[1.15rem] shrink-0 items-center justify-center rounded-full border transition-colors duration-200 ease-[var(--ease-calm)]',
+                  selected ? 'border-sage bg-sage' : 'border-ink/25 bg-surface',
+                )}
+              >
+                {selected ? <Check className="size-3 text-surface" /> : null}
+              </span>
+              {option.label}
+            </span>
+          </label>
+        )
+      })}
+    </div>
+    {error ? (
+      <p
+        id={`${id}-error`}
+        className="mt-1.5 flex items-start gap-1.5 text-[0.87rem] font-medium text-red-800"
+      >
+        <AlertCircle aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
+        <span>{error}</span>
+      </p>
+    ) : null}
+  </fieldset>
+)
 
 const ReviewRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-baseline justify-between gap-4 border-t border-ink/8 py-2.5 first:border-t-0 first:pt-0">
@@ -205,9 +298,12 @@ export const BookingDetailsForm = ({
       sessionId: session.id,
       locationId: location.id,
       startsAt: startsAt.toISOString(),
-      customerName: values.customerName,
+      firstName: values.firstName,
+      lastName: values.lastName,
       email: values.email,
       mobile: values.mobile,
+      // Narrowed by the shared validation that has already run above.
+      guestAttendance: values.guestAttendance as GuestAttendanceCode,
       droneModel: values.droneModel,
       controllerModel: values.controllerModel,
       experienceCode: values.experienceCode,
@@ -257,14 +353,29 @@ export const BookingDetailsForm = ({
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
       <div className="grid gap-5 sm:grid-cols-2">
+        {/*
+          The four contact fields read as a deliberate 2 x 2 grid on desktop —
+          first and last name on one row, email and mobile on the next — and
+          stack in the same order on mobile.
+        */}
         <TextField
-          id={FIELD_IDS.customerName}
-          name="customerName"
-          label="Full name"
-          value={values.customerName}
-          onChange={(value) => update('customerName', value)}
-          error={errors.customerName}
-          autoComplete="name"
+          id={FIELD_IDS.firstName}
+          name="firstName"
+          label="First name"
+          value={values.firstName}
+          onChange={(value) => update('firstName', value)}
+          error={errors.firstName}
+          autoComplete="given-name"
+          maxLength={MAX.name}
+        />
+        <TextField
+          id={FIELD_IDS.lastName}
+          name="lastName"
+          label="Last name"
+          value={values.lastName}
+          onChange={(value) => update('lastName', value)}
+          error={errors.lastName}
+          autoComplete="family-name"
           maxLength={MAX.name}
         />
         <TextField
@@ -290,6 +401,12 @@ export const BookingDetailsForm = ({
           autoComplete="tel"
           maxLength={MAX.mobile}
           hint="So we can reach you on the day."
+        />
+        <GuestAttendanceField
+          id={FIELD_IDS.guestAttendance}
+          value={values.guestAttendance}
+          onChange={(code) => update('guestAttendance', code)}
+          error={errors.guestAttendance}
         />
         {/*
           Equipment. The aircraft decides which controllers exist, so the two
@@ -425,6 +542,12 @@ export const BookingDetailsForm = ({
           <ReviewRow label="Date" value={formatLongDate(startsAt, timeZone)} />
           <ReviewRow label="Time" value={formatTimeRange(startsAt, endsAt, timeZone)} />
           <ReviewRow label="Training area" value={location.enquiryValue} />
+          {isGuestAttendanceCode(values.guestAttendance) ? (
+            <ReviewRow
+              label="Attending"
+              value={values.guestAttendance === 'one-guest' ? 'Me + one guest' : 'Just me'}
+            />
+          ) : null}
           {/* A last chance to notice the wrong aircraft or controller was picked. */}
           {values.droneModel.trim().length > 0 ? (
             <ReviewRow label="Aircraft" value={values.droneModel} />

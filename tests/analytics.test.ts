@@ -62,6 +62,9 @@ describe('analytics payload sanitisation', () => {
       // Every forbidden value, offered under its most plausible key.
       name: 'Jordan Example',
       customerName: 'Jordan Example',
+      firstName: 'Jordan',
+      lastName: 'Example',
+      guestAttendance: 'one-guest',
       email: 'jordan@example.com',
       phone: '0400 000 000',
       mobile: '0400 000 000',
@@ -94,6 +97,7 @@ describe('analytics payload sanitisation', () => {
     for (const secret of [
       'Jordan', 'example.com', '0400', 'DJI', 'RC 2', 'wind', 'car park',
       'DC-4821', 'cs_test', 'pi_3', 're_3', '203.0.113', 'Mozilla', 'https',
+      'one-guest',
     ]) {
       expect(stored).not.toContain(secret)
     }

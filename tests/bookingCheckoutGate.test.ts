@@ -98,9 +98,11 @@ const post = () =>
         sessionId: 'first-flight',
         locationId: 'south-sydney',
         startsAt: START,
-        customerName: 'Alex Taylor',
+        firstName: 'Alex',
+        lastName: 'Taylor',
         email: 'alex@example.com',
         mobile: '0400 000 000',
+        guestAttendance: 'one-guest',
         droneModel: 'DJI Mini 4K',
         controllerModel: 'DJI RC-N1',
         experienceCode: 'new',
@@ -177,6 +179,10 @@ describe('checkout defence in depth', () => {
         // The equipment pair reaches the reservation function as submitted.
         p_drone_model: 'DJI Mini 4K',
         p_controller_model: 'DJI RC-N1',
+        // The name is composed on the server, and the guest code has become a
+        // boolean before it reaches the database.
+        p_customer_name: 'Alex Taylor',
+        p_guest_attending: true,
       }),
     )
   })

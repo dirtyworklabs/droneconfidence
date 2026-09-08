@@ -110,6 +110,7 @@ export default async (request: Request, _context: Context): Promise<Response> =>
       p_experience_code: input.experienceCode,
       p_help_with: input.helpWith,
       p_notes: input.notes,
+      p_guest_attending: input.guestAttending,
       p_hold_minutes: settings.checkoutHoldMinutes,
       p_grace_minutes: settings.holdGraceMinutes,
     })

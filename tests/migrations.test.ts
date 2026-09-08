@@ -22,6 +22,7 @@ const MIGRATIONS = [
   'supabase/migrations/0002_booking_functions.sql',
   'supabase/migrations/0003_privilege_hardening.sql',
   'supabase/migrations/0006_booking_controller.sql',
+  'supabase/migrations/0007_booking_guest.sql',
 ]
 
 /** Every function the migrations define. All of them must be unreachable to PUBLIC. */
@@ -49,6 +50,7 @@ interface ReserveOptions {
   locationSlug?: string
   durationMinutes?: number
   holdMinutes?: number
+  guestAttending?: boolean
 }
 
 const reserve = async ({
@@ -57,6 +59,7 @@ const reserve = async ({
   locationSlug = 'south-sydney',
   durationMinutes = 60,
   holdMinutes = 30,
+  guestAttending = false,
 }: ReserveOptions) => {
   const startsAt = new Date(start)
   const endsAt = new Date(startsAt.getTime() + durationMinutes * 60_000)
@@ -67,7 +70,7 @@ const reserve = async ({
        $1, 'first-flight', 'First Flight', $2, 17900,
        $3, 'South Sydney', $4, $5, $6, 'Australia/Sydney',
        'Test Customer', 'test@example.com', '0400000000', 'DJI Mini 4K',
-       'DJI RC-N1', 'new', 'Confidence in the air', null, $7, $8)`,
+       'DJI RC-N1', 'new', 'Confidence in the air', null, $7, $8, $9)`,
     [
       attempt,
       durationMinutes,
@@ -75,6 +78,7 @@ const reserve = async ({
       startsAt.toISOString(),
       endsAt.toISOString(),
       occupiedUntil.toISOString(),
+      guestAttending,
       holdMinutes,
       GRACE,
     ],
@@ -98,7 +102,8 @@ const rawInsert = (locationSlug: string, name: string, start: string, reference:
        reference, session_slug, session_name, duration_minutes, price_cents,
        location_slug, location_name, starts_at, ends_at, occupied_until,
        customer_name, email, mobile, drone_model, experience_code, help_with)
-     -- No controller_model: the shape of a booking taken before 0006.
+     -- No controller_model and no guest_attending: the shape of a booking taken
+     -- before 0006 and 0007.
      values ($1, 'first-flight', 'First Flight', 60, 17900, $2, $3, $4,
        $4::timestamptz + interval '60 minutes',
        $4::timestamptz + interval '90 minutes',
@@ -207,9 +212,42 @@ describe('reserve_booking_hold', () => {
     })
   })
 
-  it('exists as exactly one signature after 0006 replaced it', async () => {
+  it('records the guest answer the reservation was made with', async () => {
+    // false is a real answer, distinct from null, so it has to survive the
+    // insert rather than being collapsed into "nothing recorded".
+    const alone = await db.query<{ guest_attending: boolean | null }>(
+      `select guest_attending from bookings where attempt_id = $1`,
+      ['11111111-1111-4111-8111-111111111111'],
+    )
+    expect(alone.rows[0]!.guest_attending).toBe(false)
+
+    const withGuest = await reserve({
+      attempt: '99999999-9999-4999-8999-999999999901',
+      start: '2027-05-04T22:00:00Z',
+      guestAttending: true,
+    })
+    const guest = await db.query<{ guest_attending: boolean | null }>(
+      `select guest_attending from bookings where id = $1`,
+      [withGuest.booking_id],
+    )
+    expect(guest.rows[0]!.guest_attending).toBe(true)
+    await db.query(`delete from bookings where id = $1`, [withGuest.booking_id])
+  })
+
+  it('leaves a booking taken before 0007 with no guest answer at all', async () => {
+    // Null means "never asked". A historical row must not read as "said no".
+    await rawInsert('south-sydney', 'South Sydney', '2027-04-06T22:00:00Z', 'DC-LEGACY-2')
+    const row = await db.query<{ guest_attending: boolean | null }>(
+      `select guest_attending from bookings where reference = 'DC-LEGACY-2'`,
+    )
+    expect(row.rows[0]!.guest_attending).toBeNull()
+    await db.query(`delete from bookings where reference = 'DC-LEGACY-2'`)
+  })
+
+  it('exists as exactly one signature after 0007 replaced it', async () => {
     // Changing a parameter list creates an overload rather than replacing the
-    // function, so a hold could silently be reserved without its controller.
+    // function, so a hold could silently be reserved without its controller or
+    // its guest answer.
     const overloads = await db.query<{ n: number }>(
       `select count(*)::int as n from pg_proc p
         join pg_namespace n on n.oid = p.pronamespace

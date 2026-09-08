@@ -384,6 +384,18 @@ const BookingDetailPanel = ({ bookingId, run, onChanged, onClose }: BookingDetai
           {/* Bookings taken before the controller was collected have none, and a
               value is never invented for them. */}
           <DetailRow label="Controller / RC" value={booking.controllerModel ?? 'Not recorded'} />
+          {/* Null means the booking predates the question, which is not the same
+              thing as the customer having said no. */}
+          <DetailRow
+            label="Guest attending"
+            value={
+              booking.guestAttending === null
+                ? 'Not recorded'
+                : booking.guestAttending
+                  ? 'Yes — one guest'
+                  : 'No — just customer'
+            }
+          />
           <DetailRow label="Experience" value={experienceLabel(booking.experienceCode)} />
           <DetailRow label="Wants help with" value={booking.helpWith} />
           {booking.notes ? <DetailRow label="Notes" value={booking.notes} /> : null}
