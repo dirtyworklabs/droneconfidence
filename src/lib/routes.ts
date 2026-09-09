@@ -63,6 +63,9 @@ export const CUSTOM_LOCATION_QUERY = '/contact?reason=custom-location'
 /** Contact page pre-set to a "which session" question. */
 export const ASK_A_QUESTION_QUERY = '/contact?reason=which-session'
 
+/** Contact page pre-set to a drone suitability question. */
+export const DRONE_QUESTION_QUERY = '/contact?reason=drone'
+
 /** Contact page pre-set to a booking question. */
 export const BOOKING_QUESTION_QUERY = '/contact?reason=booking'
 

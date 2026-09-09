@@ -14,8 +14,7 @@ export const SessionsOverview = () => (
         title="Choose where you want to start."
         intro={
           <p>
-            Every session is private, one-on-one and flown on your own aircraft. Session lengths are
-            fixed, so you know exactly what you&rsquo;re booking.
+            Every session is private, one-on-one and flown on your own aircraft.
           </p>
         }
         size="lg"

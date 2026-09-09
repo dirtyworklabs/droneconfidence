@@ -16,10 +16,14 @@ export const SessionComparison = () => (
       className="grid gap-px overflow-hidden rounded-[var(--radius-panel)] border border-ink/8 bg-ink/8 shadow-[var(--shadow-raise)] sm:grid-cols-3"
     >
       {sessions.map((session) => (
-        <RevealItem as="li" key={session.id} className="bg-surface p-6 sm:p-7">
+        <RevealItem
+          as="li"
+          key={session.id}
+          className="bg-surface transition-colors duration-200 ease-[var(--ease-calm)] hover:bg-sage-soft"
+        >
           <a
             href={`#${session.id}`}
-            className="group flex h-full flex-col gap-4 rounded-[var(--radius-control)] transition-colors duration-200 ease-[var(--ease-calm)]"
+            className="group flex h-full cursor-pointer flex-col gap-4 p-6 sm:p-7"
           >
             <h3 className="text-[1.25rem] transition-colors duration-200 ease-[var(--ease-calm)] group-hover:text-eucalyptus">
               {session.name}
@@ -28,17 +32,23 @@ export const SessionComparison = () => (
             <dl className="flex flex-col gap-2.5 text-[0.95rem]">
               <div className="flex items-baseline justify-between gap-4 border-b border-ink/8 pb-2.5">
                 <dt className="text-ink-muted">Duration</dt>
-                <dd className="font-medium">{formatDuration(session.durationMinutes)}</dd>
+                <dd className="font-medium">
+                  {formatDuration(session.durationMinutes)}
+                </dd>
               </div>
+
               <div className="flex items-baseline justify-between gap-4 border-b border-ink/8 pb-2.5">
                 <dt className="text-ink-muted">Price</dt>
                 <dd className="font-display text-[1.15rem] font-bold tracking-[-0.03em]">
                   {formatPrice(session.price)}
                 </dd>
               </div>
+
               <div className="flex items-baseline justify-between gap-4">
                 <dt className="text-ink-muted">Best for</dt>
-                <dd className="text-right font-medium">{session.bestForShort}</dd>
+                <dd className="text-right font-medium">
+                  {session.bestForShort}
+                </dd>
               </div>
             </dl>
           </a>

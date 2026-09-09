@@ -52,8 +52,7 @@ const sessionCopy: Record<SessionId, SessionCopy> = {
       'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
     intro: [
       'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
-      'This session builds control, awareness and confidence through practical flying.',
-      'Rather than following a rigid syllabus, we’ll identify the areas you want to improve and work directly on them.',
+      'This session builds control, awareness and confidence through practical flying. Rather than following a rigid syllabus, we’ll identify the areas you want to improve and work directly on them.',
     ],
     covers: [
       'Smooth, controlled flying',

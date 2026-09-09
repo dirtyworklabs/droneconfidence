@@ -26,7 +26,6 @@ const locationCopy: Record<LocationId, LocationCopy> = {
       'Rockdale',
       'Kogarah',
       'Sutherland Shire',
-      'Cronulla',
       'and surrounding suburbs',
     ],
     ctaLabel: 'Book South Sydney',

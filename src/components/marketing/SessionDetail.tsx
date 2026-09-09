@@ -159,20 +159,7 @@ export const SessionDetail = ({
             </Reveal>
 
             <Reveal delay={0.1}>
-              <div className="flex items-end justify-between gap-6 border-b border-ink/10 pb-3">
-                <div>
-                  <p className="font-display text-[0.68rem] font-bold uppercase tracking-[0.16em] text-eucalyptus/60">
-                    We can cover
-                  </p>
-
-                  <p className="mt-1.5 max-w-[32rem] text-[0.88rem] leading-relaxed text-ink-muted">
-                    We&rsquo;ll prioritise the areas that are most useful to
-                    you rather than trying to work through a fixed syllabus.
-                  </p>
-                </div>
-              </div>
-
-              <ul className="mt-2 columns-1 gap-x-8 sm:columns-2 xl:columns-3">
+              <ul className="columns-1 gap-x-8 sm:columns-2 xl:columns-3">
                 {session.covers.map((item) => (
                   <li
                     key={item}

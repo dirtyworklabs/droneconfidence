@@ -84,15 +84,15 @@ const Book = () => {
       <PageHero
         eyebrow="Booking"
         title="Book your session."
-        intro={
-          <p>
-            Choose the session and Sydney training area that suit you. You&rsquo;ll then choose an
-            available time, tell us a little about your drone and complete payment securely online.
-          </p>
-        }
+        className="!pb-6 sm:!pb-8"
       />
 
-      <Section tone="canvas" space="sm" aria-labelledby="booking-flow-heading">
+      <Section
+        tone="canvas"
+        space="sm"
+        aria-labelledby="booking-flow-heading"
+        className="!pt-0"
+      >
         <Container>
           <h2 id="booking-flow-heading" className="sr-only">
             Start your booking

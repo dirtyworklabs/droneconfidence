@@ -31,9 +31,10 @@ const Faq = () => {
             isn&rsquo;t here, just ask.
           </p>
         }
+        className="!pb-6 sm:!pb-8"
       />
 
-      <Section tone="canvas" space="sm">
+      <Section tone="canvas" space="sm" className="!pt-0">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)] lg:gap-16">
             <Reveal>

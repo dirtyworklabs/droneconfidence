@@ -25,9 +25,10 @@ const Locations = () => {
         eyebrow="Locations"
         title="Two Sydney training areas."
         intro={<p>Choose the side of Sydney that&rsquo;s most convenient for you.</p>}
+        className="!pb-6 sm:!pb-8"
       />
 
-      <Section tone="canvas" space="sm">
+      <Section tone="canvas" space="sm" className="!pt-0">
         <Container>
           <RevealGroup as="ul" className="grid gap-6 lg:grid-cols-2">
             {locations.map((location) => (
@@ -42,7 +43,6 @@ const Locations = () => {
       </Section>
 
       <CustomLocationCallout />
-      <HowItWorks />
       <FinalCta />
     </>
   )

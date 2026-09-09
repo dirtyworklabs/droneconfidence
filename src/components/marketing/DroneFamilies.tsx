@@ -8,7 +8,7 @@ import {
   RevealItem,
 } from '@/components/ui/Reveal'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { ASK_A_QUESTION_QUERY } from '@/lib/routes'
+import { DRONE_QUESTION_QUERY } from '@/lib/routes'
 
 interface DroneFamilyItem {
   id: string
@@ -179,7 +179,7 @@ export const DroneFamilies = () => (
         </div>
 
         <Link
-          to={ASK_A_QUESTION_QUERY}
+          to={DRONE_QUESTION_QUERY}
           className="group/link inline-flex shrink-0 items-center gap-2 self-start font-display text-[0.9rem] font-semibold text-eucalyptus transition-colors duration-200 ease-[var(--ease-calm)] hover:text-sage sm:self-auto"
         >
           Ask about your drone

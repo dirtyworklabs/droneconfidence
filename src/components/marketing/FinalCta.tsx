@@ -32,7 +32,7 @@ export const FinalCta = () => (
           </h2>
 
           <p className="max-w-[38rem] text-[1.03rem] leading-relaxed text-sage-soft/80">
-            Private one-on-one coaching in Sydney, built around your aircraft,
+            Private one-on-one drone coaching in Sydney, built around your aircraft,
             your experience and what you want to improve.
           </p>
         </Reveal>

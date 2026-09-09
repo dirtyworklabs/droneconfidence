@@ -69,7 +69,7 @@ export const Hero = () => {
         <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)] lg:gap-16">
           <div className="flex flex-col gap-6">
             <motion.div {...step(0)}>
-              <Eyebrow>Private one-on-one drone training · Sydney</Eyebrow>
+              <Eyebrow>Private drone training · Sydney</Eyebrow>
             </motion.div>
 
             <motion.h1
@@ -82,8 +82,7 @@ export const Hero = () => {
             <motion.div {...step(0.26)} className="measure space-y-4 text-[1.05rem] leading-relaxed text-ink-soft">
               <p>
                 Get practical,
-                one-on-one help with your own drone, from your first take-off to smoother flying and
-                better camera work.
+                one-on-one help with your own drone.
               </p>
             </motion.div>
 
