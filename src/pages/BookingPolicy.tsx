@@ -186,10 +186,10 @@ const policySections: PolicySection[] = [
           relevant app installed.
         </p>
         <p>
-          Tell us your aircraft and controller/RC models when you book. Lengthy firmware downloads and account setup can
-          reduce flying time, so we may send you a few simple preparation steps beforehand. You
-          remain responsible for your own equipment and for any registration or account requirements
-          that apply to it.
+          Tell us your aircraft and controller/RC models when you book. Lengthy firmware downloads
+          and account setup can reduce flying time, so we may send you a few simple preparation
+          steps beforehand. You remain responsible for your own equipment and for any registration
+          or account requirements that apply to it.
         </p>
       </>
     ),
@@ -236,9 +236,10 @@ const BookingPolicy = () => {
             September 2026.
           </p>
         }
+        className="!pb-6 sm:!pb-8"
       />
 
-      <Section tone="canvas" space="sm">
+      <Section tone="canvas" space="sm" className="!pt-0">
         <Container width="text">
           <Reveal>
             <div className="rounded-[var(--radius-card)] border border-ink/8 bg-surface p-6 sm:p-8">
@@ -247,7 +248,10 @@ const BookingPolicy = () => {
               </h2>
               <dl className="mt-4 flex flex-col">
                 {cancellationRows.map((row) => (
-                  <div key={row.when} className="border-t border-ink/8 py-3 first:border-t-0 first:pt-0">
+                  <div
+                    key={row.when}
+                    className="border-t border-ink/8 py-3 first:border-t-0 first:pt-0"
+                  >
                     <dt className="text-[0.95rem] font-medium text-ink">{row.when}</dt>
                     <dd className="text-[0.95rem] text-eucalyptus">{row.outcome}</dd>
                   </div>

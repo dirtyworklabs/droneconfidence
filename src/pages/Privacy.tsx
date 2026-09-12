@@ -186,9 +186,10 @@ const Privacy = () => {
             What we collect, why we collect it and what happens to it. Last updated September 2026.
           </p>
         }
+        className="!pb-6 sm:!pb-8"
       />
 
-      <Section tone="canvas" space="sm">
+      <Section tone="canvas" space="sm" className="!pt-0">
         <Container width="text">
           <div className="flex flex-col gap-10">
             {privacySections.map((section, index) => (
