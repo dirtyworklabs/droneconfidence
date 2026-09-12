@@ -3,14 +3,13 @@ import { Reveal } from '@/components/ui/Reveal'
 import { cn } from '@/lib/cn'
 
 /**
- * Quiet trust signals. Four only, separated by fine editorial rules rather than
+ * Quiet trust signals, separated by fine editorial rules rather than
  * bullet dots, so the strip reads as a masthead line and not a feature ticker.
  */
 const signals = [
-  'Working with drones since 2014',
   'A decade of drone industry experience',
   'Government & commercial clients',
-  'Photography background',
+  'Creative technology background',
 ]
 
 export const ExperienceStrip = () => (
@@ -19,12 +18,15 @@ export const ExperienceStrip = () => (
       <Reveal
         as="ul"
         distance={10}
-        className="grid gap-x-8 gap-y-2.5 text-[0.92rem] leading-snug text-ink-soft sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-x-8 gap-y-2.5 text-[0.92rem] leading-snug text-ink-soft sm:grid-cols-2 lg:grid-cols-3"
       >
         {signals.map((signal, index) => (
           <li
             key={signal}
-            className={cn('lg:border-l lg:border-ink/10 lg:pl-6', index === 0 && 'lg:border-l-0 lg:pl-0')}
+            className={cn(
+              'lg:border-l lg:border-ink/10 lg:pl-6',
+              index === 0 && 'lg:border-l-0 lg:pl-0',
+            )}
           >
             {signal}
           </li>

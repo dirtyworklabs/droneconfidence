@@ -23,7 +23,7 @@ const About = () => {
     <>
       <PageHero
         eyebrow="About"
-        title="Experience behind Drone Confidence."
+        title="Meet your drone coach."
         className="!pb-2 sm:!pb-4"
       />
 
@@ -43,7 +43,7 @@ const About = () => {
             <Reveal delay={0.08} className="flex flex-col gap-6">
               <div className="space-y-5 text-[1.06rem] leading-relaxed text-ink-soft">
                 <p>
-                  Tom has worked professionally with drones since 2016, including founding
+                  Tom Gerrard has worked professionally with drones since 2016, including founding
                   and operating In Motion Aero, which delivered commercial drone projects
                   across Australia under a UAV Operator&rsquo;s Certificate (UOC).
                 </p>
@@ -76,9 +76,8 @@ const About = () => {
                   </p>
 
                   <p>
-                    They&rsquo;ve simply bought a drone and want an experienced
-                    person to spend an hour or two showing them how to use it
-                    properly.
+                    They&rsquo;ve just bought a drone and want an experienced
+                    person to show them how to use it.
                   </p>
                 </div>
               </blockquote>

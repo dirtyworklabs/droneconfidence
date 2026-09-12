@@ -12,12 +12,20 @@ export interface AboutGalleryImage {
 }
 
 /**
- * The five About-page photographs, in editorial order.
+ * The About-page photographs, in editorial order.
  *
  * Alt text describes what is visible and nothing more — no client, project or
  * location claims beyond what the page already establishes.
  */
 export const aboutGalleryImages: AboutGalleryImage[] = [
+  {
+    src: '/images/about/tom-profile-shot.jpg',
+    alt: 'Tom Gerrard, founder of Drone Confidence',
+    width: 1503,
+    height: 1055,
+    // Keep Tom prominent while avoiding the partial person on the far right.
+    objectPosition: '42% 50%',
+  },
   {
     src: '/images/about/tom-drone-operations.jpg',
     alt: 'Tom Gerrard discussing a drone operation with a colleague in the field',
