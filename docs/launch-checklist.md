@@ -68,9 +68,10 @@ one form: `contact`. It is unchanged by the booking system.
 ### Supabase
 
 - [ ] Project created in a region close to Sydney.
-- [ ] All four migrations applied, in order: `0001_booking_core.sql`,
+- [ ] All seven migrations applied, in order: `0001_booking_core.sql`,
       `0002_booking_functions.sql`, `0003_privilege_hardening.sql`,
-      `0004_service_role_table_grants.sql`.
+      `0004_service_role_table_grants.sql`, `0005_first_party_analytics.sql`,
+      `0006_booking_controller.sql`, `0007_booking_guest.sql`.
 - [ ] `select relrowsecurity from pg_class where relname = 'bookings';` returns `true`, and
       `select count(*) from pg_policies where schemaname = 'public';` returns `0`. Row Level Security
       is on with no policies: the service-role key is the only way in.

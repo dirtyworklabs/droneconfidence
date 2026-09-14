@@ -1,8 +1,9 @@
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { PGlite } from '@electric-sql/pglite'
 import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist'
 import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { MIGRATION_CHAIN } from './migrationChain'
 
 /**
  * The migrations, genuinely applied.
@@ -14,19 +15,14 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
  * a webhook delivered twice, and the same-day training-area lock.
  *
  * A hold is a row. Its serialised behaviour is the product, so it is asserted at
- * the database, not at the API.
+ * the database, not at the API. The sequence is every file in
+ * `supabase/migrations/`, in order, including analytics (0005) and the later
+ * booking-column migrations (0006, 0007).
  */
 
-const MIGRATIONS = [
-  'supabase/migrations/0001_booking_core.sql',
-  'supabase/migrations/0002_booking_functions.sql',
-  'supabase/migrations/0003_privilege_hardening.sql',
-  'supabase/migrations/0006_booking_controller.sql',
-  'supabase/migrations/0007_booking_guest.sql',
-]
-
-/** Every function the migrations define. All of them must be unreachable to PUBLIC. */
-const BOOKING_FUNCTIONS = [
+/** Every function in public the migrations define. All of them must be unreachable to PUBLIC. */
+const EXPECTED_PUBLIC_FUNCTIONS = [
+  'analytics_events_stamp',
   'booking_weekdays_valid',
   'bookings_set_derived',
   'confirm_booking_payment',
@@ -113,7 +109,12 @@ const rawInsert = (locationSlug: string, name: string, start: string, reference:
 
 beforeAll(async () => {
   db = await PGlite.create({ extensions: { btree_gist, pgcrypto } })
-  for (const file of MIGRATIONS) {
+  // 0004 grants to service_role unconditionally, and 0003/0005/0006/0007 take
+  // the production revoke/grant path only when the Supabase roles exist.
+  for (const role of ['anon', 'authenticated', 'service_role']) {
+    await db.exec(`create role ${role} nologin`)
+  }
+  for (const file of MIGRATION_CHAIN) {
     await db.exec(readFileSync(file, 'utf8'))
   }
 })
@@ -129,6 +130,7 @@ describe('schema', () => {
        where relnamespace = 'public'::regnamespace and relkind = 'r' order by relname`,
     )
     expect(tables.rows.map((row) => row.relname)).toEqual([
+      'analytics_events',
       'availability_blocks',
       'booking_events',
       'booking_notifications',
@@ -136,6 +138,13 @@ describe('schema', () => {
       'bookings',
       'stripe_events',
     ])
+  })
+
+  it('applies every SQL file in supabase/migrations, in order', () => {
+    const onDisk = readdirSync('supabase/migrations')
+      .filter((name) => name.endsWith('.sql'))
+      .sort()
+    expect(MIGRATION_CHAIN.map((file) => file.replace('supabase/migrations/', ''))).toEqual(onDisk)
   })
 
   it('ships the booking master switch turned off', async () => {
@@ -585,7 +594,7 @@ describe('function privileges', () => {
        order by p.proname`,
     )
     // A new function added without being hardened fails here, not in production.
-    expect(rows.rows.map((row) => row.proname)).toEqual(BOOKING_FUNCTIONS)
+    expect(rows.rows.map((row) => row.proname)).toEqual(EXPECTED_PUBLIC_FUNCTIONS)
   })
 
   it('takes EXECUTE away from PUBLIC on every function', async () => {
@@ -604,10 +613,10 @@ describe('function privileges', () => {
          join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.proname = any($1)
         order by p.proname`,
-      [BOOKING_FUNCTIONS],
+      [EXPECTED_PUBLIC_FUNCTIONS],
     )
 
-    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    expect(rows.rows).toHaveLength(EXPECTED_PUBLIC_FUNCTIONS.length)
     for (const row of rows.rows) {
       // A null ACL is the Postgres default, and the default includes PUBLIC.
       expect(row.acl_is_default, `${row.proname} still has the default ACL`).toBe(false)
@@ -620,10 +629,10 @@ describe('function privileges', () => {
       `select proname, proconfig from pg_proc p
         join pg_namespace n on n.oid = p.pronamespace
        where n.nspname = 'public' and p.proname = any($1)`,
-      [BOOKING_FUNCTIONS],
+      [EXPECTED_PUBLIC_FUNCTIONS],
     )
 
-    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    expect(rows.rows).toHaveLength(EXPECTED_PUBLIC_FUNCTIONS.length)
     for (const row of rows.rows) {
       // 'search_path=public' would leave pg_temp implicitly searched first for
       // relation names, which a SECURITY DEFINER function must never allow.
@@ -666,7 +675,7 @@ describe('privileges with the Supabase roles present', () => {
     // The migrations skip roles that don't exist, so the harness must supply the
     // three Supabase roles for the grants and revokes to be observable at all.
     await roled.exec(`create role anon; create role authenticated; create role service_role;`)
-    for (const file of MIGRATIONS) {
+    for (const file of MIGRATION_CHAIN) {
       await roled.exec(readFileSync(file, 'utf8'))
     }
   })
@@ -690,10 +699,10 @@ describe('privileges with the Supabase roles present', () => {
          join pg_namespace n on n.oid = p.pronamespace
         where n.nspname = 'public' and p.proname = any($1)
         order by p.proname`,
-      [BOOKING_FUNCTIONS],
+      [EXPECTED_PUBLIC_FUNCTIONS],
     )
 
-    expect(rows.rows).toHaveLength(BOOKING_FUNCTIONS.length)
+    expect(rows.rows).toHaveLength(EXPECTED_PUBLIC_FUNCTIONS.length)
     for (const row of rows.rows) {
       expect(row.anon, `${row.proname} is callable by anon`).toBe(false)
       expect(row.authenticated, `${row.proname} is callable by authenticated`).toBe(false)

@@ -17,7 +17,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],
-    // The Postgres suite boots a WASM database and applies both migrations.
+    // The Postgres suite boots a WASM database and applies every migration in order.
     testTimeout: 60_000,
     hookTimeout: 60_000,
   },

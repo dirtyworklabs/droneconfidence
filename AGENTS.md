@@ -58,7 +58,8 @@ netlify/
                   refunds, adminAuth, env, http, email/{render,templates,send}
 supabase/migrations/  0001_booking_core.sql, 0002_booking_functions.sql,
                       0003_privilege_hardening.sql, 0004_service_role_table_grants.sql,
-                      0005_first_party_analytics.sql
+                      0005_first_party_analytics.sql, 0006_booking_controller.sql,
+                      0007_booking_guest.sql
 docs/             stripe-setup, booking-email-templates, launch-checklist,
                   local-booking-test-mode, reporting (the owner's SQL)
 tests/            vitest — migrations run against real Postgres via PGlite
@@ -289,7 +290,7 @@ booking-disabled and booking-enabled states at step 3. At step 3, page through t
 at the first and last month with times, and the summary must keep showing the selected time while
 another month is on screen.
 
-Concurrency changes must come with a test in `tests/migrations.test.ts`. It applies both migrations to
-a real Postgres and asserts the behaviour that cannot be reasoned about from the TypeScript: duplicate
-attempts, buffered slots, the same-day area lock, expiry with grace, webhook idempotency, reschedule
-audit history, and RLS being on with no policies.
+Concurrency changes must come with a test in `tests/migrations.test.ts`. It applies every migration in
+`supabase/migrations/` in order to a real Postgres and asserts the behaviour that cannot be reasoned
+about from the TypeScript: duplicate attempts, buffered slots, the same-day area lock, expiry with
+grace, webhook idempotency, reschedule audit history, and RLS being on with no policies.

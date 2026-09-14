@@ -3,26 +3,20 @@ import { PGlite } from '@electric-sql/pglite'
 import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist'
 import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { MIGRATION_CHAIN } from './migrationChain'
 
 /**
- * Migration 0005, genuinely applied.
+ * Analytics schema and reporting views, genuinely applied.
  *
  * Two things can only be verified in a real Postgres: that the analytics table
  * is unreachable from a browser role and that the reporting views compute the
  * Sydney periods and the money the way the business reads them. Both are
- * asserted here, against the same DDL Supabase will run.
+ * asserted here, against the same DDL Supabase will run — the full 0001–0007
+ * chain, so reporting is checked against the current booking schema.
  *
  * The browser roles are created first so the grants and revokes in 0003, 0004
  * and 0005 all take their real production path rather than being skipped.
  */
-
-const MIGRATIONS = [
-  'supabase/migrations/0001_booking_core.sql',
-  'supabase/migrations/0002_booking_functions.sql',
-  'supabase/migrations/0003_privilege_hardening.sql',
-  'supabase/migrations/0004_service_role_table_grants.sql',
-  'supabase/migrations/0005_first_party_analytics.sql',
-]
 
 const REPORTING_VIEWS = [
   'booking_mix_monthly',
@@ -126,7 +120,7 @@ beforeAll(async () => {
   for (const role of ['anon', 'authenticated', 'service_role']) {
     await db.exec(`create role ${role} nologin`)
   }
-  for (const file of MIGRATIONS) {
+  for (const file of MIGRATION_CHAIN) {
     await db.exec(readFileSync(file, 'utf8'))
   }
 })

@@ -185,7 +185,7 @@ dashboard sends a reason, never an amount.
 ### Setting it up
 
 See [`docs/launch-checklist.md`](docs/launch-checklist.md) for the full sequence. In short: create
-the Supabase project, apply the migrations in `supabase/migrations/` in order (`0001` → `0004`),
+the Supabase project, apply the migrations in `supabase/migrations/` in order (`0001` → `0007`),
 create the owner user, set the environment variables above, add the Stripe webhook
 ([`docs/stripe-setup.md`](docs/stripe-setup.md)), verify the Resend domain, then work through the
 test-mode checklist before turning the master switch on.
