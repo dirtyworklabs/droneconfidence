@@ -21,8 +21,8 @@ automatically.
 | --- | --- | --- | --- |
 | `hero` | `hero.webp` | Landscape, wide | Sydney open space, drone in flight or being launched |
 | `session-first-flight` | `session-first-flight.webp` | Landscape 3:2 | Beginner holding a controller, calm and unposed |
-| `session-fly-with-confidence` | `session-fly-with-confidence.webp` | Landscape 3:2 | Confident flying in an open reserve |
-| `session-photo-video` | `session-photo-video.webp` | Landscape 3:2 | Framing a shot, screen visible |
+| `session-fly-with-confidence` | `session-fly-with-confidence.webp` | Landscape 3:2 | Dormant — retired session, not rendered |
+| `session-photo-video` | `session-photo-video.webp` | Landscape 3:2 | Dormant — retired session, not rendered |
 | `location-south` | `location-south.webp` | Landscape 3:2 | Open grass and sky near Taren Point |
 | `location-north` | `location-north.webp` | Landscape 3:2 | Open reserve near North Ryde |
 | `about-tom` | `about-tom.webp` | Portrait 4:5 | Tom outdoors, natural, drone in hand or nearby |

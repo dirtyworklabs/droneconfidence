@@ -10,8 +10,8 @@
 import {
   type LocationCatalogEntry,
   type SessionCatalogEntry,
+  findBookableSession,
   findLocation,
-  findSession,
 } from '../../shared/booking/catalog'
 import { isExperienceCode } from '../../shared/booking/experience'
 import { MAX, validateBookingDetails } from '../../shared/booking/fields'
@@ -58,8 +58,9 @@ export const validateCheckoutRequest = (raw: unknown): ValidationResult => {
   const attemptId = str(body.attemptId, 40)
   if (!UUID_PATTERN.test(attemptId)) problems.push('Invalid submission id.')
 
-  // Arbitrary or unknown ids are rejected outright, never defaulted.
-  const session = findSession(typeof body.sessionId === 'string' ? body.sessionId : null)
+  // Arbitrary, unknown or retired ids are rejected outright, never defaulted. A
+  // retired session stays resolvable for history, but cannot be bought anew.
+  const session = findBookableSession(typeof body.sessionId === 'string' ? body.sessionId : null)
   if (!session) problems.push('Choose one of the available sessions.')
 
   const location = findLocation(typeof body.locationId === 'string' ? body.locationId : null)

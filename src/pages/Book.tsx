@@ -10,27 +10,22 @@ import { CustomLocationCallout } from '@/components/marketing/CustomLocationCall
 import { BookingProgress } from '@/components/booking/BookingProgress'
 import { BookingStep } from '@/components/booking/BookingStep'
 import { BookingSummary } from '@/components/booking/BookingSummary'
-import { SessionSelector } from '@/components/booking/SessionSelector'
 import { LocationSelector } from '@/components/booking/LocationSelector'
 import { BookingAvailability } from '@/components/booking/BookingAvailability'
 import { BookingDetailsForm } from '@/components/booking/BookingDetailsForm'
 import { useBookingSelection } from '@/components/booking/useBookingSelection'
-import { formatPrice, sessions } from '@/content/sessions'
+import { activeSession, formatPrice } from '@/content/sessions'
 import { track } from '@/lib/analytics'
 import { useSeo } from '@/lib/seo'
 import { serviceSchema } from '@/lib/structuredData'
 
-/** "First Flight $180, Fly With Confidence $240, Photo & Video $280" — from the catalogue. */
-const sessionPriceList = sessions
-  .map((session) => `${session.name} ${formatPrice(session.price)}`)
-  .join(', ')
-
 /**
  * The permanent public booking entry point.
  *
- * Four steps, in order: session, training area, a real available time, then
- * details and payment. Session, area and the chosen time are mirrored in the URL
- * so deep links and browser history behave; the customer's own details are not.
+ * Three steps, in order: training area, a real available time, then details and
+ * payment. First Flight is the only public lesson, so it is carried implicitly
+ * rather than chosen. The area and the chosen time are mirrored in the URL so
+ * deep links and browser history behave; the customer's own details are not.
  *
  * Nothing here fabricates availability, prices or confirmations. Times come from
  * the availability endpoint, the price charged is resolved on the server from the
@@ -39,12 +34,12 @@ const sessionPriceList = sessions
 const Book = () => {
   useSeo({
     title: 'Book a Drone Lesson Sydney | Drone Confidence',
-    description: `Book a private one-on-one drone lesson in Sydney. ${sessionPriceList}. North and south Sydney training areas.`,
+    description: `Book ${activeSession.name}, a private ${activeSession.durationMinutes}-minute beginner drone lesson in Sydney for ${formatPrice(activeSession.price)}.`,
     path: '/book',
     structuredData: [serviceSchema()],
   })
 
-  const { session, location, slot, currentStep, selectSession, selectLocation, selectSlot, clearSlot } =
+  const { session, location, slot, currentStep, selectLocation, selectSlot, clearSlot } =
     useBookingSelection()
   const [params, setParams] = useSearchParams()
   // Bumped whenever the server tells us the times we're showing are stale.
@@ -70,7 +65,7 @@ const Book = () => {
     setParams(next, { replace: true, preventScrollReset: true })
   }, [params, setParams])
 
-  /** The chosen time was gone by the time we asked for it. Reopen step 3. */
+  /** The chosen time was gone by the time we asked for it. Reopen step 2. */
   const handleSlotRejected = useCallback(() => {
     setNotice(
       'That time was taken while you were filling in your details. Nothing has been charged. Please choose another time.',
@@ -83,7 +78,7 @@ const Book = () => {
     <>
       <PageHero
         eyebrow="Booking"
-        title="Book your session."
+        title="Book your First Flight."
         className="!pb-6 sm:!pb-8"
       />
 
@@ -115,33 +110,21 @@ const Book = () => {
             <div className="flex flex-col gap-12 sm:gap-14">
               <Reveal>
                 <BookingStep
-                  id="booking-session"
-                  number={1}
-                  title="Choose your session"
-                  description="Each session is private, one-on-one and a fixed length, using your own drone."
-                >
-                  <SessionSelector selectedId={session?.id ?? null} onSelect={selectSession} />
-                </BookingStep>
-              </Reveal>
-
-              {session ? (
-                <BookingStep
                   id="booking-location"
-                  number={2}
+                  number={1}
                   title="Choose your training area"
                   description={<>Pick the side of Sydney that&rsquo;s most convenient for you.</>}
-                  appear
                 >
                   <LocationSelector selectedId={location?.id ?? null} onSelect={selectLocation} />
                 </BookingStep>
-              ) : null}
+              </Reveal>
 
-              {session && location ? (
+              {location ? (
                 <BookingStep
                   id="booking-availability"
-                  number={3}
+                  number={2}
                   title="Choose a date & time"
-                  description="Available times are shown for your session and training area, in Sydney time. Payment is completed securely at the end of booking."
+                  description="Available times are shown for your lesson and training area, in Sydney time. Payment is completed securely at the end of booking."
                   appear
                 >
                   <BookingAvailability
@@ -155,10 +138,10 @@ const Book = () => {
                 </BookingStep>
               ) : null}
 
-              {session && location && slot ? (
+              {location && slot ? (
                 <BookingStep
                   id="booking-details"
-                  number={4}
+                  number={3}
                   title="Your details & payment"
                   description={<>We only ask for what the lesson needs. You&rsquo;ll review everything before paying.</>}
                   appear

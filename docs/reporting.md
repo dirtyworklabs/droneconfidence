@@ -90,6 +90,11 @@ three times counts once — `session_selected_sessions`, `location_selected_sess
 `slot_selected_sessions`, `details_started_sessions`, `checkout_started_sessions`,
 `checkout_failed_sessions`, `booking_confirmed_view_sessions`.
 
+Since `/book` stopped asking for a session (First Flight is the only public lesson and is carried
+implicitly), nothing fires `booking_session_selected` any more, so `session_selected_sessions` reads
+0 for periods after that change. It is not a drop-off: read the funnel from
+`location_selected_sessions` onwards. Earlier periods keep their historical counts.
+
 **Booking activity**, from the booking records — `holds_created`, `holds_expired`,
 `holds_released`, `confirmed_bookings`, `cancelled_bookings`, `reschedules`,
 `payment_conflicts` (someone reached a slot a moment too late).

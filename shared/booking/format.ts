@@ -52,3 +52,14 @@ export const formatWeekday = (instant: Date, timeZone = SYDNEY): string =>
 /** "10 Sep" — the compact date on an available-date button. */
 export const formatDayAndMonth = (instant: Date, timeZone = SYDNEY): string =>
   formatter({ day: 'numeric', month: 'short' }, timeZone).format(instant)
+
+/**
+ * Whole-dollar price range for structured data: "$180" for a single price,
+ * "$180–$280" if more than one lesson is ever bookable again — never a
+ * degenerate "$180–$180".
+ */
+export const formatPriceRange = (prices: readonly number[]): string => {
+  const low = Math.min(...prices)
+  const high = Math.max(...prices)
+  return low === high ? `$${low}` : `$${low}–$${high}`
+}

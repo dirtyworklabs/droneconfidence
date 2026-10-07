@@ -33,11 +33,11 @@ const privacySections: PrivacySection[] = [
           <li>your mobile number, where you provide it</li>
           <li>the content of your enquiry, including what you&rsquo;d like help with</li>
           <li>drone and experience details you choose to tell us</li>
-          <li>your preferred session, training area or location, where you select one</li>
+          <li>your preferred training area or location, where you select one</li>
         </ul>
         <p>
           When you book a session, we store the booking details you provide — your name, email
-          address, mobile number, chosen session, training area, appointment time, aircraft make and
+          address, mobile number, the lesson booked, training area, appointment time, aircraft make and
           model, controller/RC model, experience level, what you&rsquo;d like help with and any
           notes you add — so the session can be arranged and delivered. We also store the payment
           status of your booking and the reference our payment provider gives us for it.

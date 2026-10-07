@@ -19,7 +19,7 @@ export const faqs: Faq[] = [
     id: 'own-drone',
     question: 'Do I need to bring my own drone?',
     answer: [
-      'These sessions are primarily designed around learning on your own aircraft. That’s the best way to leave knowing how the drone you’ll actually use behaves.',
+      'First Flight is primarily designed around learning on your own aircraft. That’s the best way to leave knowing how the drone you’ll actually use behaves.',
       'Tell us your model when booking.',
     ],
     featured: true,
@@ -41,6 +41,14 @@ export const faqs: Faq[] = [
     ],
   },
   {
+    id: 'licence',
+    question: 'Do I need a drone licence or accreditation for a lesson?',
+    answer: [
+      'No CASA licence, RePL or operator accreditation is required simply to attend a recreational coaching session. Drone Confidence provides practical coaching, not RePL training or a CASA qualification.',
+      'If you intend to operate a drone for work or business, the registration, accreditation/RePL and other operating requirements that apply to your operation remain your responsibility.',
+    ],
+  },
+  {
     id: 'repl',
     question: 'Do you provide RePL training?',
     answer: [
@@ -53,7 +61,7 @@ export const faqs: Faq[] = [
     id: 'commercial',
     question: 'Can you teach me to fly commercially?',
     answer: [
-      'We can help improve your practical flying, aircraft familiarity and camera skills, but Drone Confidence does not issue commercial aviation qualifications.',
+      'First Flight can help with practical flying and familiarity with your aircraft, but Drone Confidence does not issue commercial aviation qualifications.',
       'Commercial operators are responsible for ensuring they hold any registrations, accreditation, licences and approvals required for their operations.',
     ],
   },
@@ -70,7 +78,7 @@ export const faqs: Faq[] = [
     id: 'wind',
     question: 'What if it’s windy?',
     answer: [
-      'That depends on the conditions, location, aircraft and type of session.',
+      'That depends on the conditions, location, aircraft and your experience.',
       'We’ll assess the forecast and conditions rather than using one arbitrary wind number for every drone. If conditions aren’t appropriate, we’ll reschedule or refund you as described above.',
     ],
   },
@@ -111,10 +119,10 @@ export const faqs: Faq[] = [
   },
   {
     id: 'photography',
-    question: 'Can you help me with photography as well as flying?',
+    question: 'Does First Flight cover photography or video?',
     answer: [
-      'Yes. That’s exactly what the Photo & Video session is designed for.',
-      'We’ll work on both aircraft movement and camera technique.',
+      'First Flight is primarily about setup, safety and the fundamental flying skills a beginner needs.',
+      'We can answer basic camera questions where time permits, but it is not currently offered as a dedicated photography or video lesson.',
     ],
   },
   {

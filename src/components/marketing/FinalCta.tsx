@@ -49,7 +49,7 @@ export const FinalCta = () => (
               context="final-cta"
               withArrow
             >
-              Book a Session
+              Book First Flight
             </BookingCta>
 
             <Link

@@ -6,11 +6,11 @@
  * themselves.
  */
 
-import type { LocationId, SessionId } from './catalog'
+import type { BookableSessionId, LocationId } from './catalog'
 import type { GuestAttendanceCode } from './guest'
 
 // Re-exported so a consumer of these contracts needs only one import.
-export type { LocationId, SessionId } from './catalog'
+export type { BookableSessionId, LocationId, SessionId } from './catalog'
 import type { DayIso } from './time'
 
 /** A single bookable start time. ISO 8601 instants, offset included. */
@@ -38,10 +38,11 @@ export type BookingStatus = 'pending_payment' | 'confirmed' | 'cancelled' | 'exp
 
 export type PaymentState = 'unpaid' | 'paid' | 'refunded' | 'partially_refunded' | 'failed'
 
-/** Everything step 4 collects. Prices and durations are deliberately absent. */
+/** Everything the details step collects. Prices and durations are deliberately absent. */
 export interface CheckoutRequest {
   attemptId: string
-  sessionId: SessionId
+  /** Only a bookable session. The server re-checks it and refuses a retired id. */
+  sessionId: BookableSessionId
   locationId: LocationId
   /** ISO instant of the chosen slot, as returned by the availability endpoint. */
   startsAt: string

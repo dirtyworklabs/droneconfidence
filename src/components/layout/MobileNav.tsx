@@ -7,7 +7,7 @@ import { BookingCta } from '@/components/booking/BookingCta'
 import { Wordmark } from '@/components/layout/Wordmark'
 import { calm } from '@/lib/motion'
 import { cn } from '@/lib/cn'
-import { formatPrice, lowestSessionPrice } from '@/content/sessions'
+import { activeSession, formatPrice } from '@/content/sessions'
 
 interface MobileNavProps {
   open: boolean
@@ -150,10 +150,10 @@ export const MobileNav = ({ open, onClose, triggerRef }: MobileNavProps) => {
 
             <div className="border-t border-ink/8 p-4">
               <BookingCta size="lg" fullWidth context="mobile-nav" withArrow>
-                Book a Session
+                {activeSession.ctaLabel}
               </BookingCta>
               <p className="pt-3 text-center text-sm text-ink-muted">
-                Sessions from {formatPrice(lowestSessionPrice)}
+                {activeSession.name} · {formatPrice(activeSession.price)} · {activeSession.durationMinutes} min
               </p>
             </div>
           </motion.div>

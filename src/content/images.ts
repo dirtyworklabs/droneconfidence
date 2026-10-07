@@ -48,6 +48,8 @@ export const imageSlots: Record<ImageSlotKey, ImageSlot> = {
     fallbackCaption: 'Pre-flight · controls · first hover',
   },
 
+  // Dormant: the Fly With Confidence and Photo & Video sessions are retired and
+  // no public page renders these slots. Kept so the assets stay referenced.
   'session-fly-with-confidence': {
     src: '/images/dc-fly-with-confidence.jpg',
     alt: 'A consumer camera drone flying while its pilot practises confident drone control',

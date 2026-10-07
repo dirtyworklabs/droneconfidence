@@ -33,7 +33,7 @@ const policySections: PolicySection[] = [
       <>
         <p>
           A session is confirmed once your booking is completed and payment has been received. You
-          will receive a confirmation with your session type, date, time and meeting point.
+          will receive a confirmation with your lesson, date, time and meeting point.
         </p>
         <p>
           Sending an enquiry through this website does not create a booking and does not reserve a

@@ -52,7 +52,7 @@ const LocationOption = ({
 }
 
 /**
- * Step 2. Only the two standard training areas are instantly bookable. Custom
+ * Step 1. Only the two standard training areas are instantly bookable. Custom
  * Sydney locations stay a request, because travel, venue or permit costs may
  * need checking before a session can be confirmed.
  */

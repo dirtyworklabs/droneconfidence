@@ -16,8 +16,8 @@ import type {
   CheckoutRequest,
   CheckoutResponse,
   ConfirmationResponse,
+  BookableSessionId,
   LocationId,
-  SessionId,
 } from '@shared/booking/types'
 
 const ENDPOINT = {
@@ -27,7 +27,7 @@ const ENDPOINT = {
 } as const
 
 export interface AvailabilityQuery {
-  sessionId: SessionId
+  sessionId: BookableSessionId
   locationId: LocationId
 }
 

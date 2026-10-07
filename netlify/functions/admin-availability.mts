@@ -77,6 +77,8 @@ export default async (request: Request, _context: Context): Promise<Response> =>
 
     if (request.method === 'GET') {
       if (url.searchParams.get('slots') === '1') {
+        // Historical lookup on purpose: a booking for a retired session must still
+        // be offered reschedule times at its own stored length.
         const session = findSession(url.searchParams.get('session'))
         const location = findLocation(url.searchParams.get('location'))
         if (!session || !location) {

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { findSession, sessionPriceCents } from '@shared/booking/catalog'
+import { findBookableSession, sessionPriceCents } from '@shared/booking/catalog'
 import type { BookingRow } from '../../netlify/lib/store'
 import {
   cancellationEmail,
@@ -11,25 +11,26 @@ import {
 import type { EmailBody } from '../../netlify/lib/email/render'
 
 // A current hypothetical booking, so the amounts come from the live catalogue.
-const PREVIEW_PRICE_CENTS = sessionPriceCents(findSession('fly-with-confidence')!)
+const PREVIEW_SESSION = findBookableSession('first-flight')!
+const PREVIEW_PRICE_CENTS = sessionPriceCents(PREVIEW_SESSION)
 
 const MOCK_BOOKING: BookingRow = {
   id: 'preview-booking',
   reference: 'DC-7F3K2Q',
   attempt_id: null,
 
-  session_slug: 'fly-with-confidence',
-  session_name: 'Fly With Confidence',
-  duration_minutes: 90,
+  session_slug: PREVIEW_SESSION.id,
+  session_name: PREVIEW_SESSION.name,
+  duration_minutes: PREVIEW_SESSION.durationMinutes,
   price_cents: PREVIEW_PRICE_CENTS,
 
   location_slug: 'taren-point',
   location_name: 'South Sydney · Taren Point',
 
-  // 10:00 am – 11:30 am Sydney time on 10 September 2026.
+  // 10:00 am – 11:00 am Sydney time on 10 September 2026.
   starts_at: '2026-09-10T00:00:00.000Z',
-  ends_at: '2026-09-10T01:30:00.000Z',
-  occupied_until: '2026-09-10T01:45:00.000Z',
+  ends_at: '2026-09-10T01:00:00.000Z',
+  occupied_until: '2026-09-10T01:15:00.000Z',
   booking_day: '2026-09-10',
   time_zone: 'Australia/Sydney',
 
@@ -42,7 +43,7 @@ const MOCK_BOOKING: BookingRow = {
   guest_attending: true,
   experience_code: 'some',
   help_with:
-    'Return-to-Home, smoother flight controls, camera settings and feeling more confident flying independently.',
+    'Setting up Return-to-Home, understanding the flight controls and feeling more confident flying independently.',
   notes:
     'Would especially like help understanding obstacle avoidance and safe battery margins.',
 

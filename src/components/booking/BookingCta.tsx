@@ -1,11 +1,14 @@
 import { LinkButton, type ButtonSize, type ButtonVariant } from '@/components/ui/Button'
 import { bookingPath } from '@/lib/routes'
 import { track } from '@/lib/analytics'
-import type { LocationId, SessionId } from '@/types'
+import type { BookableSessionId, LocationId } from '@/types'
 
 interface BookingCtaProps {
-  /** Preselects a session on /book. Omit for the general CTA. */
-  sessionId?: SessionId
+  /**
+   * Preselects a session on /book. Omit for the general CTA. Only a currently
+   * bookable session is accepted, so a retired one can't be linked by accident.
+   */
+  sessionId?: BookableSessionId
   /** Preselects a training area on /book. */
   locationId?: LocationId
   children: React.ReactNode

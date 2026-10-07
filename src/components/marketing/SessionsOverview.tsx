@@ -1,30 +1,28 @@
 import { Container } from '@/components/ui/Container'
 import { Section } from '@/components/ui/Section'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { RevealGroup } from '@/components/ui/Reveal'
 import { SessionCard } from '@/components/marketing/SessionCard'
-import { sessions } from '@/content/sessions'
+import { activeSession } from '@/content/sessions'
 
+/** The homepage's single beginner lesson, presented as one deliberate offering. */
 export const SessionsOverview = () => (
   <Section id="sessions" tone="sage" space="lg" aria-labelledby="sessions-heading">
     <Container>
       <SectionHeading
-        eyebrow="Three sessions"
+        eyebrow="Beginner lesson"
         id="sessions-heading"
-        title="Choose where you want to start."
+        title="Start with the fundamentals."
         intro={
           <p>
-            Every session is private, one-on-one and flown on your own aircraft.
+            One focused lesson: private, one-on-one and flown on your own aircraft.
           </p>
         }
         size="lg"
       />
 
-      <RevealGroup as="ul" className="mt-11 grid gap-6 lg:grid-cols-3">
-        {sessions.map((session) => (
-          <SessionCard key={session.id} session={session} />
-        ))}
-      </RevealGroup>
+      <div className="mt-11">
+        <SessionCard session={activeSession} />
+      </div>
     </Container>
   </Section>
 )

@@ -47,7 +47,7 @@ interface BookingDetailsFormProps {
   /** ISO start instant of the chosen slot. */
   slot: string
   timeZone: string
-  /** Called when the server says the chosen time is gone, so step 3 reopens. */
+  /** Called when the server says the chosen time is gone, so the date & time step reopens. */
   onSlotRejected: () => void
 }
 
@@ -99,7 +99,7 @@ interface GuestAttendanceFieldProps {
  * so it borrows the form's own label, hint and error treatment rather than
  * becoming another card. Nothing is pre-selected, because an untouched default
  * would record an answer the customer never gave, and the first radio carries
- * `id` so the same first-error focus flow as every other step 4 field reaches
+ * `id` so the same first-error focus flow as every other details-step field reaches
  * it. No detail about the guest is asked for anywhere.
  */
 const GuestAttendanceField = ({ id, value, onChange, error }: GuestAttendanceFieldProps) => (
@@ -180,7 +180,7 @@ const ReviewRow = ({ label, value }: { label: string; value: string }) => (
 )
 
 /**
- * Step 4 — details, review, then hosted payment.
+ * Step 3 — details, review, then hosted payment.
  *
  * The form collects what the lesson needs, shows the customer exactly what they
  * are about to pay for, and requires an explicit, unticked-by-default

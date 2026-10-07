@@ -55,7 +55,7 @@ export const WhatToBring = () => (
                 <div className="space-y-3">
                   <p>
                     You don&rsquo;t need specialist equipment or a complicated
-                    setup. For most sessions, just bring the gear you normally
+                    setup. For most lessons, just bring the gear you normally
                     fly with.
                   </p>
 

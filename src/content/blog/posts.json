@@ -954,10 +954,10 @@
       "how-windy-is-too-windy-to-fly-drone"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Want to see exactly how RTH behaves on your drone?",
-      "body": "Fly With Confidence can include a practical RTH setup and demonstration on your own aircraft, in a controlled environment.",
-      "label": "Book Fly With Confidence"
+      "body": "If you’re new to flying, First Flight can help you understand and set up Return-to-Home on your own aircraft, with a practical demonstration in a controlled environment.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1109,10 +1109,10 @@
       "dji-obstacle-avoidance-explained"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Recognise a few of these?",
-      "body": "Fly With Confidence is built for owners who can get airborne but want better orientation, judgement and control when the flight stops feeling automatic.",
-      "label": "Book Fly With Confidence"
+      "body": "First Flight is designed to help new owners build the right habits from the beginning — orientation, judgement and control on your own drone.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1246,10 +1246,10 @@
       "beginner-drone-mistakes"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Lost confidence after a crash?",
-      "body": "Once the aircraft is confirmed airworthy, we can work through the flight skills and decision-making that make the next outing feel controlled again.",
-      "label": "Book Fly With Confidence"
+      "body": "Once the aircraft is confirmed airworthy, First Flight can take you back through the fundamentals — controls, orientation and pre-flight decisions — so the next outing feels controlled again.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1493,10 +1493,10 @@
       "how-windy-is-too-windy-to-fly-drone"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Want to get comfortable before flying somewhere exposed?",
-      "body": "Build orientation, wind awareness and return planning in a simpler environment first.",
-      "label": "Book Fly With Confidence"
+      "body": "First Flight builds the fundamentals — orientation, wind awareness and Return-to-Home — in a simpler environment first.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1728,10 +1728,10 @@
       "crashed-my-drone-what-now"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
-      "title": "Want to test your drone’s safety features without testing your luck?",
-      "body": "We can walk through sensing modes, limitations and controlled practice on your own aircraft.",
-      "label": "Book Fly With Confidence"
+      "sessionId": "first-flight",
+      "title": "Want to understand your drone’s safety features without testing your luck?",
+      "body": "First Flight covers how your aircraft’s safety features and Return-to-Home behave, with controlled practice on your own drone.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1844,10 +1844,10 @@
       "drone-battery-care"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Wind judgement is easier with real flying time.",
-      "body": "We assess conditions for the aircraft and session rather than using one arbitrary number for every drone.",
-      "label": "Book Fly With Confidence"
+      "body": "First Flight includes practical wind awareness and learning how to judge whether conditions are suitable for your aircraft.",
+      "label": "Book First Flight"
     }
   },
   {

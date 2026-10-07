@@ -13,16 +13,12 @@ interface Step {
  * The customer journey, described once.
  *
  * This is the final public sequence and does not vary: it describes what
- * booking a session involves, never the state of an integration.
+ * booking First Flight involves, never the state of an integration.
  */
 const steps: Step[] = [
   {
-    title: 'Choose your session',
-    body: <p>First Flight, Fly With Confidence or Photo &amp; Video.</p>,
-  },
-  {
     title: 'Choose your training area and time',
-    body: <p>Choose North or South Sydney and an available appointment.</p>,
+    body: <p>Choose North or South Sydney and an available First Flight appointment.</p>,
   },
   {
     title: 'Tell us about your drone and book',
@@ -44,7 +40,7 @@ export const HowItWorks = () => (
         size="lg"
       />
 
-      <Reveal as="ol" className="mt-11 grid gap-y-1 md:grid-cols-2 md:gap-x-16">
+      <Reveal as="ol" className="mt-11 grid gap-y-1 md:grid-cols-3 md:gap-x-10 lg:gap-x-16">
         {steps.map((step, index) => (
           <li key={step.title} className="flex gap-5 border-t border-ink/10 py-6 md:gap-6">
             <span

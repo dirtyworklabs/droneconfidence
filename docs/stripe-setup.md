@@ -6,7 +6,8 @@ code change involved.
 
 ## How payment works here
 
-1. The customer completes the four steps at `/book`.
+1. The customer completes the three steps at `/book` (training area, date & time, details &
+   payment) for First Flight, the only lesson currently on sale.
 2. `create-checkout` reserves the slot as a 30-minute hold in Supabase, then creates a Stripe
    Checkout Session with a dynamic AUD `price_data` line item priced from
    `shared/booking/catalog.ts`.
@@ -17,8 +18,12 @@ code change involved.
 5. `/booking-confirmed` asks the server what actually happened, using the Checkout Session id in the
    URL. It never trusts the URL as proof of payment.
 
-There are no Products or Prices to create in Stripe. Each Checkout Session is priced from the
-session catalogue at request time, so a price change in the code is the only change needed.
+There are no Products or Prices to create or manage in Stripe. Each Checkout Session's line item
+uses `price_data` built from the server-side session catalogue at request time, so a price change —
+or retiring a session, as Fly With Confidence and Photo & Video have been — is a code change only,
+with nothing to archive in the Stripe dashboard. Checkout accepts only a currently bookable session
+(`findBookableSession()`); refunds of historical bookings work exactly as before, because they are
+derived from the amount the booking actually paid.
 
 ## Environment variables
 

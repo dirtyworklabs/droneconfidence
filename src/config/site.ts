@@ -16,7 +16,7 @@ export const siteConfig = {
   businessName: 'Drone Confidence',
   tagline: 'Private one-on-one drone training in Sydney.',
   shortDescription:
-    'Private one-on-one drone training in Sydney. Practical help with your own drone, from first take-off to confident flying and better aerial imagery.',
+    'Private one-on-one drone training in Sydney. Practical help with your own drone, from setup and first take-off to confident, independent flying.',
 
   /** Canonical production domain. DNS is not assumed to be configured yet. */
   siteUrl: readString(import.meta.env.VITE_SITE_URL, 'https://droneconfidence.com'),

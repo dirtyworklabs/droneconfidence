@@ -949,10 +949,10 @@
       "drone-flight-101"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Want to see exactly how RTH behaves on your drone?",
-      "body": "Fly With Confidence can include a practical RTH setup and demonstration on your own aircraft, in a controlled environment.",
-      "label": "Book Fly With Confidence"
+      "body": "If you’re new to flying, First Flight can help you understand and set up Return-to-Home on your own aircraft, with a practical demonstration in a controlled environment.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1103,10 +1103,10 @@
       "dji-return-to-home-explained"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Recognise a few of these?",
-      "body": "Fly With Confidence is built for owners who can get airborne but want better orientation, judgement and control when the flight stops feeling automatic.",
-      "label": "Book Fly With Confidence"
+      "body": "First Flight is designed to help new owners build the right habits from the beginning — orientation, judgement and control on your own drone.",
+      "label": "Book First Flight"
     }
   },
   {
@@ -1238,10 +1238,10 @@
       "beginner-drone-mistakes"
     ],
     "cta": {
-      "sessionId": "fly-with-confidence",
+      "sessionId": "first-flight",
       "title": "Lost confidence after a crash?",
-      "body": "Once the aircraft is confirmed airworthy, we can work through the flight skills and decision-making that make the next outing feel controlled again.",
-      "label": "Book Fly With Confidence"
+      "body": "Once the aircraft is confirmed airworthy, First Flight can take you back through the fundamentals — controls, orientation and pre-flight decisions — so the next outing feels controlled again.",
+      "label": "Book First Flight"
     }
   }
 ]

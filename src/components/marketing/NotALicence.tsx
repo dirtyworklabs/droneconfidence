@@ -9,7 +9,7 @@ export const NotALicence = () => (
       <Reveal className="overflow-hidden rounded-[var(--radius-panel)] border border-ink/8 bg-surface">
         <div className="grid gap-8 p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16 lg:p-12">
           <div className="flex flex-col gap-5">
-            <Eyebrow>Drone Confidence Sessions</Eyebrow>
+            <Eyebrow>About the lesson</Eyebrow>
             <h2 id="not-a-licence-heading" className="text-[clamp(1.7rem,3.4vw,2.35rem)]">
               Practical coaching, not a drone licence course.
             </h2>
@@ -18,6 +18,11 @@ export const NotALicence = () => (
               <p>
                 We do not provide Remote Pilot Licence (RePL) qualifications, CASA certification or
                 formal aviation qualifications.
+              </p>
+              <p>
+                No CASA licence, RePL or operator accreditation is needed simply to attend a
+                recreational coaching session. If you intend to fly for work or business, the
+                requirements that apply to your own operation remain your responsibility.
               </p>
               <p>
                 If your goal is to obtain a professional aviation qualification, we&rsquo;ll happily

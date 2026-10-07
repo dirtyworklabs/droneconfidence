@@ -148,7 +148,7 @@ decision from a weather API.
 from the published policy in `shared/booking/policy.ts` — full refund, or 50% refunded and 50%
 retained, or free reschedule/full refund for a weather change.
 
-`[AIRCRAFT]` and `[CONTROLLER]` are the human-readable names chosen at step 4 of `/book`, stored on
+`[AIRCRAFT]` and `[CONTROLLER]` are the human-readable names chosen at the details step of `/book`, stored on
 the booking as written. A booking taken before the controller was collected shows
 `Controller / RC: Not recorded` rather than a guessed value.
 

@@ -6,8 +6,8 @@ Vite · React 19 · TypeScript · Tailwind CSS v4 · React Router · Motion for 
 · Supabase · Stripe Checkout · Resend.
 
 This repository is both the public marketing site and the operating booking system behind it.
-Customers choose a session, a training area and a genuinely available time, pay through Stripe's
-hosted checkout, and receive a confirmation email. The owner runs everything from `/admin`.
+Customers choose a training area and a genuinely available time for First Flight, pay through
+Stripe's hosted checkout, and receive a confirmation email. The owner runs everything from `/admin`.
 
 There are still no customer accounts, no card fields and no payment form here: Supabase owns booking
 state, Stripe owns payment, and the browser is never authoritative for a price, a duration or a
@@ -88,7 +88,9 @@ skeleton that exists purely so Netlify's build bot can register the forms and th
 AJAX to `/__forms.html` as `application/x-www-form-urlencoded`.
 
 Registered form: `contact` (the `/contact` enquiry form). It is a general enquiry channel — asking
-which session suits you, requesting a custom Sydney location, or an ordinary question. It does not
+whether First Flight is right for you (`?reason=lesson`; the older `?reason=which-session` maps to the
+same option), requesting a custom Sydney location, or an ordinary question. A custom-location enquiry
+still submits `preferred_session` (always "First Flight") so the registered form keeps its shape. It does not
 create a booking and does not take payment.
 
 Forms only work on a deployed site, not on `localhost`. After the first deploy, enable email
@@ -97,18 +99,21 @@ notifications in **Netlify → Project configuration → Notifications** so subm
 ## How booking works
 
 `/book` is the permanent public booking entry point, and every CTA on the site enters through it.
-Four steps, in order:
+**First Flight ($180, 60 minutes) is currently the only public lesson**, so it is carried implicitly
+rather than chosen. Three steps, in order:
 
-1. **Session** — from `src/content/sessions.ts`.
-2. **Training area** — from `src/content/locations.ts`.
-3. **Date & time** — real slots from `/.netlify/functions/booking-availability`. If the master switch
+1. **Training area** — from `src/content/locations.ts`.
+2. **Date & time** — real slots from `/.netlify/functions/booking-availability`. If the master switch
    is off, or nothing is available, the step says so. It never invents a time.
-4. **Your details & payment** — the fields the lesson needs, a review panel, an unticked policy
+3. **Your details & payment** — the fields the lesson needs, a review panel, an unticked policy
    acknowledgement, then a redirect to Stripe Checkout.
 
-Session, training area and the chosen start time are mirrored in the query string, so
-`/book?session=first-flight&location=north-sydney` deep-links and back/forward work. Values are
-validated against real content and silently dropped when they don't match. **No personal detail ever
+The training area and the chosen start time are mirrored in the query string, so
+`/book?location=north-sydney` deep-links and back/forward work. `?session=first-flight` from older
+links is still accepted. A retired or unknown `?session=` is removed and never re-enables that
+product, and any `?slot=` that came with it is cleared, because it may have been computed for a
+different lesson length. Other values are validated against real content and silently dropped when
+they don't match. **No personal detail ever
 goes in the URL, or into an analytics event.**
 
 Payment and confirmation:
@@ -134,7 +139,7 @@ All times are Australia/Sydney, and all arithmetic is DST-correct.
 | --- | --- |
 | Bookable days | Tuesday, Wednesday, Thursday |
 | Day window | 08:00 – 15:00, lesson finishing by 3:00 pm |
-| Latest start | 2:00 pm (60 min) · 1:30 pm (90 min) |
+| Latest start | 2:00 pm for First Flight (60 min). The engine is length-generic, so a historical 90-minute booking being rescheduled from `/admin` gets 1:30 pm. |
 | Slot increment | 30 minutes |
 | Buffer between lessons | 30 minutes (not required before the first of the day) |
 | Minimum notice | 7 days |
@@ -200,8 +205,8 @@ the layout doesn't change when real photography arrives. Drop files into `public
 | --- | --- | --- |
 | `hero` | Homepage hero | Wide Sydney open space, drone in flight or being launched, natural light |
 | `session-first-flight` | First Flight card and detail | Beginner with controller, calm and unposed |
-| `session-fly-with-confidence` | Fly With Confidence card and detail | Confident flying in an open reserve |
-| `session-photo-video` | Photo & Video card and detail | Framing a shot, screen visible, real composition |
+| `session-fly-with-confidence` | Dormant — retired session, not rendered | — |
+| `session-photo-video` | Dormant — retired session, not rendered | — |
 | `location-south` | Locations — south | Open grass and sky near Taren Point |
 | `location-north` | Locations — north | Open reserve near North Ryde |
 | `about-tom` | About page and homepage preview | Tom, outdoors, natural, holding or beside a drone |
@@ -228,8 +233,14 @@ is turned on.
 
 These are deliberate and should be preserved:
 
-- Prices, names and durations live only in `src/content/sessions.ts`. Session lengths are fixed —
-  never imply a session can be extended.
+- Prices, names and durations live only in `shared/booking/catalog.ts`, displayed through
+  `src/content/sessions.ts`. Session lengths are fixed — never imply a session can be extended.
+- `BOOKABLE_SESSION_CATALOG` (today: First Flight only) is what the public can buy, and
+  `findBookableSession()` is what public availability and checkout validate against. The retired
+  Fly With Confidence (90 min) and Photo & Video (90 min) entries remain in `SESSION_CATALOG` **only**
+  so historical booking rows keep resolving in `/admin` — detail, cancellation, refund and a
+  duration-correct reschedule. They have no public copy, CTA or route, and `BookingCta`,
+  `bookingPath()` and blog CTAs only accept a `BookableSessionId`.
 - `src/content/testimonials.ts` is empty and the testimonials section does not render. Never add a
   fabricated name, quote or rating.
 - No CASA approval, licence, certification, insurance status, venue permission or government

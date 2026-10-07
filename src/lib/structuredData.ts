@@ -1,3 +1,4 @@
+import { formatPriceRange } from '@shared/booking/format'
 import { siteConfig } from '@/config/site'
 import { sessions } from '@/content/sessions'
 import { faqs } from '@/content/faqs'
@@ -20,7 +21,7 @@ export const localBusinessSchema = (): Record<string, unknown> => ({
   description: siteConfig.shortDescription,
   url: absoluteUrl('/'),
   image: `${siteConfig.siteUrl.replace(/\/+$/, '')}/social-card.svg`,
-  priceRange: `$${Math.min(...sessions.map((s) => s.price))}–$${Math.max(...sessions.map((s) => s.price))}`,
+  priceRange: formatPriceRange(sessions.map((s) => s.price)),
   currenciesAccepted: siteConfig.currency,
   areaServed: {
     '@type': 'City',
@@ -43,7 +44,7 @@ export const localBusinessSchema = (): Record<string, unknown> => ({
     itemOffered: {
       '@type': 'Service',
       name: `${session.name} — private drone training`,
-      serviceType: 'Private drone training session',
+      serviceType: 'Private beginner drone lesson',
       description: session.summary,
     },
   })),
@@ -61,13 +62,13 @@ export const websiteSchema = (): Record<string, unknown> => ({
 export const serviceSchema = (): Record<string, unknown> => ({
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: 'Private one-on-one drone training in Sydney',
+  name: 'Private one-on-one beginner drone lessons in Sydney',
   serviceType: 'Drone training',
   provider: { '@id': BUSINESS_ID },
   areaServed: { '@type': 'City', name: 'Sydney' },
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Drone Confidence sessions',
+    name: 'Drone Confidence beginner lesson',
     itemListElement: sessions.map((session) => ({
       '@type': 'Offer',
       name: session.name,

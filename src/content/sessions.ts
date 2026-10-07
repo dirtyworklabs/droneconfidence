@@ -1,8 +1,10 @@
-import { SESSION_CATALOG } from '@shared/booking/catalog'
-import type { Session, SessionId } from '@/types'
+import { BOOKABLE_SESSION_CATALOG, DEFAULT_BOOKABLE_SESSION_ID } from '@shared/booking/catalog'
+import type { BookableSessionId, Session } from '@/types'
 
 /**
- * The marketing copy for the three sessions.
+ * The marketing copy for the sessions the public can book — today, First Flight
+ * only. Retired sessions remain in the catalogue for historical bookings, but
+ * have no public copy here, so no page can render or link to one.
  *
  * The bookable facts — id, name, price and duration — are *not* here. They live
  * in `shared/booking/catalog.ts`, which the Netlify Functions also import, so
@@ -15,9 +17,9 @@ import type { Session, SessionId } from '@/types'
  */
 type SessionCopy = Omit<Session, 'id' | 'name' | 'price' | 'durationMinutes'>
 
-const sessionCopy: Record<SessionId, SessionCopy> = {
+const sessionCopy: Record<BookableSessionId, SessionCopy> = {
   'first-flight': {
-    label: 'SESSION 1',
+    label: 'BEGINNER SESSION',
     tagline: 'First Flight',
     summary:
       'Perfect if you’ve recently bought a drone, have never flown before, or don’t quite feel confident taking it out by yourself.',
@@ -45,76 +47,10 @@ const sessionCopy: Record<SessionId, SessionCopy> = {
     ctaLabel: 'Book First Flight',
     imageSlot: 'session-first-flight',
   },
-  'fly-with-confidence': {
-    label: 'SESSION 2',
-    tagline: 'Fly With Confidence',
-    summary:
-      'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
-    intro: [
-      'You can already get your drone in the air, but there are still situations where you hesitate, lose orientation or aren’t quite sure what the aircraft is going to do.',
-      'This session builds control, awareness and confidence through practical flying. Rather than following a rigid syllabus, we’ll identify the areas you want to improve and work directly on them.',
-    ],
-    covers: [
-      'Smooth, controlled flying',
-      'Better orientation',
-      'Flying towards and away from yourself',
-      'Coordinated turns',
-      'Circles and repeatable flight paths',
-      'More precise take-offs and landings',
-      'Height and distance judgement',
-      'Obstacle awareness',
-      'Wind awareness',
-      'Battery planning',
-      'Return-to-Home behaviour and settings',
-      'Intelligent flight features',
-      'Building a reliable pre-flight routine',
-      'What to do when something doesn’t look right',
-    ],
-    bestFor:
-      'Beginner and developing pilots who want to become more capable and relaxed in the air.',
-    bestForShort: 'Developing pilots',
-    ctaLabel: 'Book Fly With Confidence',
-    imageSlot: 'session-fly-with-confidence',
-  },
-  'photo-video': {
-    label: 'SESSION 3',
-    tagline: 'Photo & Video',
-    summary:
-      'Once you’re comfortable controlling the aircraft, the next challenge is making the footage actually look good.',
-    intro: [
-      'Once you’re comfortable controlling the aircraft, the next challenge is making the footage actually look good.',
-      'This session combines practical drone flying with professional photography and image-making experience.',
-      'We’ll work on both your camera settings and the way you move the aircraft.',
-    ],
-    covers: [
-      'Camera setup',
-      'Exposure',
-      'ISO and shutter speed',
-      'White balance',
-      'Photo settings',
-      'Resolution and frame rates',
-      'ND filters where appropriate',
-      'Gimbal settings and movement',
-      'Smooth cinematic flying',
-      'Push-ins and pull-outs',
-      'Reveal shots',
-      'Orbits',
-      'Parallel and tracking movements',
-      'Creating foreground and depth',
-      'Planning a shot before take-off',
-      'Intelligent flight modes where appropriate',
-      'Reviewing your footage and identifying improvements',
-    ],
-    bestFor:
-      'Drone owners, photographers, content creators and small businesses wanting better aerial imagery.',
-    bestForShort: 'Aerial photo/video',
-    ctaLabel: 'Book Photo & Video',
-    imageSlot: 'session-photo-video',
-  },
 }
 
-/** Catalogue facts plus marketing copy, in catalogue order. */
-export const sessions: Session[] = SESSION_CATALOG.map((entry) => ({
+/** Bookable catalogue facts plus marketing copy, in catalogue order. */
+export const sessions: Session[] = BOOKABLE_SESSION_CATALOG.map((entry) => ({
   id: entry.id,
   name: entry.name,
   price: entry.priceDollars,
@@ -122,7 +58,7 @@ export const sessions: Session[] = SESSION_CATALOG.map((entry) => ({
   ...sessionCopy[entry.id],
 }))
 
-export const sessionById = (id: SessionId): Session => {
+export const sessionById = (id: BookableSessionId): Session => {
   const match = sessions.find((session) => session.id === id)
   if (!match) throw new Error(`Unknown session: ${id}`)
   return match
@@ -132,11 +68,5 @@ export const formatPrice = (price: number): string => `$${price}`
 
 export const formatDuration = (minutes: number): string => `${minutes} minutes`
 
-/** Lowest published price, used in hero and meta copy. */
-export const lowestSessionPrice = Math.min(...sessions.map((session) => session.price))
-
-/** Options offered by the enquiry form, in the order the spec defines. */
-export const preferredSessionOptions = [
-  ...sessions.map((session) => session.name),
-  'Not sure yet',
-]
+/** The one lesson currently sold. `/book` carries it without asking. */
+export const activeSession: Session = sessionById(DEFAULT_BOOKABLE_SESSION_ID)
