@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { locations } from '@/content/locations'
-import { sessions } from '@/content/sessions'
+import { isBookableSessionId } from '@shared/booking/catalog'
+import { activeSession } from '@/content/sessions'
 import { BOOKING_PARAM } from '@/lib/routes'
 import { track } from '@/lib/analytics'
-import type { LocationId, Session, SessionId, TrainingLocation } from '@/types'
+import type { LocationId, Session, TrainingLocation } from '@/types'
 
 /**
  * Public booking state for /book.
@@ -16,16 +17,19 @@ import type { LocationId, Session, SessionId, TrainingLocation } from '@/types'
  *
  * Selections are pushed onto the history stack so back and forward step through
  * the choices, and deep links from marketing CTAs arrive preselected.
+ *
+ * There is one public lesson, so the session is never asked for: it is always
+ * First Flight. `?session=first-flight` from an older link is accepted as-is. A
+ * retired or unknown `?session=` is removed and never re-enables that product —
+ * and any `?slot=` travelling with it goes too, because it may have been chosen
+ * against a different lesson length.
  */
-
-const isSessionId = (value: string | null): value is SessionId =>
-  value !== null && sessions.some((session) => session.id === value)
 
 const isLocationId = (value: string | null): value is LocationId =>
   value !== null && locations.some((location) => location.id === value)
 
-/** 1 Session · 2 Location · 3 Date & time · 4 Details & payment. */
-export const BOOKING_STEPS = ['Session', 'Location', 'Date & time', 'Details & payment'] as const
+/** 1 Training area · 2 Date & time · 3 Details & payment. */
+export const BOOKING_STEPS = ['Training area', 'Date & time', 'Details & payment'] as const
 
 /**
  * A chosen slot is the ISO start instant returned by the availability endpoint.
@@ -40,13 +44,13 @@ const isSlotIso = (value: string | null): boolean => {
 }
 
 export interface BookingSelectionState {
-  session: Session | null
+  /** Always the active lesson. Not a customer choice. */
+  session: Session
   location: TrainingLocation | null
   /** ISO start instant of the chosen slot, or null. */
   slot: string | null
   /** The furthest step the current selection has unlocked. */
   currentStep: number
-  selectSession: (id: SessionId) => void
   selectLocation: (id: LocationId) => void
   selectSlot: (startsAtIso: string) => void
   clearSlot: () => void
@@ -59,19 +63,19 @@ export const useBookingSelection = (): BookingSelectionState => {
   const rawLocation = params.get(BOOKING_PARAM.location)
   const rawSlot = params.get(BOOKING_PARAM.slot)
 
-  const sessionId = isSessionId(rawSession) ? rawSession : null
   const locationId = isLocationId(rawLocation) ? rawLocation : null
   const slot = isSlotIso(rawSlot) ? rawSlot : null
 
   // An unrecognised value is ignored, then tidied out of the URL so a shared
   // link doesn't keep propagating it.
   useEffect(() => {
-    const sessionInvalid = rawSession !== null && sessionId === null
+    const sessionInvalid = rawSession !== null && !isBookableSessionId(rawSession)
     const locationInvalid = rawLocation !== null && locationId === null
-    // A slot without both a session and an area can't be interpreted, so it goes
+    // A slot without an area can't be interpreted, and one that arrived with an
+    // obsolete session may have been computed for another duration, so it goes
     // too — the duration and the training area are what make a time meaningful.
     const slotInvalid =
-      rawSlot !== null && (slot === null || sessionId === null || locationId === null)
+      rawSlot !== null && (slot === null || sessionInvalid || locationId === null)
     if (!sessionInvalid && !locationInvalid && !slotInvalid) return
 
     const next = new URLSearchParams(params)
@@ -79,37 +83,17 @@ export const useBookingSelection = (): BookingSelectionState => {
     if (locationInvalid) next.delete(BOOKING_PARAM.location)
     if (slotInvalid) next.delete(BOOKING_PARAM.slot)
     setParams(next, { replace: true, preventScrollReset: true })
-  }, [params, setParams, rawSession, rawLocation, rawSlot, sessionId, locationId, slot])
+  }, [params, setParams, rawSession, rawLocation, rawSlot, locationId, slot])
 
-  const session = useMemo(
-    () => sessions.find((item) => item.id === sessionId) ?? null,
-    [sessionId],
-  )
+  const session = activeSession
   const location = useMemo(
     () => locations.find((item) => item.id === locationId) ?? null,
     [locationId],
   )
 
-  // Changing the session changes the duration, and changing the area changes
-  // which days are open, so an already-chosen time can no longer be assumed
-  // valid. It is dropped rather than silently carried forward.
-  const selectSession = useCallback(
-    (id: SessionId) => {
-      if (id === sessionId) return
-      track('booking_session_selected', { session: id })
-      setParams(
-        (current) => {
-          const next = new URLSearchParams(current)
-          next.set(BOOKING_PARAM.session, id)
-          next.delete(BOOKING_PARAM.slot)
-          return next
-        },
-        { preventScrollReset: true },
-      )
-    },
-    [sessionId, setParams],
-  )
-
+  // Changing the area changes which days are open, so an already-chosen time
+  // can no longer be assumed valid. It is dropped rather than silently carried
+  // forward.
   const selectLocation = useCallback(
     (id: LocationId) => {
       if (id === locationId) return
@@ -130,7 +114,7 @@ export const useBookingSelection = (): BookingSelectionState => {
   const selectSlot = useCallback(
     (startsAtIso: string) => {
       if (startsAtIso === slot) return
-      track('booking_slot_selected', { session: sessionId ?? '', location: locationId ?? '' })
+      track('booking_slot_selected', { session: session.id, location: locationId ?? '' })
       setParams(
         (current) => {
           const next = new URLSearchParams(current)
@@ -140,7 +124,7 @@ export const useBookingSelection = (): BookingSelectionState => {
         { preventScrollReset: true },
       )
     },
-    [slot, sessionId, locationId, setParams],
+    [slot, session.id, locationId, setParams],
   )
 
   const clearSlot = useCallback(() => {
@@ -154,7 +138,7 @@ export const useBookingSelection = (): BookingSelectionState => {
     )
   }, [setParams])
 
-  const currentStep = session === null ? 1 : location === null ? 2 : slot === null ? 3 : 4
+  const currentStep = location === null ? 1 : slot === null ? 2 : 3
 
-  return { session, location, slot, currentStep, selectSession, selectLocation, selectSlot, clearSlot }
+  return { session, location, slot, currentStep, selectLocation, selectSlot, clearSlot }
 }

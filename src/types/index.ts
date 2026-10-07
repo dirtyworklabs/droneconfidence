@@ -1,14 +1,15 @@
-import type { LocationId, SessionId } from '@shared/booking/catalog'
+import type { BookableSessionId, LocationId } from '@shared/booking/catalog'
 
 /**
  * Session and training-area ids come from the booking catalogue, which the
  * Netlify Functions also import. Re-exported here so existing `@/types` imports
  * keep working and there is still only one definition.
  */
-export type { LocationId, SessionId } from '@shared/booking/catalog'
+export type { BookableSessionId, LocationId, SessionId } from '@shared/booking/catalog'
 
+/** A publicly bookable session with its marketing copy. Retired sessions have none. */
 export interface Session {
-  id: SessionId
+  id: BookableSessionId
   /** Display name, e.g. "First Flight". */
   name: string
   /** Uppercase eyebrow label used above headings. */
@@ -85,6 +86,6 @@ export interface Testimonial {
  * location content, mirrored in the URL, and never containing personal data.
  */
 export interface BookingSelection {
-  sessionId: SessionId | null
+  sessionId: BookableSessionId | null
   locationId: LocationId | null
 }

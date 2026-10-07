@@ -11,14 +11,14 @@ interface BookingProgressProps {
 /**
  * Understated progress indicator for the booking journey.
  *
- * Four hairline rules with numbered labels on tablet and up; on phones the rules
+ * Three hairline rules with numbered labels on tablet and up; on phones the rules
  * stay and the labels collapse to a single line, which keeps the whole thing to
  * two rows of text. Screen readers always get the full list, so nothing is
  * communicated by colour or width alone.
  */
 export const BookingProgress = ({ currentStep, className }: BookingProgressProps) => (
   <div className={cn('flex flex-col gap-3', className)}>
-    <ol aria-label="Booking steps" className="grid grid-cols-4 gap-x-2 sm:gap-x-6">
+    <ol aria-label="Booking steps" className="grid grid-cols-3 gap-x-2 sm:gap-x-6">
       {BOOKING_STEPS.map((label, index) => {
         const number = index + 1
         const isDone = number < currentStep

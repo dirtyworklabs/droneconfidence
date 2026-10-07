@@ -19,12 +19,12 @@ export const Introduction = () => (
             more experience.
           </p>
           <p className="font-display text-[1.2rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
-            Drone Confidence provides private sessions built around you, your drone and what you actually want to
-            learn.
+            Drone Confidence provides a private beginner lesson built around you, your drone and what you
+            actually want to learn.
           </p>
           <p>
-            Whether your drone is still in the box or you&rsquo;ve been flying for a while, we start
-            at your level.
+            Whether your drone is still in the box or you&rsquo;ve had a few nervous flights, we
+            start at your level.
           </p>
         </Reveal>
       </div>

@@ -1,7 +1,8 @@
 /**
  * Grouping real availability into browsable months.
  *
- * Step 3 shows one month at a time, and this module decides what that means.
+ * The date & time step shows one month at a time, and this module decides
+ * what that means.
  * It is deliberately pure and deliberately ignorant: the only input is the day
  * list the availability endpoint returned, and the only months that exist are
  * the ones present in it. There is no calendar arithmetic, no booking horizon,

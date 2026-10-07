@@ -10,7 +10,7 @@
  */
 
 import type { Context } from '@netlify/functions'
-import { findLocation, findSession } from '../../shared/booking/catalog'
+import { findBookableSession, findLocation } from '../../shared/booking/catalog'
 import type { AvailabilityResponse } from '../../shared/booking/types'
 import { lookupAvailability } from '../lib/availabilityService'
 import { jsonResponse, logFailure, methodNotAllowed } from '../lib/http'
@@ -20,7 +20,9 @@ export default async (request: Request, _context: Context): Promise<Response> =>
   if (request.method !== 'GET') return methodNotAllowed('GET')
 
   const url = new URL(request.url)
-  const session = findSession(url.searchParams.get('session'))
+  // Public: only a currently bookable session. Retired ids are refused here, while
+  // the admin reschedule search (admin-availability) still resolves them.
+  const session = findBookableSession(url.searchParams.get('session'))
   const location = findLocation(url.searchParams.get('location'))
 
   if (!session || !location) {

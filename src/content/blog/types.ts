@@ -1,4 +1,4 @@
-import type { SessionId } from '@/types'
+import type { BookableSessionId } from '@/types'
 
 export type BlogPostStatus = 'published' | 'draft'
 
@@ -23,7 +23,8 @@ export interface BlogSection {
 }
 
 export interface BlogCta {
-  sessionId?: SessionId
+  /** Bookable sessions only — a post can never link to a retired lesson. */
+  sessionId?: BookableSessionId
   title: string
   body: string
   label: string

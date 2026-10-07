@@ -88,8 +88,8 @@ export const SessionApproach = () => (
             </h2>
 
             <p className="measure text-[1.04rem] leading-relaxed text-ink-soft">
-              Whichever session you choose, we start with your drone, your
-              experience and what you want to feel more confident doing.
+              We start with your drone, your experience and what you want to
+              feel more confident doing.
             </p>
 
             <div className="mt-3 hidden max-w-[24rem] border-l border-eucalyptus/20 pl-4 sm:block">

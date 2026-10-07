@@ -21,7 +21,7 @@ finished.
       row hides itself rather than showing a placeholder.
 - [ ] Instagram URL added if one exists (`instagramUrl`), otherwise it stays hidden.
 - [ ] About/portrait image added if available (`src/content/images.ts` → `aboutPortrait`).
-- [ ] Real photography added where available — hero, three sessions, two locations. Designed SVG
+- [ ] Real photography added where available — hero, First Flight, two locations. Designed SVG
       fallbacks are used until then, at the same geometry, so no layout changes are needed.
 - [ ] No fake testimonials. `src/content/testimonials.ts` is empty and the section does not render.
       Only add genuine quotes from real customers.
@@ -131,27 +131,34 @@ shared database keeps `booking_settings.booking_enabled = false`. See
       API — dates are blocked deliberately, by hand.
 - [ ] A block reason is internal: confirm it never appears in the response from
       `/.netlify/functions/booking-availability`.
-- [ ] `/book` step 3 shows real times only: 08:00 first, last start 2:00 pm for a 60-minute session
-      and 1:30 pm for a 90-minute one.
+- [ ] `/book` date & time step (step 2) shows real times only: 08:00 first, last start 2:00 pm for
+      First Flight (60 minutes).
 - [ ] Nothing is offered inside the 7-day notice window.
-- [ ] With the master switch **off**, `/book` still shows all four steps and reports that online
+- [ ] With the master switch **off**, `/book` still shows all three steps and reports that online
       booking is unavailable at the date and time step. Nothing can be paid for.
 
 ### Public booking flow (deployed)
 
-- [ ] `/book` loads with the four-step progress indicator and no launch or waitlist language.
-- [ ] Selecting a session reveals the training area step, then real availability, then details.
-- [ ] The summary shows the correct session, duration, price, training area and chosen time.
-- [ ] Deep links preselect correctly: `?session=first-flight`, `?session=fly-with-confidence`,
-      `?session=photo-video`, `?location=south-sydney`, `?location=north-sydney`.
+- [ ] `/book` loads with the three-step progress indicator (Training area · Date & time · Details &
+      payment), no session step, and no launch or waitlist language.
+- [ ] Selecting a training area reveals real availability, then details.
+- [ ] The summary shows First Flight, 60 minutes, $180, the training area and the chosen time.
+- [ ] Deep links work: plain `/book`, `?session=first-flight`, `?location=south-sydney`,
+      `?location=north-sydney`.
+- [ ] A retired session link (`?session=fly-with-confidence` or `?session=photo-video`, with or
+      without `&slot=`) drops the session and the slot, keeps a valid location, and books First
+      Flight. The retired product is never shown.
 - [ ] An invalid value (e.g. `?session=nope`) is ignored and removed from the URL.
+- [ ] A handcrafted checkout or availability request for a retired session is refused.
+- [ ] A historical 90-minute booking (if any exists) still opens, cancels, refunds and reschedules
+      in `/admin`, and its reschedule picker offers 90-minute times.
 - [ ] Browser back and forward step through selections.
 - [ ] No personal detail ever appears in the URL.
 - [ ] Book a real time in one training area, then confirm the **other** area disappears for that
       date — one location per Sydney day.
-- [ ] Keyboard pass through all four steps: focus is visible and selection works without a mouse.
+- [ ] Keyboard pass through all three steps: focus is visible and selection works without a mouse.
 - [ ] Desktop summary stays clear of the header and footer while sticky.
-- [ ] Every booking CTA re-tested — homepage, session cards, sessions page, locations, final CTA,
+- [ ] Every booking CTA re-tested — homepage lesson card, beginner lesson page, locations, final CTA,
       header, mobile nav. All of them enter through `/book`.
 
 ## Final real-world test
@@ -159,7 +166,7 @@ shared database keeps `booking_settings.booking_enabled = false`. See
 Complete one entire booking in Stripe **test** mode:
 
 1. Homepage
-2. → `/book` with a session preselected
+2. → `/book` (First Flight is implicit)
 3. → training area
 4. → a real available date and time
 5. → details, review, policy acknowledgement
@@ -171,7 +178,7 @@ Complete one entire booking in Stripe **test** mode:
 
 Then, in a second window, prove the concurrency rules:
 
-- [ ] Two browsers reach step 4 on the same time; the second one to pay is told the time was taken
+- [ ] Two browsers reach the details step (step 3) on the same time; the second one to pay is told the time was taken
       and is not charged.
 - [ ] Two browsers try to hold different training areas on the same empty date; only one succeeds.
 

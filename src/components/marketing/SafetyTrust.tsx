@@ -391,7 +391,7 @@ export const SafetyTrust = () => (
                 </p>
 
                 <p className="mt-3 text-[0.91rem] leading-relaxed text-ink-muted">
-                  All sessions are conducted subject to applicable Australian
+                  Every lesson is conducted subject to applicable Australian
                   drone rules, airspace restrictions and local operating
                   requirements.
                 </p>

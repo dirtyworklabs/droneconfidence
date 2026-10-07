@@ -13,6 +13,8 @@ const today = `${nowSydney.getFullYear()}-${pad2(nowSydney.getMonth() + 1)}-${pa
 
 const posts = JSON.parse(await readFile(new URL('../src/content/blog/posts.json', import.meta.url), 'utf8'))
 const errors = []
+/** Mirrors BOOKABLE_SESSION_CATALOG in shared/booking/catalog.ts. */
+const bookableSessionIds = new Set(['first-flight'])
 const warnings = []
 const slugs = new Set()
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -65,6 +67,11 @@ if (!Array.isArray(posts)) {
     if (!Array.isArray(post.keyPoints) || post.keyPoints.length < 3) errors.push(`${post.slug}: needs at least three key points.`)
     if (!Array.isArray(post.relatedSlugs)) errors.push(`${post.slug}: relatedSlugs must be an array.`)
     if (!post.cta?.title || !post.cta?.body || !post.cta?.label) errors.push(`${post.slug}: CTA fields are incomplete.`)
+    // Only a publicly bookable session may be linked. Retired lessons stay in the
+    // booking catalogue for historical rows, never in a blog CTA.
+    if (post.cta?.sessionId !== undefined && !bookableSessionIds.has(post.cta.sessionId)) {
+      errors.push(`${post.slug}: CTA sessionId ${post.cta.sessionId} is not a bookable session.`)
+    }
     if (post.readingMinutes < 3 || post.readingMinutes > 7) errors.push(`${post.slug}: readingMinutes must stay between 3 and 7.`)
 
     const words = wordsIn(post)

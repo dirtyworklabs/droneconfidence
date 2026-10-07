@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
 import { ErrorSummary, Honeypot, SelectField, TextField, TextareaField } from '@/components/forms/Fields'
 import { SuccessPanel } from '@/components/forms/SuccessPanel'
-import { preferredSessionOptions } from '@/content/sessions'
+import { activeSession } from '@/content/sessions'
 import { createSubmissionGuard, submitNetlifyForm, type SubmitState } from '@/lib/netlifyForms'
 import {
   MAX,
@@ -19,14 +19,14 @@ const FORM_NAME = 'contact'
 export const CUSTOM_LOCATION_ENQUIRY = 'Custom location'
 
 export const enquiryTypes = [
-  'Which session should I choose?',
+  'Is First Flight right for me?',
   'Is my drone suitable?',
   CUSTOM_LOCATION_ENQUIRY,
   'Booking question',
   'Other',
 ]
 
-type FieldName = 'name' | 'email' | 'mobile' | 'enquiry_type' | 'custom_location' | 'preferred_session' | 'message'
+type FieldName = 'name' | 'email' | 'mobile' | 'enquiry_type' | 'custom_location' | 'message'
 
 const initialValues: Record<FieldName, string> = {
   name: '',
@@ -34,7 +34,6 @@ const initialValues: Record<FieldName, string> = {
   mobile: '',
   enquiry_type: '',
   custom_location: '',
-  preferred_session: '',
   message: '',
 }
 
@@ -44,7 +43,6 @@ const FIELD_ORDER: FieldName[] = [
   'mobile',
   'enquiry_type',
   'custom_location',
-  'preferred_session',
   'message',
 ]
 
@@ -103,7 +101,10 @@ export const ContactForm = ({ sourcePage, defaultEnquiryType }: ContactFormProps
       mobile: values.mobile.trim(),
       enquiry_type: values.enquiry_type,
       custom_location: isCustomLocation ? values.custom_location.trim() : '',
-      preferred_session: isCustomLocation ? values.preferred_session : '',
+      // There is one public lesson, so this is no longer asked. It is still sent
+      // for a custom-location enquiry so the registered Netlify form field and
+      // existing submission records keep the same shape.
+      preferred_session: isCustomLocation ? activeSession.name : '',
       message: values.message.trim(),
       source_page: sourcePage,
     }
@@ -212,8 +213,8 @@ export const ContactForm = ({ sourcePage, defaultEnquiryType }: ContactFormProps
       </div>
 
       {isCustomLocation ? (
-        <div className="grid gap-5 rounded-[var(--radius-control)] border border-sand/70 bg-sand-soft/60 p-5 sm:grid-cols-2">
-          <p className="text-[0.92rem] leading-relaxed text-ink-soft sm:col-span-2">
+        <div className="grid gap-5 rounded-[var(--radius-control)] border border-sand/70 bg-sand-soft/60 p-5">
+          <p className="text-[0.92rem] leading-relaxed text-ink-soft">
             Other Sydney locations may be possible by arrangement. Additional travel, venue or permit
             costs may apply and will always be confirmed before you book.
           </p>
@@ -226,15 +227,6 @@ export const ContactForm = ({ sourcePage, defaultEnquiryType }: ContactFormProps
             maxLength={MAX.shortText}
             optional
             error={errors.custom_location}
-          />
-          <SelectField
-            id="contact-session"
-            name="preferred_session"
-            label="Preferred session"
-            value={values.preferred_session}
-            onChange={set('preferred_session')}
-            options={preferredSessionOptions}
-            placeholder="Optional — if you know"
           />
         </div>
       ) : null}

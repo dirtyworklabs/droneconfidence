@@ -57,8 +57,8 @@ const About = () => {
 
                 <p>
                   Alongside drones, Tom works professionally as a creative technologist and
-                  photographer. That experience with cameras, composition and image-making
-                  also shapes Drone Confidence&rsquo;s Photo &amp; Video sessions.
+                  photographer, bringing years of practical camera, composition and field
+                  experience to the way Drone Confidence teaches.
                 </p>
 
                 <p>

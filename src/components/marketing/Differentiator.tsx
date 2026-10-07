@@ -19,13 +19,13 @@ const examples = [
   },
   {
     number: '02',
-    title: 'Already flying?',
-    text: 'Improve orientation, smoother control, situational awareness and decision-making.',
+    title: 'Nervous about losing it?',
+    text: 'Understand Return-to-Home, battery margins and orientation, so you know what the aircraft will do and what to do yourself.',
   },
   {
     number: '03',
-    title: 'Want better photos and video?',
-    text: 'Focus on camera settings, framing, movement and practical shot techniques.',
+    title: 'Not sure where you can fly?',
+    text: 'Get practical location and airspace awareness, and the Australian drone rules that matter for everyday flying.',
   },
 ]
 
@@ -179,7 +179,7 @@ export const Differentiator = () => (
               size="lg"
               withArrow
             >
-              Explore the Sessions
+              Explore First Flight
             </LinkButton>
           </div>
         </Reveal>
@@ -225,7 +225,7 @@ export const Differentiator = () => (
             withArrow
             fullWidth
           >
-            Explore the Sessions
+            Explore First Flight
           </LinkButton>
         </Reveal>
       </div>

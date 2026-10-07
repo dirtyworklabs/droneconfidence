@@ -59,7 +59,7 @@ export const optionalLength = (value: string, label: string, max: number): strin
 export const firstErrorKey = <T extends string>(errors: FieldErrors<T>, order: T[]): T | undefined =>
   order.find((key) => Boolean(errors[key]))
 
-/** The fields step 4 collects, in the order they appear and are announced. */
+/** The fields the details step collects, in the order they appear and are announced. */
 export type BookingDetailField =
   | 'firstName'
   | 'lastName'

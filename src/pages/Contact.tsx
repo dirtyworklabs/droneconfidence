@@ -12,7 +12,9 @@ import { useSeo } from '@/lib/seo'
 /** `?reason=` presets, so links elsewhere on the site arrive with the right intent. */
 const reasonToEnquiryType: Record<string, string> = {
   'custom-location': CUSTOM_LOCATION_ENQUIRY,
-  'which-session': 'Which session should I choose?',
+  lesson: 'Is First Flight right for me?',
+  // Older links, from before First Flight was the only lesson.
+  'which-session': 'Is First Flight right for me?',
   drone: 'Is my drone suitable?',
   booking: 'Booking question',
 }
@@ -21,7 +23,7 @@ const Contact = () => {
   useSeo({
     title: 'Contact Drone Confidence | Drone Lessons Sydney',
     description:
-      'Ask a question about private drone lessons in Sydney — which session suits you, whether your drone is suitable, or a custom training location.',
+      'Ask a question about private drone lessons in Sydney — whether First Flight is right for you, whether your drone is suitable, or a custom training location.',
     path: '/contact',
   })
 
@@ -108,7 +110,7 @@ const Contact = () => {
               </div>
 
               <p className="text-[0.9rem] leading-relaxed text-ink-muted">
-                Sending a message doesn&rsquo;t book a session or take a payment. We&rsquo;ll always
+                Sending a message doesn&rsquo;t book a lesson or take a payment. We&rsquo;ll always
                 confirm details with you first.
               </p>
             </Reveal>

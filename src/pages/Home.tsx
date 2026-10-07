@@ -7,14 +7,14 @@ import { AboutTrust } from '@/components/marketing/AboutTrust'
 import { Testimonials } from '@/components/marketing/Testimonials'
 import { FaqPreview } from '@/components/marketing/FaqPreview'
 import { FinalCta } from '@/components/marketing/FinalCta'
-import { formatPrice, lowestSessionPrice } from '@/content/sessions'
 import { useSeo } from '@/lib/seo'
 import { localBusinessSchema, serviceSchema, websiteSchema } from '@/lib/structuredData'
 
 const Home = () => {
   useSeo({
     title: 'Drone Lessons Sydney | Private 1-on-1 Training',
-    description: `Private one-on-one drone lessons in Sydney. Learn to fly confidently or capture better aerial photo/video. Sessions from ${formatPrice(lowestSessionPrice)}.`,
+    description:
+      'Private one-on-one beginner drone lessons in Sydney. Learn to fly your own drone confidently with practical help on setup, controls, take-off, landing, Return-to-Home, safety and everyday drone rules.',
     path: '/',
     socialTitle: 'Drone Confidence | Private Drone Training Sydney',
     socialDescription:
@@ -24,7 +24,7 @@ const Home = () => {
 
   /**
    * Deliberate order: what this is, how it works, why a full course is
-   * unnecessary, which session suits you, then trust and the booking CTA.
+   * unnecessary, the beginner lesson itself, then trust and the booking CTA.
    * Training areas live on /locations and the experience strip on /about.
    */
   return (

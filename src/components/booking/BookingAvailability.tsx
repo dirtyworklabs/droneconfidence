@@ -6,10 +6,10 @@ import { BookingUnavailable } from '@/components/booking/BookingUnavailable'
 import { SlotPicker } from '@/components/booking/SlotPicker'
 import { fetchAvailability } from '@/lib/bookingService'
 import { track } from '@/lib/analytics'
-import type { LocationId, SessionId } from '@/types'
+import type { BookableSessionId, LocationId } from '@/types'
 
 interface BookingAvailabilityProps {
-  sessionId: SessionId
+  sessionId: BookableSessionId
   locationId: LocationId
   selected: string | null
   onSelect: (startsAtIso: string) => void
@@ -26,7 +26,7 @@ type State =
   | { kind: 'unavailable' }
 
 /**
- * Step 3 — real availability.
+ * Step 2 — real availability.
  *
  * The only thing this component knows is how to ask the availability endpoint and
  * render what comes back. There is no local calendar, no sample data and no

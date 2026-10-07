@@ -1,6 +1,6 @@
 /** Shared route helpers so query-driven entry points stay consistent. */
 
-import type { LocationId, SessionId } from '@/types'
+import type { BookableSessionId, LocationId } from '@/types'
 
 export const ROUTES = {
   home: '/',
@@ -37,7 +37,8 @@ export const BOOKING_PARAM = {
 } as const
 
 export interface BookingLinkOptions {
-  session?: SessionId
+  /** Bookable sessions only. A retired session id is not a valid public link. */
+  session?: BookableSessionId
   location?: LocationId
 }
 
@@ -60,8 +61,8 @@ export const bookingPath = ({ session, location }: BookingLinkOptions = {}): str
 /** Contact page pre-set to a custom-location request. */
 export const CUSTOM_LOCATION_QUERY = '/contact?reason=custom-location'
 
-/** Contact page pre-set to a "which session" question. */
-export const ASK_A_QUESTION_QUERY = '/contact?reason=which-session'
+/** Contact page pre-set to an "is First Flight right for me?" question. */
+export const ASK_A_QUESTION_QUERY = '/contact?reason=lesson'
 
 /** Contact page pre-set to a drone suitability question. */
 export const DRONE_QUESTION_QUERY = '/contact?reason=drone'

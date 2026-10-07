@@ -37,7 +37,7 @@ src/
     ui/           Button, Container, Section, Eyebrow, SectionHeading, Reveal, Accordion
     layout/       Header, Footer, MobileNav, Layout, Wordmark, navigation
     booking/      BookingCta, useBookingSelection, BookingProgress, BookingStep, BookingChoice,
-                  SessionSelector, LocationSelector, SlotPicker, BookingAvailability,
+                  LocationSelector, SlotPicker, BookingAvailability,
                   BookingDetailsForm, BookingSummary, BookingUnavailable
     admin/        AdminShell, useAdminSession, AdminBookingsPanel, AdminAvailabilityPanel,
                   AdminSettingsPanel
@@ -76,6 +76,15 @@ location })` in `src/lib/routes.ts` is the only place a booking URL is assembled
 `locationId` to preselect. Never hard-code a booking URL in a component, and never point a CTA
 off-site.
 
+**One public lesson; retired sessions are history, not products.** `SESSION_CATALOG` in
+`shared/booking/catalog.ts` keeps every session ever sold (First Flight, plus the retired Fly With
+Confidence and Photo & Video) so historical rows resolve in `/admin` — including a duration-correct
+reschedule search in `admin-availability`. `BOOKABLE_SESSION_CATALOG` holds only First Flight, and
+`findBookableSession()` is what `bookingInput` and `booking-availability` validate against, so a
+retired id is refused on every public path. `/book` carries First Flight implicitly (three steps:
+training area, date & time, details & payment); a retired `?session=` is dropped along with any
+`?slot=`. `BookingCta`, `bookingPath()` and blog CTAs accept only a `BookableSessionId`.
+
 **The server decides what things cost.** `shared/booking/catalog.ts` holds the id, name, price and
 duration of every session, and `netlify/lib/bookingInput.ts` resolves them from it by id. A payload
 containing `priceCents`, `durationMinutes` or `sessionName` is ignored, not trusted. The same applies
@@ -89,7 +98,7 @@ fabricate a slot, a calendar or a confirmation: when nothing is bookable the ste
 operational language — never "coming soon", "being prepared" or a waitlist.
 
 **The booking master switch defaults to off.** `booking_settings.booking_enabled` ships `false`. With
-it off, `/book` still renders all four steps and reports at step 3 that online booking is
+it off, `/book` still renders all three steps and reports at step 2 that online booking is
 unavailable. No marketing copy, FAQ, heading or step list may branch on it. The one exception is
 `netlify/lib/bookingAccess.ts`: `publicBookingAllowed(bookingEnabled)` is the single definition of
 "a customer may book now", and its local-only override requires `BOOKING_TEST_MODE=true` *and* an
@@ -179,7 +188,7 @@ from `bookings` and `booking_events`, never from analytics. Periods are Sydney v
 periodised honestly: a refund issued in the Stripe dashboard arrives as a cumulative charge total, so
 it is counted, not summed. Don't approximate it. No dashboard UI — the SQL Editor is the interface.
 
-**Step 3 browses months, and only real ones.** `shared/booking/months.ts` groups the availability
+**The date & time step browses months, and only real ones.** `shared/booking/months.ts` groups the availability
 response into months and answers every navigation question purely; `SlotPicker` renders one month at
 a time with an `auto-fill` grid, so the column count follows the content width and nothing scrolls
 sideways. Only dates the server returned are rendered — no greyed-out days, no month reachable
@@ -231,7 +240,7 @@ than the marketing site — compact, no hero, no motion for its own sake.
   `ANALYTICS_EVENTS`, the `analytics_events_name` check constraint and, if it belongs in a report,
   `reporting.period_snapshot`. A payload key that isn't in the whitelist is silently dropped, so
   invent one deliberately rather than hoping it lands.
-- Month grouping, navigation bounds and the step 3 view state live in `shared/booking/months.ts` as
+- Month grouping, navigation bounds and the date & time step view state live in `shared/booking/months.ts` as
   pure functions, because `tests/` cannot import from `src/`. Put anything worth testing there.
 - Never render customer input as raw HTML. There is no `dangerouslySetInnerHTML` in this codebase,
   and every customer value in an email goes through `escapeHtml`.
@@ -268,7 +277,7 @@ than the marketing site — compact, no hero, no motion for its own sake.
 - Never accept a client timestamp for an analytics event; `occurred_at` is stamped by the database.
 - Never fabricate a reporting figure. If the authoritative data can't answer a question exactly, name
   the metric for what it is (a cohort, a count) or document the limit in `docs/reporting.md`.
-- Never recompute a booking rule in the browser to build a calendar. Step 3 renders the days the
+- Never recompute a booking rule in the browser to build a calendar. The date & time step renders the days the
   availability endpoint returned, and nothing else.
 
 ## Verifying a change
@@ -283,9 +292,10 @@ npm run preview     # check routes, console, and a mobile viewport
 The contact form and the Netlify Functions can only be exercised on a deployed URL (or via
 `netlify dev` with the environment variables set).
 
-On `/book`, walk the routing cases — `/book`, `?session=` (three values), `?location=` (two values),
+On `/book`, walk the routing cases — `/book`, `?session=first-flight`, a retired `?session=` with a
+`&slot=` (both dropped), `?location=` (two values),
 `?slot=`, an invalid value that should be dropped, and a return with `?checkout=cancelled`. Check both
-booking-disabled and booking-enabled states at step 3. At step 3, page through the months at 320px,
+booking-disabled and booking-enabled states at the date & time step. There, page through the months at 320px,
 768px and 1440px: nothing may scroll sideways, no date may be hidden to fit, the arrows must disable
 at the first and last month with times, and the summary must keep showing the selected time while
 another month is on screen.

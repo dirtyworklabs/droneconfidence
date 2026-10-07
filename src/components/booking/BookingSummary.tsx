@@ -9,7 +9,7 @@ import type { Session, TrainingLocation } from '@/types'
 interface BookingSummaryProps {
   session: Session | null
   location: TrainingLocation | null
-  /** ISO start instant of the chosen slot, once step 3 is done. */
+  /** ISO start instant of the chosen slot, once the date & time step is done. */
   slot?: string | null
   timeZone?: string
 }

@@ -7,7 +7,7 @@ import { BookingCta } from '@/components/booking/BookingCta'
 import { ImageFrame } from '@/components/visuals/ImageFrame'
 import { TopoBackdrop } from '@/components/visuals/TopoBackdrop'
 import { calm, EASE_CALM } from '@/lib/motion'
-import { formatPrice, lowestSessionPrice } from '@/content/sessions'
+import { activeSession, formatPrice } from '@/content/sessions'
 
 /** Load sequence: heading, supporting text, CTAs, then the visual. */
 const sequence = (reduced: boolean, delay: number, distance = 16) =>
@@ -88,17 +88,17 @@ export const Hero = () => {
 
             <motion.div {...step(0.36)} className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-3">
-                <BookingCta size="lg" context="hero" withArrow>
-                  Book a Session
+                <BookingCta sessionId={activeSession.id} size="lg" context="hero" withArrow>
+                  {activeSession.ctaLabel}
                 </BookingCta>
                 <LinkButton to="/sessions" variant="secondary" size="lg">
-                  View Sessions
+                  View Beginner Lesson
                 </LinkButton>
               </div>
 
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[0.95rem] text-ink-muted">
                 <span className="font-display font-semibold text-ink">
-                  Sessions from {formatPrice(lowestSessionPrice)}
+                  {formatPrice(activeSession.price)} · {activeSession.durationMinutes} minutes · one-on-one
                 </span>
                 <span aria-hidden="true" className="hidden h-4 w-px bg-ink/12 sm:block" />
                 <span className="inline-flex items-center gap-1.5">
