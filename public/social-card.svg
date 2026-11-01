@@ -1,21 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Drone Confidence — private one-on-one drone training in Sydney">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Drone Confidence — fly your drone with confidence. Private one-on-one drone training in Sydney.">
+  <!-- Source for social-card.png. Render from public/: rsvg-convert -w 1200 -h 630 social-card.svg -o social-card.png -->
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#163F37"/>
-      <stop offset="1" stop-color="#0E2A25"/>
+    <linearGradient id="ground" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11442D"/>
+      <stop offset="1" stop-color="#0B2E1F"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="url(#sky)"/>
-  <g fill="none" stroke="#337667" stroke-width="1.5" opacity="0.5">
-    <path d="M-40 520c180-40 300-150 520-150s360 90 760 40"/>
-    <path d="M-40 570c200-40 320-140 540-140s340 80 740 30"/>
-    <path d="M-40 470c160-40 280-160 500-160s380 100 780 50"/>
-    <path d="M-40 420c140-40 260-170 480-170s400 110 800 60"/>
+  <rect width="1200" height="630" fill="url(#ground)"/>
+  <g fill="none" stroke="#8CC7B0" stroke-width="1.5" opacity="0.18">
+    <path d="M560 640c120-60 240-170 400-170s200 40 280 20"/>
+    <path d="M620 640c110-50 220-140 360-140s180 34 260 16"/>
+    <path d="M500 640c130-70 260-200 440-200s220 46 300 24"/>
+    <path d="M440 640c140-80 280-230 480-230s240 52 320 28"/>
   </g>
-  <path d="M120 300C300 180 460 400 660 260s300-60 460-140" fill="none" stroke="#B9DDE5" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 12" opacity="0.75"/>
-  <circle cx="660" cy="260" r="9" fill="#E9DCC5"/>
-  <text x="96" y="200" fill="#F5F7F3" font-family="Manrope, Inter, system-ui, sans-serif" font-size="72" font-weight="700" letter-spacing="-2">Fly your drone</text>
-  <text x="96" y="278" fill="#F5F7F3" font-family="Manrope, Inter, system-ui, sans-serif" font-size="72" font-weight="700" letter-spacing="-2">with confidence.</text>
-  <text x="98" y="120" fill="#B9DDE5" font-family="Inter, system-ui, sans-serif" font-size="22" letter-spacing="6">DRONE CONFIDENCE</text>
-  <text x="98" y="530" fill="#DDEBE6" font-family="Inter, system-ui, sans-serif" font-size="27">First Flight &#160;·&#160; $180 &#160;·&#160; 60 minutes &#160;·&#160; private one-on-one in Sydney</text>
+  <image x="88" y="70" width="560" height="132" preserveAspectRatio="xMinYMid meet" xlink:href="brand/drone-confidence-logo-horizontal-white.png" href="brand/drone-confidence-logo-horizontal-white.png"/>
+  <text x="98" y="330" fill="#FFFFFF" font-family="Manrope, Inter, DejaVu Sans, system-ui, sans-serif" font-size="68" font-weight="700" letter-spacing="-1.5">Fly your drone</text>
+  <text x="98" y="412" fill="#FFFFFF" font-family="Manrope, Inter, DejaVu Sans, system-ui, sans-serif" font-size="68" font-weight="700" letter-spacing="-1.5">with confidence.</text>
+  <rect x="98" y="470" width="56" height="3" rx="1.5" fill="#8CC7B0"/>
+  <text x="98" y="530" fill="#DCEDE5" font-family="Inter, DejaVu Sans, system-ui, sans-serif" font-size="27">First Flight &#160;·&#160; $180 &#160;·&#160; 60 minutes &#160;·&#160; private one-on-one in Sydney</text>
 </svg>

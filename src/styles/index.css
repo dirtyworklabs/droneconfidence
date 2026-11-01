@@ -2,8 +2,9 @@
 
 /* ---------------------------------------------------------------------------
    Drone Confidence — art direction tokens
-   Understated outdoor / technical palette. Warm off-white ground, deep
-   eucalyptus brand, muted sage support, soft sky and warm sand accents.
+   Understated outdoor / technical palette. Warm off-white ground, the deep
+   forest green of the official logo, muted sage support, the logo's mint as
+   an accent, and soft sky and warm sand.
 --------------------------------------------------------------------------- */
 
 @theme {
@@ -17,11 +18,12 @@
   --color-ink-soft: #3c4a45;
   --color-ink-muted: #66716d;
 
-  /* Brand */
-  --color-eucalyptus: #163f37;
-  --color-eucalyptus-deep: #0e2a25;
-  --color-sage: #337667;
-  --color-sage-soft: #ddebe6;
+  /* Brand — eucalyptus and mint are sampled from the official logo artwork */
+  --color-eucalyptus: #11442d;
+  --color-eucalyptus-deep: #0b2e1f;
+  --color-sage: #2f6f57;
+  --color-sage-soft: #dcede5;
+  --color-mint: #8cc7b0;
 
   /* Accents */
   --color-sky: #b9dde5;
@@ -46,6 +48,18 @@
 
   /* Motion */
   --ease-calm: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Route-loading mark: held back so a fast chunk load never flashes it. */
+  --animate-brand-settle: brand-settle 400ms var(--ease-calm) 400ms both;
+
+  @keyframes brand-settle {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 0.9;
+    }
+  }
 
   /* Editorial type scale */
   --text-display: 3.75rem;

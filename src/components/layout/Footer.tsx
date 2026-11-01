@@ -10,7 +10,13 @@ export const Footer = () => (
     <Container className="py-14 sm:py-16">
       <div className="grid gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <div className="flex flex-col gap-4">
-          <Wordmark />
+          <Link
+            to="/"
+            className="self-start rounded-[var(--radius-control)] transition-opacity duration-200 ease-[var(--ease-calm)] hover:opacity-80"
+          >
+            <Wordmark size="footer" />
+            <span className="sr-only">— home</span>
+          </Link>
           <p className="measure text-ink-soft">
             Private one-on-one drone training in Sydney.
           </p>

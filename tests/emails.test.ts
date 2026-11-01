@@ -102,7 +102,7 @@ describe('transactional emails', () => {
       const images = body.html.match(/<img\b/g) ?? []
       expect(images).toHaveLength(1)
       expect(body.html).toContain(
-        'src="https://droneconfidence.com/images/drone-confidence-email-logo.png"',
+        'src="https://droneconfidence.com/brand/drone-confidence-logo-stacked-green.png"',
       )
     }
   })

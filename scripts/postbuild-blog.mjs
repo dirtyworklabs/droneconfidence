@@ -125,6 +125,8 @@ const articleJsonLd = (post) => ({
         '@id': `${absolute('/')}#business`,
         name: 'Drone Confidence',
         url: absolute('/'),
+        // Mirrors BRAND_LOGOS.stacked.onLight in shared/brand.ts.
+        logo: `${siteUrl}/brand/drone-confidence-logo-stacked-green.png`,
       },
       image: `${siteUrl}/social-card.png`,
       articleSection: post.category,

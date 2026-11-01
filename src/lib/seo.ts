@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { BRAND_SOCIAL_CARD, brandAssetUrl } from '@shared/brand'
 import { siteConfig } from '@/config/site'
 
 export interface SeoInput {
@@ -87,7 +88,7 @@ export const useSeo = ({
     const canonical = absoluteUrl(path)
     const ogTitle = socialTitle ?? title
     const ogDescription = socialDescription ?? description
-    const image = `${siteConfig.siteUrl.replace(/\/+$/, '')}/social-card.png`
+    const image = brandAssetUrl(BRAND_SOCIAL_CARD.src, siteConfig.siteUrl)
 
     document.title = title
     upsertMeta('name', 'description', description)
@@ -101,6 +102,8 @@ export const useSeo = ({
     upsertMeta('property', 'og:description', ogDescription)
     upsertMeta('property', 'og:url', canonical)
     upsertMeta('property', 'og:image', image)
+    upsertMeta('property', 'og:image:width', String(BRAND_SOCIAL_CARD.width))
+    upsertMeta('property', 'og:image:height', String(BRAND_SOCIAL_CARD.height))
 
     upsertMeta('name', 'twitter:card', 'summary_large_image')
     upsertMeta('name', 'twitter:title', ogTitle)

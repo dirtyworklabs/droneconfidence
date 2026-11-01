@@ -5,6 +5,18 @@
 [build.environment]
   NODE_VERSION = "22"
 
+# Booking emails sent before the rebrand point at the retired logo file. Send
+# them to the current stacked logo rather than to the SPA shell.
+[[redirects]]
+  from = "/images/drone-confidence-email-logo.png"
+  to = "/brand/drone-confidence-logo-stacked-green.png"
+  status = 301
+
+[[headers]]
+  for = "/brand/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
 # Single-page application routing: every real route is served by index.html,
 # while the static form-detection skeleton and generated assets stay reachable.
 [[redirects]]

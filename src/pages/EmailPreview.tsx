@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { BRAND_COLORS, BRAND_LOGOS } from '@shared/brand'
 import { findBookableSession, sessionPriceCents } from '@shared/booking/catalog'
 import type { BookingRow } from '../../netlify/lib/store'
 import {
@@ -8,7 +9,7 @@ import {
   reminderEmail,
   rescheduleEmail,
 } from '../../netlify/lib/email/templates'
-import type { EmailBody } from '../../netlify/lib/email/render'
+import { EMAIL_LOGO_URL, type EmailBody } from '../../netlify/lib/email/render'
 
 // A current hypothetical booking, so the amounts come from the live catalogue.
 const PREVIEW_SESSION = findBookableSession('first-flight')!
@@ -121,10 +122,7 @@ const PREVIEWS: PreviewOption[] = [
   },
 ]
 
-const PRODUCTION_LOGO_URL =
-  'https://droneconfidence.com/images/drone-confidence-email-logo.png'
-
-const LOCAL_LOGO_URL = '/images/drone-confidence-email-logo.png'
+const LOCAL_LOGO_URL = BRAND_LOGOS.stacked.onLight.src
 
 const emailForPreview = (id: PreviewId): EmailBody => {
   switch (id) {
@@ -188,12 +186,12 @@ const EmailPreview = () => {
    * Production emails deliberately use the public HTTPS logo.
    *
    * For this local-only preview we swap that URL for the image inside
-   * public/images so the logo can be checked before deployment.
+   * public/brand so the logo can be checked before deployment.
    */
   const previewHtml = useMemo(
     () =>
       email.html.replaceAll(
-        PRODUCTION_LOGO_URL,
+        EMAIL_LOGO_URL,
         LOCAL_LOGO_URL,
       ),
     [email.html],
@@ -204,7 +202,7 @@ const EmailPreview = () => {
       style={{
         minHeight: '100vh',
         background: '#ecece8',
-        color: '#123f3f',
+        color: BRAND_COLORS.forest,
         fontFamily:
           "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif",
       }}
@@ -238,7 +236,7 @@ const EmailPreview = () => {
                 fontWeight: 700,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
-                color: '#5a7d63',
+                color: '#2f6f57',
                 marginBottom: 4,
               }}
             >
@@ -268,10 +266,10 @@ const EmailPreview = () => {
               style={{
                 border:
                   !mobile
-                    ? '1px solid #123f3f'
+                    ? `1px solid ${BRAND_COLORS.forest}`
                     : '1px solid #d8dad5',
-                background: !mobile ? '#123f3f' : '#ffffff',
-                color: !mobile ? '#ffffff' : '#123f3f',
+                background: !mobile ? BRAND_COLORS.forest : '#ffffff',
+                color: !mobile ? '#ffffff' : BRAND_COLORS.forest,
                 padding: '8px 14px',
                 borderRadius: 999,
                 cursor: 'pointer',
@@ -287,10 +285,10 @@ const EmailPreview = () => {
               style={{
                 border:
                   mobile
-                    ? '1px solid #123f3f'
+                    ? `1px solid ${BRAND_COLORS.forest}`
                     : '1px solid #d8dad5',
-                background: mobile ? '#123f3f' : '#ffffff',
-                color: mobile ? '#ffffff' : '#123f3f',
+                background: mobile ? BRAND_COLORS.forest : '#ffffff',
+                color: mobile ? '#ffffff' : BRAND_COLORS.forest,
                 padding: '8px 14px',
                 borderRadius: 999,
                 cursor: 'pointer',
@@ -340,7 +338,7 @@ const EmailPreview = () => {
                   textAlign: 'left',
                   cursor: 'pointer',
                   background: active ? '#f0f4ef' : 'transparent',
-                  color: '#123f3f',
+                  color: BRAND_COLORS.forest,
                 }}
               >
                 <div

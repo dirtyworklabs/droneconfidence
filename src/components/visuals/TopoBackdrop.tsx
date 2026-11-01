@@ -25,7 +25,7 @@ export const TopoBackdrop = ({ className, tone = 'ink', fade = true }: TopoBackd
       className="h-full w-full"
       preserveAspectRatio="xMidYMid slice"
       fill="none"
-      stroke={tone === 'ink' ? '#163F37' : '#DDEBE6'}
+      stroke={tone === 'ink' ? '#11442d' : '#dcede5'}
       strokeOpacity={tone === 'ink' ? 0.1 : 0.18}
       strokeWidth={1}
     >

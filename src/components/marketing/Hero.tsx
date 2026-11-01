@@ -32,7 +32,7 @@ const TracedArc = () => {
       {reduced ? (
         <path
           d="M8 196C120 176 196 96 330 88s210 44 382-24"
-          stroke="#337667"
+          stroke="#2f6f57"
           strokeOpacity="0.4"
           strokeWidth="1.5"
           strokeDasharray="6 9"
@@ -40,7 +40,7 @@ const TracedArc = () => {
       ) : (
         <motion.path
           d="M8 196C120 176 196 96 330 88s210 44 382-24"
-          stroke="#337667"
+          stroke="#2f6f57"
           strokeOpacity="0.4"
           strokeWidth="1.5"
           strokeDasharray="6 9"

@@ -28,6 +28,8 @@ field; a second backend framework; a state-management library.
 shared/booking/   catalog, rules, availability, policy, time, format, months, fields,
                   experience, types — the domain, with no React and no import.meta,
                   so pages, functions and tests share one definition
+shared/brand.ts   logo/icon paths, intrinsic sizes and brand colours — the only
+                  place a brand asset path is written (see brand/README.md)
 shared/analytics/ events (the storable-field contract), tracker (the DOM-free
                   tracker core) — shared by the browser and the collector
 src/
@@ -209,6 +211,11 @@ raw hex.
 **The FAQ accordion keeps answers in the DOM.** It animates `grid-template-rows` from `0fr` to `1fr`
 and marks the collapsed panel `inert`, so content stays indexable while staying out of the tab order.
 Don't replace it with conditional rendering.
+
+**The logo is the supplied artwork, used as-is.** `Wordmark` renders the official horizontal logo
+from `shared/brand.ts` with intrinsic width and height so it never stretches or shifts layout; it
+takes a `size` from a fixed map because `cn` does not merge Tailwind classes. Below 360px the header
+swaps in the standalone icon. Masters live in `brand/source/`; web exports in `public/brand/`.
 
 **Image slots ship with designed fallbacks.** `ImageFrame` renders a real `<img>` when
 `imageSlots[key].src` is non-empty and an SVG `Treatment` at identical geometry otherwise. To add
