@@ -1,3 +1,4 @@
+import { BRAND_LOGOS, BRAND_SOCIAL_CARD, brandAssetUrl } from '@shared/brand'
 import { formatPriceRange } from '@shared/booking/format'
 import { siteConfig } from '@/config/site'
 import { sessions } from '@/content/sessions'
@@ -20,7 +21,8 @@ export const localBusinessSchema = (): Record<string, unknown> => ({
   name: siteConfig.businessName,
   description: siteConfig.shortDescription,
   url: absoluteUrl('/'),
-  image: `${siteConfig.siteUrl.replace(/\/+$/, '')}/social-card.svg`,
+  image: brandAssetUrl(BRAND_SOCIAL_CARD.src, siteConfig.siteUrl),
+  logo: brandAssetUrl(BRAND_LOGOS.stacked.onLight.src, siteConfig.siteUrl),
   priceRange: formatPriceRange(sessions.map((s) => s.price)),
   currenciesAccepted: siteConfig.currency,
   areaServed: {
@@ -128,7 +130,7 @@ export const blogPostingSchema = (post: import('@/content/blog').BlogPost): Reco
     datePublished: publishedAt,
     dateModified: modifiedAt,
     articleSection: post.category,
-    image: `${siteConfig.siteUrl.replace(/\/+$/, '')}/social-card.png`,
+    image: brandAssetUrl(BRAND_SOCIAL_CARD.src, siteConfig.siteUrl),
     author: {
       '@type': 'Person',
       name: post.author,

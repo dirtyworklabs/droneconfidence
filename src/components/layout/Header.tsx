@@ -35,9 +35,9 @@ export const Header = () => {
       >
         <Link
           to="/"
-          className="min-w-0 rounded-[var(--radius-control)] py-2 transition-opacity duration-200 ease-[var(--ease-calm)] hover:opacity-80"
+          className="flex min-w-0 items-center rounded-[var(--radius-control)] py-2 transition-opacity duration-200 ease-[var(--ease-calm)] hover:opacity-80"
         >
-          <Wordmark />
+          <Wordmark compactBelow360 />
           <span className="sr-only">— home</span>
         </Link>
 

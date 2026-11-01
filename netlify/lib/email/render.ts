@@ -10,6 +10,8 @@
  * is loaded remotely from the public website.
  */
 
+import { BRAND_COLORS, BRAND_LOGOS, BRAND_SITE_URL, brandAssetUrl } from '../../../shared/brand'
+
 export const escapeHtml = (value: string): string =>
   value
     .replace(/&/g, '&amp;')
@@ -38,16 +40,20 @@ export type Block =
   | { kind: 'list'; items: string[] }
   | { kind: 'button'; label: string; href: string }
 
-const INK = '#123f3f'
+const INK = BRAND_COLORS.forest
 const BODY = '#4c5658'
-const SAGE = '#5a7d63'
+const SAGE = '#2f6f57'
 const BORDER = '#e5e7e2'
 const BACKGROUND = '#f6f4ef'
 
-const LOGO_URL =
-  'https://droneconfidence.com/images/drone-confidence-email-logo.png'
+const LOGO = BRAND_LOGOS.stacked.onLight
+const LOGO_WIDTH = 150
+const LOGO_HEIGHT = Math.round((LOGO_WIDTH * LOGO.height) / LOGO.width)
 
-const WEBSITE_URL = 'https://droneconfidence.com'
+/** Always the public HTTPS file: an email can't resolve a relative path. */
+export const EMAIL_LOGO_URL = brandAssetUrl(LOGO.src)
+
+const WEBSITE_URL = BRAND_SITE_URL
 
 /**
  * Composes the HTML and text bodies from the same block list so the two
@@ -149,13 +155,14 @@ export const renderEmail = (subject: string, blocks: Block[]): EmailBody => {
         style="display:inline-block;text-decoration:none;"
       >
         <img
-          src="${LOGO_URL}"
-          width="135"
+          src="${EMAIL_LOGO_URL}"
+          width="${LOGO_WIDTH}"
+          height="${LOGO_HEIGHT}"
           alt="Drone Confidence"
           style="
             display:block;
-            width:135px;
-            max-width:135px;
+            width:${LOGO_WIDTH}px;
+            max-width:${LOGO_WIDTH}px;
             height:auto;
             margin:0 auto;
             border:0;

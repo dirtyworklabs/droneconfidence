@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { Wordmark } from '@/components/layout/Wordmark'
 import { cn } from '@/lib/cn'
 import { ROUTES } from '@/lib/routes'
 
@@ -22,11 +23,11 @@ export const AdminShell = ({ identity, onSignOut, children }: AdminShellProps) =
   <div className="min-h-dvh bg-canvas">
     <header className="border-b border-ink/8 bg-surface">
       <div className="mx-auto flex max-w-[72rem] flex-wrap items-center justify-between gap-3 px-5 py-3.5 sm:px-8">
-        <div className="flex items-baseline gap-3">
-          <span className="font-display text-[1rem] font-semibold tracking-[-0.02em]">
-            Drone Confidence
+        <div className="flex items-center gap-3">
+          <Wordmark size="admin" />
+          <span className="border-l border-ink/12 pl-3 text-[0.72rem] uppercase tracking-[0.18em] text-sage">
+            Bookings
           </span>
-          <span className="text-[0.72rem] uppercase tracking-[0.18em] text-sage">Bookings</span>
         </div>
         <div className="flex items-center gap-4 text-[0.85rem] text-ink-muted">
           {identity ? <span className="hidden sm:inline">{identity}</span> : null}

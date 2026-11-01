@@ -102,7 +102,7 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
         <defs>
           <linearGradient id="dc-flight-bg" x1="0" y1="0" x2="0.8" y2="1">
             <stop offset="0" stopColor="#1d5147" />
-            <stop offset="0.55" stopColor="#163f37" />
+            <stop offset="0.55" stopColor="#11442d" />
             <stop offset="1" stopColor="#0b2520" />
           </linearGradient>
 
@@ -249,7 +249,7 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
           <path
             d={flightRoute}
             fill="none"
-            stroke="#DDEBE6"
+            stroke="#dcede5"
             strokeWidth="2.5"
             strokeLinecap="round"
           />
@@ -275,7 +275,7 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
             <motion.path
               d={flightRoute}
               fill="none"
-              stroke="#DDEBE6"
+              stroke="#dcede5"
               strokeWidth="2.5"
               strokeLinecap="round"
               initial={{ pathLength: 0, opacity: 0 }}
@@ -370,14 +370,14 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
           <g transform="translate(286 184)">
             <circle
               r="13"
-              fill="#163F37"
-              stroke="#DDEBE6"
+              fill="#11442d"
+              stroke="#dcede5"
               strokeWidth="1"
             />
             <circle r="3.5" fill="#E9DCC5" />
             <path
               d="M-10 -10 L10 10 M10 -10 L-10 10"
-              stroke="#DDEBE6"
+              stroke="#dcede5"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -390,15 +390,15 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
           <g filter="url(#dc-flight-marker-glow)">
             <circle
               r="13"
-              fill="#163F37"
-              stroke="#DDEBE6"
+              fill="#11442d"
+              stroke="#dcede5"
               strokeWidth="1"
             />
             <circle r="3.5" fill="#E9DCC5" />
 
             <path
               d="M-10 -10 L10 10 M10 -10 L-10 10"
-              stroke="#DDEBE6"
+              stroke="#dcede5"
               strokeWidth="1.5"
               strokeLinecap="round"
             />
@@ -421,7 +421,7 @@ const FlightPathTreatment = ({ caption }: { caption: string }) => {
         {/* Tracker brackets */}
         <g
           fill="none"
-          stroke="#DDEBE6"
+          stroke="#dcede5"
           strokeWidth="1"
           strokeOpacity="0.28"
         >
@@ -464,20 +464,20 @@ const ControllerTreatment = ({ caption }: { caption: string }) => (
         ))}
       </g>
       <rect x="96" y="132" width="348" height="152" rx="26" fill="#ffffff" opacity="0.85" />
-      <rect x="96" y="132" width="348" height="152" rx="26" fill="none" stroke="#163F37" strokeOpacity="0.14" />
-      <g fill="none" stroke="#163F37" strokeOpacity="0.5">
+      <rect x="96" y="132" width="348" height="152" rx="26" fill="none" stroke="#11442d" strokeOpacity="0.14" />
+      <g fill="none" stroke="#11442d" strokeOpacity="0.5">
         <circle cx="168" cy="208" r="38" />
         <circle cx="372" cy="208" r="38" />
       </g>
-      <circle cx="168" cy="208" r="11" fill="#163F37" opacity="0.85" />
-      <circle cx="372" cy="188" r="11" fill="#337667" opacity="0.9" />
-      <g stroke="#163F37" strokeOpacity="0.3" strokeWidth="1">
+      <circle cx="168" cy="208" r="11" fill="#11442d" opacity="0.85" />
+      <circle cx="372" cy="188" r="11" fill="#2f6f57" opacity="0.9" />
+      <g stroke="#11442d" strokeOpacity="0.3" strokeWidth="1">
         <line x1="130" y1="208" x2="206" y2="208" strokeDasharray="2 5" />
         <line x1="168" y1="170" x2="168" y2="246" strokeDasharray="2 5" />
         <line x1="334" y1="208" x2="410" y2="208" strokeDasharray="2 5" />
         <line x1="372" y1="170" x2="372" y2="246" strokeDasharray="2 5" />
       </g>
-      <TracedPath d="M52 322C150 300 190 344 270 322s180 8 250-28" stroke="#337667" width={1.6} delay={0.3} />
+      <TracedPath d="M52 322C150 300 190 344 270 322s180 8 250-28" stroke="#2f6f57" width={1.6} delay={0.3} />
     </svg>
     <div className={cn(labelClass, 'text-ink-muted')}>
       <span>{caption}</span>
@@ -491,15 +491,15 @@ const OrbitTreatment = ({ caption }: { caption: string }) => (
   <Frame className="bg-sky-soft text-ink">
     <svg viewBox="0 0 540 400" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <rect width="540" height="400" fill="#e4f1f4" />
-      <Contours opacity={0.22} stroke="#163F37" />
-      <g fill="none" stroke="#163F37" strokeOpacity="0.16">
+      <Contours opacity={0.22} stroke="#11442d" />
+      <g fill="none" stroke="#11442d" strokeOpacity="0.16">
         <circle cx="270" cy="204" r="132" />
         <circle cx="270" cy="204" r="86" />
       </g>
-      <TracedPath d="M270 72a132 132 0 1 1-0.1 0" stroke="#337667" width={2} dash="8 10" delay={0.25} />
-      <circle cx="270" cy="204" r="4" fill="#163F37" />
+      <TracedPath d="M270 72a132 132 0 1 1-0.1 0" stroke="#2f6f57" width={2} dash="8 10" delay={0.25} />
+      <circle cx="270" cy="204" r="4" fill="#11442d" />
       <Marker cx={402} cy={204} />
-      <g stroke="#163F37" strokeOpacity="0.3" strokeWidth="1">
+      <g stroke="#11442d" strokeOpacity="0.3" strokeWidth="1">
         <line x1="270" y1="204" x2="402" y2="204" strokeDasharray="3 6" />
       </g>
     </svg>
@@ -516,14 +516,14 @@ const FramingTreatment = ({ caption }: { caption: string }) => (
     <svg viewBox="0 0 540 400" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
         <linearGradient id="dc-frame-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#163F37" />
-          <stop offset="1" stopColor="#0e2a25" />
+          <stop offset="0" stopColor="#11442d" />
+          <stop offset="1" stopColor="#0b2e1f" />
         </linearGradient>
       </defs>
       <rect width="540" height="400" fill="url(#dc-frame-bg)" />
-      <path d="M0 268C120 236 200 292 320 258s160 6 220-26v168H0z" fill="#337667" opacity="0.35" />
-      <path d="M0 310C130 282 210 330 330 302s150 6 210-20v118H0z" fill="#337667" opacity="0.28" />
-      <g stroke="#DDEBE6" strokeOpacity="0.22" strokeWidth="1">
+      <path d="M0 268C120 236 200 292 320 258s160 6 220-26v168H0z" fill="#2f6f57" opacity="0.35" />
+      <path d="M0 310C130 282 210 330 330 302s150 6 210-20v118H0z" fill="#2f6f57" opacity="0.28" />
+      <g stroke="#dcede5" strokeOpacity="0.22" strokeWidth="1">
         <line x1="180" y1="60" x2="180" y2="340" />
         <line x1="360" y1="60" x2="360" y2="340" />
         <line x1="60" y1="153" x2="480" y2="153" />
@@ -548,8 +548,8 @@ const FramingTreatment = ({ caption }: { caption: string }) => (
 const TopographyTreatment = ({ caption }: { caption: string }) => (
   <Frame className="bg-sage-soft text-ink">
     <svg viewBox="0 0 540 400" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <rect width="540" height="400" fill="#ddebe6" />
-      <g fill="none" stroke="#163F37" strokeOpacity="0.18" strokeWidth="1">
+      <rect width="540" height="400" fill="#dcede5" />
+      <g fill="none" stroke="#11442d" strokeOpacity="0.18" strokeWidth="1">
         <path d="M-20 120C80 84 160 148 270 112s180 22 300-18" />
         <path d="M-20 162C90 126 170 190 280 154s180 24 300-16" />
         <path d="M-20 206C100 170 180 234 290 198s180 26 300-14" />
@@ -557,16 +557,16 @@ const TopographyTreatment = ({ caption }: { caption: string }) => (
         <path d="M-20 300C120 264 200 324 310 288s180 30 300-10" />
         <path d="M-20 350C130 314 210 372 320 336s180 32 300-8" />
       </g>
-      <g stroke="#337667" strokeOpacity="0.22" strokeWidth="1">
+      <g stroke="#2f6f57" strokeOpacity="0.22" strokeWidth="1">
         {[68, 204, 340, 476].map((x) => (
           <line key={x} x1={x} y1="0" x2={x} y2="400" />
         ))}
       </g>
-      <g fill="none" stroke="#163F37" strokeOpacity="0.45">
+      <g fill="none" stroke="#11442d" strokeOpacity="0.45">
         <circle cx="272" cy="196" r="30" strokeDasharray="4 6" />
       </g>
-      <circle cx="272" cy="196" r="6" fill="#163F37" />
-      <g stroke="#163F37" strokeOpacity="0.45" strokeWidth="1.5">
+      <circle cx="272" cy="196" r="6" fill="#11442d" />
+      <g stroke="#11442d" strokeOpacity="0.45" strokeWidth="1.5">
         <line x1="272" y1="152" x2="272" y2="164" />
         <line x1="272" y1="228" x2="272" y2="240" />
         <line x1="228" y1="196" x2="240" y2="196" />
@@ -591,12 +591,12 @@ const CredentialTreatment = ({ caption }: { caption: string }) => (
   <Frame className="bg-sand text-eucalyptus-deep">
     <svg viewBox="0 0 420 520" className="size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <rect width="420" height="520" fill="#e9dcc5" />
-      <g stroke="#163F37" strokeOpacity="0.07" strokeWidth="1">
+      <g stroke="#11442d" strokeOpacity="0.07" strokeWidth="1">
         {[70, 140, 210, 280, 350].map((x) => (
           <line key={x} x1={x} y1="0" x2={x} y2="520" />
         ))}
       </g>
-      <g fill="none" stroke="#163F37" strokeOpacity="0.16" strokeWidth="1">
+      <g fill="none" stroke="#11442d" strokeOpacity="0.16" strokeWidth="1">
         <path d="M-20 330C60 294 140 354 250 318s140 20 220-16" />
         <path d="M-20 378C70 342 150 400 260 364s130 22 210-14" />
         <path d="M-20 428C80 392 160 448 270 412s120 24 200-12" />
@@ -604,13 +604,13 @@ const CredentialTreatment = ({ caption }: { caption: string }) => (
       </g>
       <TracedPath
         d="M-10 300C70 244 130 296 210 240s130-34 230-78"
-        stroke="#337667"
+        stroke="#2f6f57"
         width={1.8}
         dash="7 10"
         delay={0.3}
       />
-      <circle cx="210" cy="240" r="16" fill="none" stroke="#163F37" strokeOpacity="0.3" />
-      <circle cx="210" cy="240" r="5" fill="#163F37" opacity="0.55" />
+      <circle cx="210" cy="240" r="16" fill="none" stroke="#11442d" strokeOpacity="0.3" />
+      <circle cx="210" cy="240" r="5" fill="#11442d" opacity="0.55" />
     </svg>
 
     <div className="pointer-events-none absolute inset-0 flex flex-col justify-between p-6 sm:p-8">

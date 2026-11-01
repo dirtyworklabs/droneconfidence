@@ -101,7 +101,7 @@ export const MobileNav = ({ open, onClose, triggerRef }: MobileNavProps) => {
             className="absolute inset-x-3 top-3 overflow-hidden rounded-[var(--radius-panel)] border border-ink/8 bg-canvas shadow-[var(--shadow-lift)]"
           >
             <div className="flex items-center justify-between border-b border-ink/8 px-5 py-4">
-              <Wordmark />
+              <Wordmark size="menu" />
               <button
                 ref={closeRef}
                 type="button"

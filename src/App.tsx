@@ -1,5 +1,6 @@
 import { Suspense, lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { BRAND_ICON } from '@shared/brand'
 import { Layout } from '@/components/layout/Layout'
 import { usePageTracking } from '@/lib/pageTracking'
 import { ROUTES } from '@/lib/routes'
@@ -44,14 +45,23 @@ const Admin = lazy(() => import('@/pages/Admin'))
 
 /**
  * Route fallback. Deliberately quiet: chunks are small enough that a spinner
- * would flash more often than it would reassure. The reserved height keeps the
- * footer from jumping up the viewport mid-navigation.
+ * would flash more often than it would reassure, so the brand icon only fades
+ * in if a load is genuinely slow. The reserved height keeps the footer from
+ * jumping up the viewport mid-navigation.
  */
 const RouteFallback = () => (
   <div
     aria-hidden="true"
-    className="min-h-[70vh] bg-canvas"
-  />
+    className="grid min-h-[70vh] place-items-center bg-canvas"
+  >
+    <img
+      src={BRAND_ICON.src}
+      width={BRAND_ICON.width}
+      height={BRAND_ICON.height}
+      alt=""
+      className="size-12 animate-brand-settle"
+    />
+  </div>
 )
 
 /**
